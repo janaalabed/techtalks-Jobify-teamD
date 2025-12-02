@@ -19,7 +19,7 @@
 
 # production
 /build
-
+db/connection.js
 # misc
 .DS_Store
 *.pem
