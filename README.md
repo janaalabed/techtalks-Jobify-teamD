@@ -155,8 +155,6 @@ Folders: lowercase, plural (users, jobs, applications).
 Files: lowercase, camelCase (ex: jobComponent)
 
 database :
-All date fields should use DATETIME DEFAULT CURRENT_TIMESTAMP.
-Use foreign keys with ON DELETE CASCADE for relational integrity.
 Error Handling
 Always return a status code and JSON message: { "status": "error", "message": "Description here" }
 
@@ -169,22 +167,3 @@ Comments:
 explain logic in non-obvious areas.
 
 ---
-Database Tables 
-
-users
-id, name, email, password, role (applicant/employer/admin), created_at
-
-applicants
-id, user_id, photo_url, skills, education, experience, cv_url
-
-employers
-id, user_id, company_name, logo_url, website, industry, location, description
-
-jobs
-id, employer_id, title, description, requirements, salary, type, paid, location, created_at
-
-applications
-id, job_id, applicant_id, cv_url, cover_letter, status
-
-bookmarks
-id, user_id, job_id
