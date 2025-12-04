@@ -150,7 +150,10 @@ while coding :
 naming :
 Use descriptive variable and function names.
 Prefer single responsibility per function.
-File & Folder Naming
+Use PascalCase for React components
+Avoid unused imports and variables
+
+File & Folder Naming:
 Folders: lowercase, plural (users, jobs, applications).
 Files: lowercase, camelCase (ex: jobComponent)
 
@@ -164,6 +167,6 @@ Never return passwords in API responses.
 Use JWT or sessions for authentication (optional for MVP).
 
 Comments:
-explain logic in non-obvious areas.
+Comment complex logic for clarity
 
 ---
