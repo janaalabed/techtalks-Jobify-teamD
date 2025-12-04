@@ -99,7 +99,7 @@ project/
 │ └── page.js # Landing page
 │
 ├── db/
-│ ├── connection.js # MySQL connection pool
+│ ├── connection.js # PostgreSQL connection pool
 │ ├── queries/ # each file in this folder contains query helpers, CRUD operations according to the task
 │ │ ├── userQueries.js
 │ │ ├── authQueries.js  
@@ -115,7 +115,9 @@ project/
 │ ├── validators.js # Zod validation for all schemas
 │ ├── upload.js # File upload helpers (CV, photos)
 │ └── utils.js
-│
+│ ├── supabaseClient.js  
+│ └── supabaseServer.js
+│  
 ├── components/
 │ ├── Navbar.js
 │ ├── JobCard.js
@@ -129,6 +131,7 @@ project/
 ├── public/
 │ ├── uploads/ # User photos, CVs
 │
+├── .env.example
 ├── package.json
 ├── next.config.mjs
 └── README.md
