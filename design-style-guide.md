@@ -5,8 +5,9 @@
 #0A66C2 – Main blue (buttons, highlights)
 #1A1A1A – Main text color
 #F5F5F5 – Light background
-Secondary Colors
-================
+
+# Secondary Colors
+
 #FFFFFF – Cards, containers
 #E5E7EB – Borders
 #10B981 – Success (accepted application)
