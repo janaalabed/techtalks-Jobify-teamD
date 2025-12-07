@@ -80,7 +80,7 @@ Role selection (Applicant or Employer) must be a radio group or toggle button st
 
 6. Applicant UI Standards
 
-# Profile Page(applicant)
+# applicant Profile Page
 
 Two-column layout
 Profile picture on the left
