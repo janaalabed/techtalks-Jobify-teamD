@@ -1,15 +1,27 @@
-import Image from "next/image";
+import Navbar from "@/components/landingPageComponents/NavBar";
+import Hero from "@/components/landingPageComponents/Hero";
+import PlatformOverview from "@/components/landingPageComponents/PlatformOverview";
+import HowItWorks from "@/components/landingPageComponents/HowItWorks";
+import Features from "@/components/landingPageComponents/Features";
+import Testimonials from "@/components/landingPageComponents/Testimonials";
+import Contact from "@/components/landingPageComponents/Footer";
 
 export default function Home() {
   return (
     <>
-      <h1>Helloo</h1>
-      <div className="bg-green-500 text-white p-4 text-center">
-        Tailwind Works!
-      </div>
-
-
-
+      <Navbar />
+      <Hero />
+      <PlatformOverview />
+      <section id="features">
+        <Features />
+      </section>
+      <section id="how-it-works">
+        <HowItWorks />
+      </section>
+    <Testimonials/>
+      <section id="contact">
+        <Contact />
+      </section>
     </>
   );
 }
