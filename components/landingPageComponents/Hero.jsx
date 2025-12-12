@@ -1,7 +1,7 @@
-"use client"; // optional if using hooks later
 
+"use client";
 import Image from "next/image";
-import heroIllustration from "@/assets/hero-illustration.png"; 
+import heroIllustration from "@/public/uploads/hero-illustration.png";
 
 export default function Hero() {
   return (
@@ -10,38 +10,43 @@ export default function Hero() {
         
         {/* Left Side: Headline + Description + CTA */}
         <div className="flex-1 text-center md:text-left space-y-6">
-          <h1 className="text-4xl md:text-5xl font-bold text-gray-900">
+          <h1 className="text-4xl md:text-5xl font-bold text-gray-900 leading-tight">
             Your bridge to internships and job opportunities.
           </h1>
-          <p className="text-gray-700 text-lg md:text-xl">
+          <p className="text-gray-700 text-lg md:text-xl max-w-xl mx-auto md:mx-0">
             Jobify connects students, job seekers, and companies in a simple, modern hiring platform.
           </p>
-          <div className="flex justify-center md:justify-start gap-4">
+          <div className="flex flex-col sm:flex-row justify-center md:justify-start gap-4 mt-4">
             <a
-              href="#signup"
-              className="bg-blue-500 text-white px-6 py-3 rounded-lg font-medium hover:bg-blue-600 transition"
+              href="../register/"
+              className="bg-blue-500 text-white px-6 py-3 rounded-lg font-medium hover:bg-blue-600 transition w-full sm:w-auto text-center"
             >
-              Sign Up
+              Start now
             </a>
             <a
               href="#how-it-works"
-              className="bg-gray-200 text-gray-800 px-6 py-3 rounded-lg font-medium hover:bg-gray-300 transition"
+              className="bg-gray-200 text-gray-800 px-6 py-3 rounded-lg font-medium hover:bg-gray-300 transition w-full sm:w-auto text-center"
             >
               Learn More
             </a>
           </div>
         </div>
 
-        {/* Right Side: Illustration */}
-        <div className="flex-1 flex justify-center md:justify-end">
-          <Image
-            src={heroIllustration}
-            alt="Students and Employers Illustration"
-            width={500}
-            height={400}
-            className="rounded-lg"
-          />
-        </div>
+{/* Right Side: Illustration */}
+<div className="flex-1 flex justify-center md:justify-end w-full">
+  <div className="w-full"> {/* no max-width limitation */}
+    <Image
+      src={heroIllustration}
+      alt="Students and Employers Illustration"
+      width={1600}    // high resolution
+      height={1200}   // high resolution
+      className="rounded-lg object-contain w-full h-auto"
+      priority
+    />
+  </div>
+</div>
+
+
       </div>
     </section>
   );

@@ -1,26 +1,34 @@
-"use client"; // optional if using hooks later
+"use client";
 
 import { FaUserCheck, FaPaperPlane, FaClipboardList, FaBuilding } from "react-icons/fa";
 
 export default function Features() {
   const features = [
     {
-      icon: <FaUserCheck className="w-8 h-8 text-blue-500" />,
+      icon: FaUserCheck,
+      iconColor: "blue-500",
+      bgHover: "blue-300",
       title: "Easy profile setup",
       description: "Create your professional profile quickly and efficiently.",
     },
     {
-      icon: <FaPaperPlane className="w-8 h-8 text-green-500" />,
+      icon: FaPaperPlane,
+      iconColor: "green-500",
+      bgHover: "green-300",
       title: "One-click applications",
       description: "Apply to jobs and internships instantly with one click.",
     },
     {
-      icon: <FaClipboardList className="w-8 h-8 text-purple-500" />,
+      icon: FaClipboardList,
+      iconColor: "purple-500",
+      bgHover: "purple-300",
       title: "Application tracking dashboard",
       description: "Track all your applications in a single dashboard.",
     },
     {
-      icon: <FaBuilding className="w-8 h-8 text-yellow-500" />,
+      icon: FaBuilding,
+      iconColor: "yellow-500",
+      bgHover: "yellow-300",
       title: "Verified company profiles",
       description: "Connect with trusted companies and verified job postings.",
     },
@@ -34,16 +42,43 @@ export default function Features() {
         </h2>
 
         <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-4">
-          {features.map((feature, index) => (
-            <div
-              key={index}
-              className="bg-white rounded-lg shadow-md p-6 flex flex-col items-center space-y-4 hover:scale-105 transition"
-            >
-              {feature.icon}
-              <h3 className="text-xl font-semibold text-gray-900">{feature.title}</h3>
-              <p className="text-gray-700 text-center">{feature.description}</p>
-            </div>
-          ))}
+          {features.map((feature, index) => {
+            const Icon = feature.icon;
+
+            return (
+              <div
+                key={index}
+                className={`
+                  group bg-white rounded-lg shadow-md p-6 flex flex-col items-center space-y-4 
+                  transition-all duration-300 transform hover:scale-105
+                  hover:bg-${feature.bgHover}
+                `}
+              >
+                <Icon
+                  className={`
+                    w-8 h-8 text-${feature.iconColor}
+                    transition-colors duration-300 group-hover:text-white
+                  `}
+                />
+                <h3
+                  className={`
+                    text-xl font-semibold text-gray-900 
+                    transition-colors duration-300 group-hover:text-white
+                  `}
+                >
+                  {feature.title}
+                </h3>
+                <p
+                  className={`
+                    text-gray-700 text-center 
+                    transition-colors duration-300 group-hover:text-white
+                  `}
+                >
+                  {feature.description}
+                </p>
+              </div>
+            );
+          })}
         </div>
       </div>
     </section>
