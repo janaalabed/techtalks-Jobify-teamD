@@ -1,212 +1,65 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import JobCard from '@/components/JobCard';
 
-// Mock job data matching DB schema (Jobs + Companies)
-const MOCK_JOBS = [
-    {
-        id: 1,
-        title: 'Senior Frontend Developer',
-        location: 'Beirut, Lebanon',
-        summary: 'We are looking for an experienced frontend developer to join our team and build amazing user experiences with React and Next.js.',
-        description: 'As a Senior Frontend Developer, you will be responsible for building and maintaining our web applications using modern technologies. You will work closely with our design and backend teams to create seamless user experiences.',
-        responsibilities: [
-            'Build responsive web applications using React and Next.js',
-            'Collaborate with design team to implement UI/UX designs',
-            'Write clean, maintainable, and well-documented code',
-            'Mentor junior developers and conduct code reviews',
-            'Optimize application performance and accessibility'
-        ],
-        requirements: [
-            '5+ years of experience with React and modern JavaScript',
-            'Strong understanding of TypeScript',
-            'Experience with Next.js and server-side rendering',
-            'Excellent communication and collaboration skills',
-            'Portfolio demonstrating frontend expertise'
-        ],
-        company: {
-            name: 'TechCorp Inc.',
-            logo: null
-        }
-    },
-    {
-        id: 2,
-        title: 'Full Stack Engineer',
-        location: 'Tripoli, Lebanon',
-        summary: 'Join our dynamic team to build scalable web applications using cutting-edge technologies across the full stack.',
-        description: 'We need a talented Full Stack Engineer who can work on both frontend and backend systems. You will be involved in the entire development lifecycle from design to deployment.',
-        responsibilities: [
-            'Develop full-stack features using React and Node.js',
-            'Design and implement database schemas',
-            'Build and maintain RESTful APIs',
-            'Deploy and monitor applications in cloud environments',
-            'Participate in agile development processes'
-        ],
-        requirements: [
-            '3+ years of full-stack development experience',
-            'Proficiency with Node.js and React',
-            'Database knowledge (PostgreSQL, MongoDB)',
-            'Experience with cloud platforms (AWS, GCP, or Azure)',
-            'Understanding of DevOps practices'
-        ],
-        company: {
-            name: 'StartupHub',
-            logo: null
-        }
-    },
-    {
-        id: 3,
-        title: 'UX/UI Designer',
-        location: 'Remote',
-        summary: 'Create beautiful and intuitive user interfaces for our products and help shape the user experience across all platforms.',
-        description: 'As a UX/UI Designer, you will work closely with product managers and developers to create exceptional user experiences. You will be responsible for the entire design process from research to final implementation.',
-        responsibilities: [
-            'Design user interfaces for web and mobile applications',
-            'Create wireframes, prototypes, and high-fidelity mockups',
-            'Conduct user research and usability testing',
-            'Maintain and evolve our design system',
-            'Collaborate with developers to ensure design implementation'
-        ],
-        requirements: [
-            '3+ years of UX/UI design experience',
-            'Proficiency in Figma and Adobe Creative Suite',
-            'Strong portfolio showcasing design work',
-            'Understanding of design principles and best practices',
-            'Experience with responsive and mobile-first design'
-        ],
-        company: {
-            name: 'DesignStudio Co.',
-            logo: null
-        }
-    },
-    {
-        id: 4,
-        title: 'Backend Developer',
-        location: 'Jounieh, Lebanon',
-        summary: 'Build robust and scalable backend systems to power our applications and handle millions of requests daily.',
-        description: 'We are seeking a Backend Developer to design and implement server-side logic and database architecture. You will work on building APIs and microservices that power our platform.',
-        responsibilities: [
-            'Develop and maintain RESTful APIs and microservices',
-            'Optimize database queries and schema design',
-            'Implement security measures and authentication systems',
-            'Write comprehensive unit and integration tests',
-            'Monitor and improve system performance'
-        ],
-        requirements: [
-            '4+ years of backend development experience',
-            'Strong knowledge of Python or Node.js',
-            'Experience with relational and NoSQL databases',
-            'Understanding of system design and architecture',
-            'Familiarity with containerization (Docker, Kubernetes)'
-        ],
-        company: {
-            name: 'CloudTech Solutions',
-            logo: null
-        }
-    },
-    {
-        id: 5,
-        title: 'DevOps Engineer',
-        location: 'Sidon, Lebanon',
-        summary: 'Manage our infrastructure and deployment pipelines to ensure smooth operations and continuous delivery.',
-        description: 'As a DevOps Engineer, you will be responsible for maintaining and improving our CI/CD pipelines and infrastructure. You will work to automate processes and ensure system reliability.',
-        responsibilities: [
-            'Manage cloud infrastructure on AWS/Azure',
-            'Build and maintain CI/CD pipelines',
-            'Monitor system performance and reliability',
-            'Automate deployment and scaling processes',
-            'Implement infrastructure as code practices'
-        ],
-        requirements: [
-            '3+ years of DevOps experience',
-            'Experience with Docker and Kubernetes',
-            'Knowledge of AWS or Azure cloud platforms',
-            'Scripting skills (Bash, Python, or Go)',
-            'Understanding of networking and security'
-        ],
-        company: {
-            name: 'InfraTech Inc.',
-            logo: null
-        }
-    },
-    {
-        id: 6,
-        title: 'Product Manager',
-        location: 'Zahle, Lebanon',
-        summary: 'Lead product strategy and work with cross-functional teams to deliver exceptional products that users love.',
-        description: 'We need a Product Manager to define product vision, strategy, and roadmap. You will work closely with engineering, design, and business teams to bring products to market.',
-        responsibilities: [
-            'Define product roadmap and prioritize features',
-            'Gather and analyze user feedback and metrics',
-            'Work with engineering and design teams on execution',
-            'Conduct market research and competitive analysis',
-            'Present product updates to stakeholders'
-        ],
-        requirements: [
-            '5+ years of product management experience',
-            'Strong analytical and problem-solving skills',
-            'Excellent communication and leadership abilities',
-            'Technical background or understanding preferred',
-            'Experience with agile methodologies'
-        ],
-        company: {
-            name: 'ProductFirst LLC',
-            logo: null
-        }
-    }
-];
-
-const JOBS_PER_PAGE = 3;
-
 export default function JobsPage() {
-    const [displayCount, setDisplayCount] = useState(JOBS_PER_PAGE);
-    const [isLoading, setIsLoading] = useState(false);
+    const [jobs, setJobs] = useState([]);
+    const [isLoading, setIsLoading] = useState(true);
+    const [error, setError] = useState(null);
 
-    const displayedJobs = MOCK_JOBS.slice(0, displayCount);
-    const hasMore = displayCount < MOCK_JOBS.length;
+    useEffect(() => {
+        const fetchJobs = async () => {
+            try {
+                const response = await fetch('/api/jobs');
+                const data = await response.json();
 
-    const handleLoadMore = () => {
-        setIsLoading(true);
-        // Simulate API call delay
-        setTimeout(() => {
-            setDisplayCount(prev => Math.min(prev + JOBS_PER_PAGE, MOCK_JOBS.length));
-            setIsLoading(false);
-        }, 1000);
-    };
+                if (data.status === 'success') {
+                    setJobs(data.data);
+                } else {
+                    setError(data.message);
+                }
+            } catch (err) {
+                setError('Failed to fetch jobs');
+                console.error(err);
+            } finally {
+                setIsLoading(false);
+            }
+        };
+
+        fetchJobs();
+    }, []);
+
+    if (isLoading) {
+        return (
+            <div className="min-h-screen bg-gray-50 flex justify-center items-center">
+                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+            </div>
+        );
+    }
+
+    if (error) {
+        return (
+            <div className="min-h-screen bg-gray-50 flex justify-center items-center">
+                <div className="text-red-600 text-xl">{error}</div>
+            </div>
+        );
+    }
 
     return (
         <div className="min-h-screen bg-gray-50 py-8 px-4 sm:px-6 lg:px-8">
             <div className="max-w-7xl mx-auto">
                 <h1 className="text-4xl font-bold text-gray-900 mb-8">Job Listings</h1>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-                    {displayedJobs.map(job => (
-                        <JobCard key={job.id} job={job} />
-                    ))}
-                </div>
-
-                {isLoading && (
-                    <div className="flex justify-center items-center py-8">
-                        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
-                        <span className="ml-3 text-gray-600">Loading more jobs...</span>
-                    </div>
-                )}
-
-                {!isLoading && hasMore && (
-                    <div className="flex justify-center">
-                        <button
-                            onClick={handleLoadMore}
-                            className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-8 rounded-lg transition-colors duration-200"
-                        >
-                            Load More
-                        </button>
-                    </div>
-                )}
-
-                {!hasMore && (
+                {jobs.length === 0 ? (
                     <div className="text-center py-8">
-                        <p className="text-gray-600 text-lg">No more jobs available</p>
+                        <p className="text-gray-600 text-lg">No jobs available at the moment.</p>
+                    </div>
+                ) : (
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+                        {jobs.map(job => (
+                            <JobCard key={job.id} job={job} />
+                        ))}
                     </div>
                 )}
             </div>
