@@ -37,11 +37,16 @@ export default function JobCard({ job }) {
                         <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
                             {job.type}
                         </span>
-                        {job.paid && (
+                        {job.salary_min && job.salary_max && (
                             <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                                Paid
+                                ${job.salary_min.toLocaleString()} - ${job.salary_max.toLocaleString()}
                             </span>
                         )}
+                        {job.skills && job.skills.map(skill => (
+                            <span key={skill} className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
+                                {skill}
+                            </span>
+                        ))}
                     </div>
 
                     <p className="text-gray-500 text-sm line-clamp-2 mb-3">

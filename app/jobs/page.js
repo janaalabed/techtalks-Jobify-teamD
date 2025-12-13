@@ -1,12 +1,27 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
+import { useSearchParams } from 'next/navigation';
 import JobCard from '@/components/JobCard';
+import JobFilters from '@/components/JobFilters';
+
+// Mock data helpers
+const MOCK_SKILLS = ['React', 'Node.js', 'Python', 'Java', 'SQL', 'TypeScript', 'AWS', 'Docker'];
+const getRandomSkills = () => {
+    const shuffled = [...MOCK_SKILLS].sort(() => 0.5 - Math.random());
+    return shuffled.slice(0, Math.floor(Math.random() * 4) + 1);
+};
+const getRandomSalary = () => {
+    const min = Math.floor(Math.random() * 50) + 30; // 30k - 80k
+    const max = min + Math.floor(Math.random() * 50) + 10; // +10k - 60k
+    return { min: min * 1000, max: max * 1000 };
+};
 
 export default function JobsPage() {
     const [jobs, setJobs] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
+    const searchParams = useSearchParams();
 
     useEffect(() => {
         const fetchJobs = async () => {
@@ -15,7 +30,15 @@ export default function JobsPage() {
                 const data = await response.json();
 
                 if (data.status === 'success') {
-                    setJobs(data.data);
+                    // Enhance jobs with mock data for MVP demonstration
+                    const enhancedJobs = data.data.map(job => ({
+                        ...job,
+                        skills: job.skills || getRandomSkills(),
+                        salary_min: job.salary_min || getRandomSalary().min,
+                        salary_max: job.salary_max || getRandomSalary().max,
+                        type: job.type || (Math.random() > 0.5 ? 'Full-time' : 'Contract') // Ensure type exists
+                    }));
+                    setJobs(enhancedJobs);
                 } else {
                     setError(data.message);
                 }
@@ -29,6 +52,41 @@ export default function JobsPage() {
 
         fetchJobs();
     }, []);
+
+    const filteredJobs = useMemo(() => {
+        return jobs.filter(job => {
+            const typeParam = searchParams.get('type');
+            const skillsParam = searchParams.get('skills');
+            const minSalaryParam = searchParams.get('minSalary');
+            const maxSalaryParam = searchParams.get('maxSalary');
+            const locationParam = searchParams.get('location');
+
+            // Filter by Type
+            if (typeParam && job.type !== typeParam) return false;
+
+            // Filter by Skills (AND logic - must have all selected skills)
+            if (skillsParam) {
+                const selectedSkills = skillsParam.split(',');
+                const hasAllSkills = selectedSkills.every(skill =>
+                    job.skills.includes(skill)
+                );
+                if (!hasAllSkills) return false;
+            }
+
+            // Filter by Salary
+            if (minSalaryParam && job.salary_max < parseInt(minSalaryParam)) return false;
+            if (maxSalaryParam && job.salary_min > parseInt(maxSalaryParam)) return false;
+
+            // Filter by Location
+            if (locationParam) {
+                const jobLocation = (job.location || '').toLowerCase();
+                const searchLocation = locationParam.toLowerCase();
+                if (!jobLocation.includes(searchLocation)) return false;
+            }
+
+            return true;
+        });
+    }, [jobs, searchParams]);
 
     if (isLoading) {
         return (
@@ -51,13 +109,15 @@ export default function JobsPage() {
             <div className="max-w-7xl mx-auto">
                 <h1 className="text-4xl font-bold text-gray-900 mb-8">Job Listings</h1>
 
-                {jobs.length === 0 ? (
+                <JobFilters />
+
+                {filteredJobs.length === 0 ? (
                     <div className="text-center py-8">
-                        <p className="text-gray-600 text-lg">No jobs available at the moment.</p>
+                        <p className="text-gray-600 text-lg">No jobs found matching your criteria.</p>
                     </div>
                 ) : (
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-                        {jobs.map(job => (
+                        {filteredJobs.map(job => (
                             <JobCard key={job.id} job={job} />
                         ))}
                     </div>
