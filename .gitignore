@@ -41,5 +41,5 @@ local.env
 *.tsbuildinfo
 next-env.d.ts
 #assets
-DB.PNG
 job.md
+DB.PNG

@@ -25,18 +25,27 @@ export default function JobsPage() {
 
     useEffect(() => {
         const fetchJobs = async () => {
+            setIsLoading(true);
             try {
-                const response = await fetch('/api/jobs');
+                // Construct query string from searchParams
+                const params = new URLSearchParams();
+                searchParams.forEach((value, key) => {
+                    params.append(key, value);
+                });
+
+                const response = await fetch(`/api/jobs?${params.toString()}`);
                 const data = await response.json();
 
                 if (data.status === 'success') {
-                    // Enhance jobs with mock data for MVP demonstration
+                    // Enhance jobs with mock data for MVP demonstration if fields are missing
+                    // Note: In a real scenario, we wouldn't overwrite backend data if we trusted the filter.
+                    // But to keep the UI looking populated for the MVP if the DB is sparse:
                     const enhancedJobs = data.data.map(job => ({
                         ...job,
                         skills: job.skills || getRandomSkills(),
                         salary_min: job.salary_min || getRandomSalary().min,
                         salary_max: job.salary_max || getRandomSalary().max,
-                        type: job.type || (Math.random() > 0.5 ? 'Full-time' : 'Contract') // Ensure type exists
+                        type: job.type || (Math.random() > 0.5 ? 'Full-time' : 'Contract')
                     }));
                     setJobs(enhancedJobs);
                 } else {
@@ -51,42 +60,7 @@ export default function JobsPage() {
         };
 
         fetchJobs();
-    }, []);
-
-    const filteredJobs = useMemo(() => {
-        return jobs.filter(job => {
-            const typeParam = searchParams.get('type');
-            const skillsParam = searchParams.get('skills');
-            const minSalaryParam = searchParams.get('minSalary');
-            const maxSalaryParam = searchParams.get('maxSalary');
-            const locationParam = searchParams.get('location');
-
-            // Filter by Type
-            if (typeParam && job.type !== typeParam) return false;
-
-            // Filter by Skills (AND logic - must have all selected skills)
-            if (skillsParam) {
-                const selectedSkills = skillsParam.split(',');
-                const hasAllSkills = selectedSkills.every(skill =>
-                    job.skills.includes(skill)
-                );
-                if (!hasAllSkills) return false;
-            }
-
-            // Filter by Salary
-            if (minSalaryParam && job.salary_max < parseInt(minSalaryParam)) return false;
-            if (maxSalaryParam && job.salary_min > parseInt(maxSalaryParam)) return false;
-
-            // Filter by Location
-            if (locationParam) {
-                const jobLocation = (job.location || '').toLowerCase();
-                const searchLocation = locationParam.toLowerCase();
-                if (!jobLocation.includes(searchLocation)) return false;
-            }
-
-            return true;
-        });
-    }, [jobs, searchParams]);
+    }, [searchParams]);
 
     if (isLoading) {
         return (
@@ -111,13 +85,13 @@ export default function JobsPage() {
 
                 <JobFilters />
 
-                {filteredJobs.length === 0 ? (
+                {jobs.length === 0 ? (
                     <div className="text-center py-8">
                         <p className="text-gray-600 text-lg">No jobs found matching your criteria.</p>
                     </div>
                 ) : (
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-                        {filteredJobs.map(job => (
+                        {jobs.map(job => (
                             <JobCard key={job.id} job={job} />
                         ))}
                     </div>
