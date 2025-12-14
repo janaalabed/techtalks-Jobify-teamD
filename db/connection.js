@@ -6,13 +6,11 @@ const pgPool = new PgPool({
   ssl: { rejectUnauthorized: false }
 });
 
-export const pg = {
+ export const pg = {
   query: (text, params) => pgPool.query(text, params),
   pool: pgPool
 };
 
-
-// MySQL
 
 import mysql from "mysql2/promise";
 
