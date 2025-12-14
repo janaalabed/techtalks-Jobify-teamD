@@ -11,7 +11,8 @@ export async function GET(request) {
             minSalary: searchParams.get('minSalary'),
             maxSalary: searchParams.get('maxSalary'),
             location: searchParams.get('location'),
-            search: searchParams.get('search')
+            search: searchParams.get('search'),
+            sort: searchParams.get('sort')
         };
 
         // Remove undefined/null/empty values

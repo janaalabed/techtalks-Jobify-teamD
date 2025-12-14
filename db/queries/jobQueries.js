@@ -79,8 +79,42 @@ export async function getAllJobs(filters = {}) {
         paramIndex++;
     }
 
-    query += ` ORDER BY j.created_at DESC`;
+    // Sorting
+    if (filters.sort === 'salary_desc') {
+        query += ` ORDER BY j.salary_max DESC NULLS LAST`;
+    } else if (filters.sort === 'salary_asc') {
+        query += ` ORDER BY j.salary_min ASC NULLS LAST`;
+    } else if (filters.sort === 'relevance' && filters.search) {
+        // Simple relevance sort by checking where the match occurred
+        // This is a basic heuristic for MVP
+        // Ideally we'd use tsvector/tsquery for full text search ranking
+        query += ` ORDER BY 
+            CASE 
+                WHEN j.title ILIKE $${paramIndex - 1} THEN 1 
+                WHEN e.company_name ILIKE $${paramIndex - 1} THEN 2
+                ELSE 3 
+            END, j.created_at DESC`;
+    } else {
+        // Default to newest first
+        query += ` ORDER BY j.created_at DESC`;
+    }
 
     const result = await pool.query(query, params);
     return result.rows;
+}
+
+export async function getJobById(id) {
+    const query = `
+        SELECT 
+            j.*, 
+            e.company_name, 
+            e.logo_url, 
+            e.location as company_location
+        FROM jobs j
+        JOIN employers e ON j.employer_id = e.id
+        WHERE j.id = $1
+    `;
+
+    const result = await pool.query(query, [id]);
+    return result.rows[0];
 }

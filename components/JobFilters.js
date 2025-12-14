@@ -159,6 +159,21 @@ export default function JobFilters() {
                     </div>
                 </div>
 
+                {/* Sort By */}
+                <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Sort By</label>
+                    <select
+                        value={searchParams.get('sort') || ''}
+                        onChange={(e) => updateFilters({ sort: e.target.value })}
+                        className="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 border p-2"
+                    >
+                        <option value="">Newest First</option>
+                        <option value="relevance">Relevance</option>
+                        <option value="salary_desc">Salary: High to Low</option>
+                        <option value="salary_asc">Salary: Low to High</option>
+                    </select>
+                </div>
+
                 {/* Skills */}
                 <div className="lg:col-span-4">
                     <label className="block text-sm font-medium text-gray-700 mb-2">Skills</label>
