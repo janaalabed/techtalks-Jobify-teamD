@@ -10,7 +10,8 @@ export async function GET(request) {
             skills: searchParams.get('skills') ? searchParams.get('skills').split(',') : [],
             minSalary: searchParams.get('minSalary'),
             maxSalary: searchParams.get('maxSalary'),
-            location: searchParams.get('location')
+            location: searchParams.get('location'),
+            search: searchParams.get('search')
         };
 
         // Remove undefined/null/empty values

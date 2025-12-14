@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import Image from 'next/image';
 
 export default function JobCard({ job }) {
     return (
@@ -14,11 +15,12 @@ export default function JobCard({ job }) {
                         </p>
                     </div>
                     {job.logo_url && (
-                        <div className="ml-4 flex-shrink-0">
-                            <img
+                        <div className="ml-4 flex-shrink-0 relative h-12 w-12">
+                            <Image
                                 src={job.logo_url}
                                 alt={`${job.company_name} logo`}
-                                className="h-12 w-12 object-contain rounded-md border border-gray-100"
+                                fill
+                                className="object-contain rounded-md border border-gray-100"
                             />
                         </div>
                     )}

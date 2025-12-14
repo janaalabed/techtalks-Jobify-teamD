@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 
 const JOB_TYPES = ['Full-time', 'Part-time', 'Contract', 'Remote', 'Internship'];
@@ -10,74 +10,76 @@ export default function JobFilters() {
     const router = useRouter();
     const searchParams = useSearchParams();
 
-    const [filters, setFilters] = useState({
-        type: '',
-        skills: [],
-        minSalary: '',
-        maxSalary: '',
-        location: ''
-    });
+    const [searchTerm, setSearchTerm] = useState(searchParams.get('search') || '');
 
-    useEffect(() => {
-        // Initialize filters from URL params
-        const type = searchParams.get('type') || '';
-        const skillsParam = searchParams.get('skills');
-        const skills = skillsParam ? skillsParam.split(',') : [];
-        const minSalary = searchParams.get('minSalary') || '';
-        const maxSalary = searchParams.get('maxSalary') || '';
-        const location = searchParams.get('location') || '';
+    const updateFilters = useCallback((updates) => {
+        const params = new URLSearchParams(searchParams.toString());
 
-        setFilters({ type, skills, minSalary, maxSalary, location });
-    }, [searchParams]);
-
-    const updateFilters = (newFilters) => {
-        setFilters(newFilters);
-        const params = new URLSearchParams();
-
-        if (newFilters.type) params.set('type', newFilters.type);
-        if (newFilters.skills.length > 0) params.set('skills', newFilters.skills.join(','));
-        if (newFilters.minSalary) params.set('minSalary', newFilters.minSalary);
-        if (newFilters.maxSalary) params.set('maxSalary', newFilters.maxSalary);
-        if (newFilters.location) params.set('location', newFilters.location);
+        Object.entries(updates).forEach(([key, value]) => {
+            if (value === '' || value === null || (Array.isArray(value) && value.length === 0)) {
+                params.delete(key);
+            } else if (Array.isArray(value)) {
+                params.set(key, value.join(','));
+            } else {
+                params.set(key, value);
+            }
+        });
 
         router.push(`?${params.toString()}`);
+    }, [searchParams, router]);
+
+    // Debounce search update
+    useEffect(() => {
+        const currentSearch = searchParams.get('search') || '';
+        const timer = setTimeout(() => {
+            if (searchTerm !== currentSearch) {
+                updateFilters({ search: searchTerm });
+            }
+        }, 500);
+
+        return () => clearTimeout(timer);
+    }, [searchTerm, searchParams, updateFilters]);
+
+    const handleSearchChange = (e) => {
+        setSearchTerm(e.target.value);
     };
 
     const handleTypeChange = (e) => {
-        updateFilters({ ...filters, type: e.target.value });
+        updateFilters({ type: e.target.value });
     };
 
     const handleSkillToggle = (skill) => {
-        const newSkills = filters.skills.includes(skill)
-            ? filters.skills.filter(s => s !== skill)
-            : [...filters.skills, skill];
-        updateFilters({ ...filters, skills: newSkills });
+        const currentSkills = searchParams.get('skills') ? searchParams.get('skills').split(',') : [];
+        const newSkills = currentSkills.includes(skill)
+            ? currentSkills.filter(s => s !== skill)
+            : [...currentSkills, skill];
+        updateFilters({ skills: newSkills });
     };
 
     const handleSalaryChange = (e) => {
         const { name, value } = e.target;
-        updateFilters({ ...filters, [name]: value });
+        updateFilters({ [name]: value });
     };
 
     const handleLocationChange = (e) => {
-        updateFilters({ ...filters, location: e.target.value });
+        updateFilters({ location: e.target.value });
     };
 
     const clearFilters = () => {
-        const emptyFilters = {
-            type: '',
-            skills: [],
-            minSalary: '',
-            maxSalary: '',
-            location: ''
-        };
-        setFilters(emptyFilters);
+        setSearchTerm('');
         router.push('?');
     };
 
+    // Derived state for UI
+    const currentType = searchParams.get('type') || '';
+    const currentSkills = searchParams.get('skills') ? searchParams.get('skills').split(',') : [];
+    const currentMinSalary = searchParams.get('minSalary') || '';
+    const currentMaxSalary = searchParams.get('maxSalary') || '';
+    const currentLocation = searchParams.get('location') || '';
+
     return (
         <div className="bg-white p-6 rounded-lg shadow-md mb-8">
-            <div className="flex justify-between items-center mb-4">
+            <div className="flex justify-between items-center mb-6">
                 <h2 className="text-lg font-semibold text-gray-900">Filter Jobs</h2>
                 <button
                     onClick={clearFilters}
@@ -87,12 +89,31 @@ export default function JobFilters() {
                 </button>
             </div>
 
+            {/* Search Bar */}
+            <div className="mb-6">
+                <label className="block text-sm font-medium text-gray-700 mb-2">Search Keywords</label>
+                <div className="relative">
+                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <svg className="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                        </svg>
+                    </div>
+                    <input
+                        type="text"
+                        value={searchTerm}
+                        onChange={handleSearchChange}
+                        placeholder="Search by title, company, or keywords..."
+                        className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md leading-5 bg-white placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-1 focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                    />
+                </div>
+            </div>
+
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                 {/* Job Type */}
                 <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">Job Type</label>
                     <select
-                        value={filters.type}
+                        value={currentType}
                         onChange={handleTypeChange}
                         className="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 border p-2"
                     >
@@ -108,7 +129,7 @@ export default function JobFilters() {
                     <label className="block text-sm font-medium text-gray-700 mb-2">Location</label>
                     <input
                         type="text"
-                        value={filters.location}
+                        value={currentLocation}
                         onChange={handleLocationChange}
                         placeholder="City, Country, or Remote"
                         className="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 border p-2"
@@ -122,7 +143,7 @@ export default function JobFilters() {
                         <input
                             type="number"
                             name="minSalary"
-                            value={filters.minSalary}
+                            value={currentMinSalary}
                             onChange={handleSalaryChange}
                             placeholder="Min"
                             className="w-1/2 rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 border p-2"
@@ -130,7 +151,7 @@ export default function JobFilters() {
                         <input
                             type="number"
                             name="maxSalary"
-                            value={filters.maxSalary}
+                            value={currentMaxSalary}
                             onChange={handleSalaryChange}
                             placeholder="Max"
                             className="w-1/2 rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 border p-2"
@@ -146,9 +167,9 @@ export default function JobFilters() {
                             <button
                                 key={skill}
                                 onClick={() => handleSkillToggle(skill)}
-                                className={`px-3 py-1 rounded-full text-sm font-medium transition-colors ${filters.skills.includes(skill)
-                                        ? 'bg-blue-600 text-white'
-                                        : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                                className={`px-3 py-1 rounded-full text-sm font-medium transition-colors ${currentSkills.includes(skill)
+                                    ? 'bg-blue-600 text-white'
+                                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                                     }`}
                             >
                                 {skill}

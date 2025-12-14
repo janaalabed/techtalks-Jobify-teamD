@@ -7,7 +7,9 @@ const pool = new Pool({
   ssl: { rejectUnauthorized: false } // required for Supabase
 });
 
-export default {
+const db = {
   query: (text, params) => pool.query(text, params),
   pool
 };
+
+export default db;

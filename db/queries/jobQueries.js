@@ -68,6 +68,17 @@ export async function getAllJobs(filters = {}) {
         });
     }
 
+    if (filters.search) {
+        query += ` AND (
+            j.title ILIKE $${paramIndex} OR 
+            j.description ILIKE $${paramIndex} OR 
+            e.company_name ILIKE $${paramIndex} OR
+            array_to_string(j.skills, ' ') ILIKE $${paramIndex}
+        )`;
+        params.push(`%${filters.search}%`);
+        paramIndex++;
+    }
+
     query += ` ORDER BY j.created_at DESC`;
 
     const result = await pool.query(query, params);

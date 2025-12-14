@@ -180,7 +180,7 @@ export default function Login() {
 
                 {/* Create Account Link */}
                 <p style={{ textAlign: "center", marginTop: 16, fontSize: 14 }}>
-                    Don't have an account?{" "}
+                    Don&apos;t have an account?{" "}
                     <span
                         onClick={() => router.push("/register")}
                         style={{ color: "#1E3A8A", cursor: "pointer", fontWeight: 600 }}

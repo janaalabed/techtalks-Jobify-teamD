@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import Image from 'next/image';
 
 // Mock job data matching DB schema (Jobs + Companies)
 const MOCK_JOBS = [
@@ -24,7 +25,7 @@ const MOCK_JOBS = [
         ],
         company: {
             name: 'TechCorp Inc.',
-            logo: null
+            logo: '/logo.png'
         }
     },
     {
@@ -49,7 +50,7 @@ const MOCK_JOBS = [
         ],
         company: {
             name: 'StartupHub',
-            logo: null
+            logo: '/logo.png'
         }
     },
     {
@@ -74,7 +75,7 @@ const MOCK_JOBS = [
         ],
         company: {
             name: 'DesignStudio Co.',
-            logo: null
+            logo: '/logo.png'
         }
     },
     {
@@ -99,7 +100,7 @@ const MOCK_JOBS = [
         ],
         company: {
             name: 'CloudTech Solutions',
-            logo: null
+            logo: '/logo.png'
         }
     },
     {
@@ -124,7 +125,7 @@ const MOCK_JOBS = [
         ],
         company: {
             name: 'InfraTech Inc.',
-            logo: null
+            logo: '/logo.png'
         }
     },
     {
@@ -149,7 +150,7 @@ const MOCK_JOBS = [
         ],
         company: {
             name: 'ProductFirst LLC',
-            logo: null
+            logo: '/logo.png'
         }
     }
 ];
@@ -171,7 +172,7 @@ export default async function JobDetailsPage({ params }) {
                         </div>
                         <h1 className="text-2xl font-bold text-gray-900 mb-2">Job Not Found</h1>
                         <p className="text-gray-600 mb-6">
-                            Sorry, we couldn't find the job you're looking for. It may have been removed or the ID is invalid.
+                            Sorry, we couldn&apos;t find the job you&apos;re looking for. It may have been removed or the ID is invalid.
                         </p>
                         <Link
                             href="/jobs"
@@ -199,16 +200,28 @@ export default async function JobDetailsPage({ params }) {
                 </Link>
 
                 <div className="bg-white rounded-lg shadow-md p-8">
-                    <div className="mb-6">
-                        <h1 className="text-3xl font-bold text-gray-900 mb-2">{job.title}</h1>
-                        <p className="text-xl text-blue-600 font-medium mb-2">{job.company.name}</p>
-                        <div className="flex items-center text-gray-600">
-                            <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                            </svg>
-                            {job.location}
+                    <div className="mb-6 flex items-start justify-between">
+                        <div>
+                            <h1 className="text-3xl font-bold text-gray-900 mb-2">{job.title}</h1>
+                            <p className="text-xl text-blue-600 font-medium mb-2">{job.company.name}</p>
+                            <div className="flex items-center text-gray-600">
+                                <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                                </svg>
+                                {job.location}
+                            </div>
                         </div>
+                        {job.company.logo && (
+                            <div className="ml-4 flex-shrink-0 relative h-20 w-20">
+                                <Image
+                                    src={job.company.logo}
+                                    alt={`${job.company.name} logo`}
+                                    fill
+                                    className="object-contain rounded-lg border border-gray-100"
+                                />
+                            </div>
+                        )}
                     </div>
 
                     <div className="mb-8">
