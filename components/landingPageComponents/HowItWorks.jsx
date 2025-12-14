@@ -1,77 +1,125 @@
-"use client";
 
-import { FaUserGraduate, FaBuilding } from "react-icons/fa";
+"use client";
+import { FaUserGraduate, FaBuilding, FaCheckCircle } from "react-icons/fa";
 
 export default function HowItWorks() {
   return (
-    <section id="how-it-works" className="bg-gray-50 py-24">
+    <section className="bg-gradient-to-b from-white to-gray-50 py-28">
       <div className="max-w-7xl mx-auto px-6 md:px-12">
-        <h2 className="text-4xl md:text-5xl font-bold text-center text-gray-900 mb-16">
-          How It Works
-        </h2>
 
-        <div className="grid md:grid-cols-2 gap-12">
-          {/* Applicant Column */}
-          <div className="bg-white rounded-xl shadow-lg p-10 flex flex-col space-y-6 hover:shadow-2xl transition-shadow duration-300">
-            <div className="flex items-center gap-4">
-              <FaUserGraduate className="text-blue-500 w-10 h-10" />
-              <h3 className="text-2xl md:text-3xl font-semibold">For Applicants</h3>
-            </div>
-            <ul className="list-disc list-inside space-y-3 text-gray-700 text-lg">
-              <li>Create a professional profile</li>
-              <li>Upload your CV</li>
-              <li>Discover opportunities</li>
-              <li>Track all your applications in one dashboard</li>
-            </ul>
+        {/* Header */}
+         <div className="text-center max-w-3xl mx-auto mb-20">
+          
+           <h2 className="text-4xl font-bold mb-14 text-[#2529a1]">
+             How Jobify Works
+           </h2>
+           <p className="text-gray-600 text-lg mt-5">
+             Whether you’re applying for a job or hiring talent, Jobify makes
+             everything smooth and fast.
+           </p>
+         </div>
 
-            {/* Applicant CTA Highlight */}
-            <div className="mt-6 bg-blue-50 border-l-4 border-blue-500 p-6 rounded-lg flex flex-col md:flex-row md:items-center md:justify-between gap-4 transition-all duration-300 hover:bg-blue-100">
-              <div className="text-gray-800">
-                <h4 className="font-semibold text-xl md:text-2xl mb-1">
-                  Ready to start applying?
-                </h4>
-                <p className="text-gray-700">Browse jobs and find your next opportunity fast.</p>
-              </div>
-              <a
-                href="../register/"
-                className="bg-gradient-to-r from-blue-500 to-blue-600 text-white px-6 py-3 rounded-lg font-medium hover:from-blue-600 hover:to-blue-700 transition"
-              >
-                Browse Jobs
-              </a>
-            </div>
-          </div>
+        <div className="grid md:grid-cols-2 gap-14">
 
-          {/* Employer Column */}
-          <div className="bg-white rounded-xl shadow-lg p-10 flex flex-col space-y-6 hover:shadow-2xl transition-shadow duration-300">
-            <div className="flex items-center gap-4">
-              <FaBuilding className="text-green-500 w-10 h-10" />
-              <h3 className="text-2xl md:text-3xl font-semibold">For Employers</h3>
-            </div>
-            <ul className="list-disc list-inside space-y-3 text-gray-700 text-lg">
-              <li>Create a company profile</li>
-              <li>Post jobs & internships</li>
-              <li>Review applicants</li>
-              <li>Accept or reject with one click</li>
-            </ul>
+          {/* Applicants */}
+         <div className="relative bg-white rounded-2xl shadow-lg p-10 hover:shadow-2xl transition">
+  <div className="flex items-center gap-4 mb-8">
+    <div className="bg-[#2529a1]/15 p-3 rounded-xl">
+      <FaUserGraduate className="text-[#2529a1] w-7 h-7" />
+    </div>
+    <h3 className="text-2xl md:text-3xl font-semibold">
+      For Applicants
+    </h3>
+  </div>
 
-            {/* Employer CTA Highlight */}
-            <div className="mt-6 bg-green-50 border-l-4 border-green-500 p-6 rounded-lg flex flex-col md:flex-row md:items-center md:justify-between gap-4 transition-all duration-300 hover:bg-green-100">
-              <div className="text-gray-800">
-                <h4 className="font-semibold text-xl md:text-2xl mb-1">
-                  Hiring made easy
-                </h4>
-                <p className="text-gray-700">Post your openings and find qualified applicants fast.</p>
-              </div>
-              <a
-                href="../register/"
-                className="bg-gradient-to-r from-green-500 to-green-600 text-white px-6 py-3 rounded-lg font-medium hover:from-green-600 hover:to-green-700 transition"
-              >
-                Start Hiring
-              </a>
-            </div>
-          </div>
-        </div>
-      </div>
+  <ul className="space-y-5">
+    {[
+      "Create your professional profile",
+      "Upload your CV once",
+      "Apply to opportunities with one click",
+      "Track application status in real-time",
+    ].map((step, i) => (
+      <li key={i} className="flex gap-4 items-start">
+        <span className="flex-shrink-0 w-8 h-8 rounded-full bg-[#2529a1] text-white flex items-center justify-center font-semibold">
+          {i + 1}
+        </span>
+        <span className="text-gray-700 text-lg">{step}</span>
+      </li>
+    ))}
+  </ul>
+
+  {/* CTA */}
+  <div className="mt-10 bg-[#2529a1]/10 border border-[#2529a1]/25 rounded-xl p-6 flex flex-col md:flex-row md:items-center md:justify-between gap-6">
+    <div>
+      <h4 className="font-semibold text-xl text-gray-900">
+        Start applying today
+      </h4>
+      <p className="text-gray-600">
+        Discover jobs and internships tailored for you.
+      </p>
+    </div>
+    <a
+      href="../register/"
+      className="bg-[#2529a1] text-white px-6 py-3 rounded-lg font-semibold hover:bg-[#1f238f] transition"
+    >
+      Browse Jobs
+    </a>
+  </div>
+</div>
+
+          {/* Employers */}
+         <div className="relative bg-white rounded-2xl shadow-lg p-10 hover:shadow-2xl transition">
+  <div className="flex items-center gap-4 mb-8">
+    <div className="bg-[#f5af71]/20 p-3 rounded-xl">
+      <FaBuilding className="text-[#f5af71] w-7 h-7" />
+    </div>
+    <h3 className="text-2xl md:text-3xl font-semibold">
+      For Employers
+    </h3>
+  </div>
+
+  <ul className="space-y-5">
+    {[
+      "Create a company profile",
+      "Post job & internship offers",
+      "Review applicants easily",
+      "Accept or reject in one click",
+    ].map((step, i) => (
+      <li key={i} className="flex gap-4 items-start">
+        <span className="flex-shrink-0 w-8 h-8 rounded-full bg-[#f5af71] text-white flex items-center justify-center font-semibold">
+          {i + 1}
+        </span>
+        <span className="text-gray-700 text-lg">{step}</span>
+      </li>
+    ))}
+  </ul>
+
+  {/* CTA */}
+  <div className="mt-10 bg-[#f5af71]/15 border border-[#f5af71]/40 rounded-xl p-6 flex flex-col md:flex-row md:items-center md:justify-between gap-6">
+    <div>
+      <h4 className="font-semibold text-xl text-gray-900">
+        Hire faster with Jobify
+      </h4>
+      <p className="text-gray-600">
+        Reach qualified candidates in minutes.
+      </p>
+    </div>
+    <a
+      href="../register/"
+      className="bg-[#f5af71] text-white px-6 py-3 rounded-lg font-semibold hover:bg-[#e89c5b] transition"
+    >
+      Start Hiring
+    </a>
+  </div>
+</div>
+
+         </div>
+
+         <div className="mt-20 text-center text-gray-600 flex items-center justify-center gap-3">
+           <FaCheckCircle className="text-[#2529a1]" />
+          <span>No complexity. No hidden steps. Just results.</span>
+         </div>
+       </div>
     </section>
   );
 }

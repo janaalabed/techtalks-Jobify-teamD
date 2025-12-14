@@ -1,52 +1,40 @@
-"use client";
 
-import { FaFacebookF, FaTwitter, FaLinkedinIn, FaInstagram } from "react-icons/fa";
+"use client";
 import Link from "next/link";
 
 export default function Footer() {
   return (
-    <footer className="bg-gray-900 text-gray-200 py-16">
-      <div className="max-w-7xl mx-auto px-6 md:px-12 grid md:grid-cols-4 gap-12">
+    <footer className="bg-gray-900 text-gray-400 py-20">
+      <div className="max-w-7xl mx-auto px-6 grid md:grid-cols-4 gap-12">
         
-
-        <div className="space-y-4">
-          <h4 className="text-xl font-semibold text-white">About</h4>
-          <p className="text-gray-400 text-sm">
-            Jobify is a modern platform connecting students, job seekers, and companies efficiently.
+        <div>
+          <h4 className="text-white font-semibold mb-4">Jobify</h4>
+          <p className="text-sm">
+            Connecting talent and opportunity in one modern platform.
           </p>
         </div>
 
-     
-        <div className="space-y-4">
-          <h4 className="text-xl font-semibold text-white">Contact</h4>
-          <p className="text-gray-400 text-sm">support@jobify.com</p>
-          <p className="text-gray-400 text-sm">+961 123 456</p>
+        <div>
+          <h4 className="text-white font-semibold mb-4">Product</h4>
+          <Link href="#features" className="block hover:text-white">Features</Link>
+          <Link href="#how-it-works" className="block hover:text-white">How it works</Link>
         </div>
 
-       
-        <div className="space-y-4">
-          <h4 className="text-xl font-semibold text-white">Support</h4>
-          <Link href="/faq" className="text-gray-400 text-sm hover:text-white block">FAQ</Link>
-          <Link href="/terms" className="text-gray-400 text-sm hover:text-white block">Terms & Privacy</Link>
+        <div>
+          <h4 className="text-white font-semibold mb-4">Support</h4>
+          <Link href="/faq" className="block hover:text-white">FAQ</Link>
+          <Link href="/terms" className="block hover:text-white">Terms & Privacy</Link>
         </div>
 
-       
-        <div className="space-y-6">
-          <h4 className="text-xl font-semibold text-white">Follow Us</h4>
-          <div className="flex gap-4 text-gray-400">
-            <a href="#" className="hover:text-white"><FaFacebookF /></a>
-            <a href="#" className="hover:text-white"><FaTwitter /></a>
-            <a href="#" className="hover:text-white"><FaLinkedinIn /></a>
-            <a href="#" className="hover:text-white"><FaInstagram /></a>
-          </div>
-
-        
+        <div>
+          <h4 className="text-white font-semibold mb-4">Contact</h4>
+          <p>support@jobify.com</p>
+          <p>+961 123 456</p>
         </div>
-
       </div>
 
-      <div className="mt-12 border-t border-gray-700 pt-6 text-center text-gray-500 text-sm">
-        &copy; {new Date().getFullYear()} Jobify. All rights reserved.
+      <div className="mt-16 text-center text-sm border-t border-gray-700 pt-6">
+        © {new Date().getFullYear()} Jobify. All rights reserved.
       </div>
     </footer>
   );

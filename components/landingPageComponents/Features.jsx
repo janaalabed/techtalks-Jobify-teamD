@@ -1,81 +1,43 @@
 "use client";
-
 import { FaUserCheck, FaPaperPlane, FaClipboardList, FaBuilding } from "react-icons/fa";
 
 export default function Features() {
   const features = [
-    {
-      icon: FaUserCheck,
-      iconColor: "blue-500",
-      bgHover: "blue-300",
-      title: "Easy profile setup",
-      description: "Create your professional profile quickly and efficiently.",
-    },
-    {
-      icon: FaPaperPlane,
-      iconColor: "green-500",
-      bgHover: "green-300",
-      title: "One-click applications",
-      description: "Apply to jobs and internships instantly with one click.",
-    },
-    {
-      icon: FaClipboardList,
-      iconColor: "purple-500",
-      bgHover: "purple-300",
-      title: "Application tracking dashboard",
-      description: "Track all your applications in a single dashboard.",
-    },
-    {
-      icon: FaBuilding,
-      iconColor: "yellow-500",
-      bgHover: "yellow-300",
-      title: "Verified company profiles",
-      description: "Connect with trusted companies and verified job postings.",
-    },
+    { icon: FaUserCheck, title: "Easy profile setup", desc: "Create your profile in minutes." },
+    { icon: FaPaperPlane, title: "One-click apply", desc: "Apply instantly to opportunities." },
+    { icon: FaClipboardList, title: "Track applications", desc: "Everything in one dashboard." },
+    { icon: FaBuilding, title: "Verified companies", desc: "Trusted job postings only." },
   ];
 
   return (
-    <section id="features" className="bg-gray-50 py-20">
-      <div className="max-w-7xl mx-auto px-6 md:px-12 text-center">
-        <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-12">
-          Key Features
+    <section id="features" className="bg-gray-50 py-24">
+      <div className="max-w-7xl mx-auto px-6 text-center">
+        <h2 className="text-4xl font-bold mb-14 text-[#2529a1]">
+          Why Jobify?
         </h2>
 
-        <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-4">
-          {features.map((feature, index) => {
-            const Icon = feature.icon;
-
+        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+          {features.map((f, i) => {
+            const Icon = f.icon;
             return (
               <div
-                key={index}
-                className={`
-                  group bg-white rounded-lg shadow-md p-6 flex flex-col items-center space-y-4 
-                  transition-all duration-300 transform hover:scale-105
-                  hover:bg-${feature.bgHover}
-                `}
+                key={i}
+                className="
+                  bg-white 
+                  hover:bg-blue-100 
+                  p-8 
+                  rounded-2xl 
+                  shadow 
+                  hover:shadow-xl 
+                  transition-all 
+                  duration-300 
+                  transform 
+                  hover:-translate-y-1
+                "
               >
-                <Icon
-                  className={`
-                    w-8 h-8 text-${feature.iconColor}
-                    transition-colors duration-300 group-hover:text-white
-                  `}
-                />
-                <h3
-                  className={`
-                    text-xl font-semibold text-gray-900 
-                    transition-colors duration-300 group-hover:text-white
-                  `}
-                >
-                  {feature.title}
-                </h3>
-                <p
-                  className={`
-                    text-gray-700 text-center 
-                    transition-colors duration-300 group-hover:text-white
-                  `}
-                >
-                  {feature.description}
-                </p>
+                <Icon className="w-10 h-10 text-[#2529a1] mx-auto mb-4" />
+                <h3 className="text-xl font-semibold mb-2">{f.title}</h3>
+                <p className="text-gray-600">{f.desc}</p>
               </div>
             );
           })}

@@ -1,23 +1,23 @@
+
 export default function PlatformOverview() {
   return (
-    <section className="bg-white py-16">
-      <div className="max-w-4xl mx-auto text-center space-y-6 px-6">
-        {/* Section Title */}
-        <h2 className="text-3xl md:text-4xl font-bold text-gray-900">
-          What Is Jobify?
-        </h2>
+    <section className="py-20 bg-white">
+      <div className="max-w-6xl mx-auto px-6 text-center space-y-8">
+        <h2 className="text-4xl font-bold text-[#2529a1]">What is Jobify?</h2>
 
-        {/* Description */}
-        <p className="text-gray-700 text-lg md:text-xl">
-          Jobify is a platform where job seekers can create profiles, upload CVs, and apply to opportunities—
-          while companies can post jobs and manage applicants easily.
+        <p className="text-gray-600 text-lg max-w-3xl mx-auto">
+          A complete hiring ecosystem where students apply smarter and companies hire faster.
         </p>
 
-        {/* Optional Sub-text / Features */}
-        <div className="flex flex-col md:flex-row justify-center gap-6 mt-6 text-gray-700 font-medium">
-          <span className="bg-gray-100 px-4 py-2 rounded-lg">Simple</span>
-          <span className="bg-gray-100 px-4 py-2 rounded-lg">Fast</span>
-          <span className="bg-gray-100 px-4 py-2 rounded-lg">Designed for students & companies</span>
+        <div className="grid md:grid-cols-3 gap-8 mt-10">
+          {["Simple", "Fast", "Built for students & companies"].map((item) => (
+            <div
+              key={item}
+              className="p-8 bg-blue-100 rounded-xl shadow hover:shadow-md transition"
+            >
+              <h3 className="text-xl font-semibold text-gray-900">{item}</h3>
+            </div>
+          ))}
         </div>
       </div>
     </section>

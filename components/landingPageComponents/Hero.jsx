@@ -5,48 +5,49 @@ import heroIllustration from "@/public/uploads/hero-illustration.png";
 
 export default function Hero() {
   return (
-    <section className="bg-gray-50">
-      <div className="max-w-7xl mx-auto px-6 md:px-12 py-20 flex flex-col-reverse md:flex-row items-center gap-10">
-        
-        {/* Left Side: Headline + Description + CTA */}
-        <div className="flex-1 text-center md:text-left space-y-6">
-          <h1 className="text-4xl md:text-5xl font-bold text-gray-900 leading-tight">
-            Your bridge to internships and job opportunities.
+    <section className="relative overflow-hidden bg-gradient-to-b from-[#849cfb] to-white">
+      <div className="max-w-7xl mx-auto px-6 md:px-12 py-28 flex flex-col-reverse md:flex-row items-center gap-14">
+
+        {/* Text */}
+        <div className="flex-1 space-y-6 text-center md:text-left">
+          <span className="inline-block bg-blue-100 text-[#2529a1] px-4 py-1 rounded-full text-sm font-medium">
+            For students & employers
+           </span>
+
+          <h1 className="text-4xl md:text-6xl font-extrabold text-gray-900 leading-tight">
+            The easiest way to land{" "}
+            <span className="text-[#2529a1]">jobs & internships</span>
           </h1>
-          <p className="text-gray-700 text-lg md:text-xl max-w-xl mx-auto md:mx-0">
-            Jobify connects students, job seekers, and companies in a simple, modern hiring platform.
+
+          <p className="text-gray-600 text-lg max-w-xl mx-auto md:mx-0">
+            Jobify connects talent and companies through a fast, modern, and transparent hiring platform.
           </p>
-          <div className="flex flex-col sm:flex-row justify-center md:justify-start gap-4 mt-4">
+
+          <div className="flex flex-col sm:flex-row gap-4 justify-center md:justify-start">
             <a
-              href="../register/"
-              className="bg-blue-500 text-white px-6 py-3 rounded-lg font-medium hover:bg-blue-600 transition w-full sm:w-auto text-center"
-            >
-              Start now
+               href="../register/"
+               className="bg-[#2529a1] text-white px-8 py-4 rounded-xl font-semibold shadow hover:shadow-lg transition"
+             >
+              Get Started
             </a>
             <a
-              href="#how-it-works"
-              className="bg-gray-200 text-gray-800 px-6 py-3 rounded-lg font-medium hover:bg-gray-300 transition w-full sm:w-auto text-center"
+              href="#how-it works"
+              className="border border-gray-300 px-8 py-4 rounded-xl font-semibold hover:bg-gray-100 transition"
             >
-              Learn More
+              Learn more
             </a>
           </div>
         </div>
 
-{/* Right Side: Illustration */}
-<div className="flex-1 flex justify-center md:justify-end w-full">
-  <div className="w-full"> {/* no max-width limitation */}
-    <Image
-      src={heroIllustration}
-      alt="Students and Employers Illustration"
-      width={1600}    // high resolution
-      height={1200}   // high resolution
-      className="rounded-lg object-contain w-full h-auto"
-      priority
-    />
-  </div>
-</div>
-
-
+        {/* Image */}
+        <div className="flex-1 w-full">
+          <Image
+            src={heroIllustration}
+            alt="Jobify Illustration"
+            priority
+            className="w-full h-auto"
+          />
+        </div>
       </div>
     </section>
   );
