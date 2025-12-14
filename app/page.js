@@ -1,9 +1,5 @@
-import Image from "next/image";
-
-export default function Home() {
-  return (
-   <>
-   <h1>Helloo</h1>
-   </>
-  );
+import {redirect } from "next/navigation";
+export default function Home()
+{
+  redirect("/api_containers/company/profile");
 }
