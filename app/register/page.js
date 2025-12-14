@@ -29,121 +29,160 @@ export default function Register() {
         });
     };
 
-    const requirementLabel = (text, valid) => (
-        <div style={{ display: "flex", alignItems: "center", fontSize: 13, color: valid ? "#1E3A8A" : "#6B7280", marginBottom: 4 }}>
-            <span style={{ marginRight: 6 }}>{valid ? "✔️" : "⚪"}</span>
-            {text}
-        </div>
+    const allRequirementsMet = useMemo(
+        () => Object.values(requirements).every(Boolean),
+        [requirements]
     );
 
-    const allRequirementsMet = useMemo(() => Object.values(requirements).every(Boolean), [requirements]);
     const passwordsMatch = password === confirmPassword && confirmPassword !== "";
-    const emailFilled = email.trim() !== "";
-    const roleSelected = role !== "";
-    const isFormValid = allRequirementsMet && passwordsMatch && emailFilled && roleSelected;
+    const isFormValid = allRequirementsMet && passwordsMatch && email && role;
 
     const handleRegister = async (e) => {
         e.preventDefault();
+        const supabase = getSupabase();
 
-        if (!roleSelected) {
-            alert("Please select a role before registering.");
+        const { data, error } = await supabase.auth.signUp({
+            email,
+            password,
+        });
+
+        if (error) {
+            alert(error.message);
             return;
         }
 
-        if (!allRequirementsMet) {
-            alert("Password does not meet all requirements.");
-            return;
-        }
-
-        if (!passwordsMatch) {
-            alert("Passwords do not match.");
-            return;
-        }
-
-        let supabase;
-        try {
-            supabase = getSupabase();
-        } catch (err) {
-            console.error(err.message);
-            alert("Supabase is not configured. Add env vars to .env.local.");
-            return;
-        }
-
-        try {
-            const { data, error } = await supabase.auth.signUp({
-                email,
-                password,
-            });
-
-            if (error) {
-                console.error("Sign up error:", error);
-                alert("Sign up failed: " + (error.message || JSON.stringify(error)));
-                return;
-            }
-
-            console.log("Sign up success:", data);
-
-            // Save session locally
-            localStorage.setItem("token", data.user?.id || email);
-            localStorage.setItem("role", role);
-
-            alert("Registered successfully!");
-            redirectToDashboard(role, router);
-
-        } catch (err) {
-            console.error("Unexpected error:", err);
-        }
-    };
-
-    const buttonStyleBase = {
-        width: "100%",
-        padding: 12,
-        backgroundColor: "#1E3A8A",
-        color: "#fff",
-        borderRadius: 6,
-        border: "none",
-        fontWeight: 600,
-        cursor: "pointer",
-        transition: "all 0.3s ease",
-        opacity: 1,
-    };
-    const disabledButtonStyle = {
-        ...buttonStyleBase,
-        backgroundColor: "#9CA3AF",
-        cursor: "not-allowed",
-        opacity: 0.9,
+        localStorage.setItem("token", data.user?.id || email);
+        localStorage.setItem("role", role);
+        redirectToDashboard(role, router);
     };
 
     return (
-        <div style={{ maxWidth: 400, margin: "40px auto", padding: 20, backgroundColor: "#f8f9fa", borderRadius: 10, boxShadow: "0 4px 12px rgba(0,0,0,0.1)" }}>
-            <h1 style={{ textAlign: "center", fontWeight: "bold", marginBottom: 24, color: "#1E3A8A" }}>Register</h1>
-            <form onSubmit={handleRegister}>
-                <label htmlFor="email" style={{ fontWeight: 500 }}>Email</label>
-                <input id="email" type="email" required value={email} onChange={(e) => setEmail(e.target.value)} style={{ width: "100%", padding: 10, marginBottom: 16, borderRadius: 6, border: "1px solid #ccc" }} />
+        <div className="min-h-screen bg-gradient-to-br from-[#2529a1]/10 via-white to-indigo-50 flex items-center justify-center px-4">
+            <div className="w-full max-w-lg bg-white rounded-3xl shadow-2xl border border-gray-100 overflow-hidden">
 
-                <label htmlFor="password" style={{ fontWeight: 500 }}>Password</label>
-                <input id="password" type="password" required value={password} onChange={(e) => handlePasswordChange(e.target.value)} style={{ width: "100%", padding: 10, marginBottom: 12, borderRadius: 6, border: "1px solid #ccc" }} />
-
-                <div style={{ marginBottom: 12 }}>
-                    {requirementLabel("At least 8 characters", requirements.length)}
-                    {requirementLabel("Contains a letter", requirements.letter)}
-                    {requirementLabel("Contains a number", requirements.number)}
-                    {requirementLabel("Contains a special character (!@#$%^&*)", requirements.special)}
+                {/* Header */}
+                <div className="bg-[#2529a1] px-8 py-6">
+                    <h1 className="text-2xl font-bold text-white">
+                        Create your account
+                    </h1>
+                    <p className="text-indigo-100 text-sm mt-1">
+                        Start your journey with Jobify
+                    </p>
                 </div>
 
-                <label htmlFor="confirmPassword" style={{ fontWeight: 500 }}>Confirm Password</label>
-                <input id="confirmPassword" type="password" required value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} style={{ width: "100%", padding: 10, marginBottom: 6, borderRadius: 6, border: passwordsMatch || confirmPassword === "" ? "1px solid #ccc" : "1px solid #dc2626" }} />
-                {!passwordsMatch && confirmPassword !== "" && <div style={{ color: "#dc2626", fontSize: 13, marginBottom: 12 }}>Passwords do not match</div>}
+                {/* Form */}
+                <form onSubmit={handleRegister} className="px-8 py-8 space-y-6">
 
-                <p style={{ color: "#6b7280", marginBottom: 8, fontSize: 13 }}>Choose the role that best describes you</p>
-                <select value={role} onChange={(e) => setRole(e.target.value)} required style={{ width: "100%", padding: 10, marginBottom: 20, borderRadius: 6, border: "1px solid #ccc", backgroundColor: "#fff", color: "#111" }}>
-                    <option value="" disabled hidden>Select role...</option>
-                    <option value="job_seeker">Job Seeker</option>
-                    <option value="employer">Employer</option>
-                </select>
+                    {/* Email */}
+                    <div>
+                        <label className="text-sm font-medium text-gray-700">
+                            Email address
+                        </label>
+                        <input
+                            type="email"
+                            required
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                            placeholder="you@example.com"
+                            className="mt-2 w-full rounded-xl border border-gray-300 px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-[#2529a1]/40"
+                        />
+                    </div>
 
-                <button type="submit" disabled={!isFormValid} style={isFormValid ? buttonStyleBase : disabledButtonStyle}>{isFormValid ? "Register" : "Fill all fields"}</button>
-            </form>
+                    {/* Password */}
+                    <div>
+                        <label className="text-sm font-medium text-gray-700">
+                            Password
+                        </label>
+                        <input
+                            type="password"
+                            required
+                            value={password}
+                            onChange={(e) => handlePasswordChange(e.target.value)}
+                            placeholder="••••••••"
+                            className="mt-2 w-full rounded-xl border border-gray-300 px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-[#2529a1]/40"
+                        />
+                    </div>
+
+                    {/* Password rules */}
+                    <div className="grid grid-cols-2 gap-3 bg-gray-50 p-4 rounded-xl text-xs">
+                        {[
+                            ["8+ characters", requirements.length],
+                            ["Letter", requirements.letter],
+                            ["Number", requirements.number],
+                            ["Special char", requirements.special],
+                        ].map(([text, valid]) => (
+                            <div
+                                key={text}
+                                className={`flex items-center gap-2 ${valid ? "text-[#2529a1]" : "text-gray-400"
+                                    }`}
+                            >
+                                <span
+                                    className={`h-2 w-2 rounded-full ${valid ? "bg-[#2529a1]" : "bg-gray-300"
+                                        }`}
+                                />
+                                {text}
+                            </div>
+                        ))}
+                    </div>
+
+                    {/* Confirm Password */}
+                    <div>
+                        <label className="text-sm font-medium text-gray-700">
+                            Confirm password
+                        </label>
+                        <input
+                            type="password"
+                            required
+                            value={confirmPassword}
+                            onChange={(e) => setConfirmPassword(e.target.value)}
+                            className={`mt-2 w-full rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 ${passwordsMatch || !confirmPassword
+                                    ? "border border-gray-300 focus:ring-[#2529a1]/40"
+                                    : "border border-red-500 focus:ring-red-300"
+                                }`}
+                        />
+                        {!passwordsMatch && confirmPassword && (
+                            <p className="text-red-500 text-xs mt-1">
+                                Passwords do not match
+                            </p>
+                        )}
+                    </div>
+
+                    {/* Role */}
+                    <div>
+                        <label className="text-sm font-medium text-gray-700">
+                            I am a
+                        </label>
+                        <select
+                            value={role}
+                            onChange={(e) => setRole(e.target.value)}
+                            required
+                            className="mt-2 w-full rounded-xl border border-gray-300 bg-white px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-[#2529a1]/40"
+                        >
+                            <option value="" disabled hidden>
+                                Select your role
+                            </option>
+                            <option value="job_seeker">Job Seeker</option>
+                            <option value="employer">Employer</option>
+                        </select>
+                    </div>
+
+                    {/* Submit */}
+                    <button
+                        type="submit"
+                        disabled={!isFormValid}
+                        className={`w-full rounded-xl py-3.5 font-semibold transition-all ${isFormValid
+                                ? "bg-[#2529a1] text-white hover:-translate-y-0.5 hover:shadow-xl"
+                                : "bg-gray-300 text-gray-500 cursor-not-allowed"
+                            }`}
+                    >
+                        Create Account
+                    </button>
+
+                    <p className="text-center text-xs text-gray-500">
+                        By signing up, you agree to Jobify’s Terms & Privacy Policy
+                    </p>
+                </form>
+            </div>
         </div>
     );
 }
