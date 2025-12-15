@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState } from "react";
@@ -43,28 +42,37 @@ export default function Login() {
         redirectToDashboard(data.user?.role || "job_seeker", router);
     };
 
+    const handleForgotPassword = async () => {
+        const supabase = getSupabase();
+
+        if (!email) {
+            alert("Please enter your email first.");
+            return;
+        }
+
+        const { error } = await supabase.auth.resetPasswordForEmail(email);
+
+        if (error) {
+            alert(error.message);
+        } else {
+            alert("Password reset email sent.");
+        }
+    };
+
     return (
         <div className="min-h-screen bg-gradient-to-br from-[#2529a1]/10 via-white to-indigo-50 flex items-center justify-center px-4">
-
-            {/* Narrower Card */}
             <div className="w-full max-w-md bg-white rounded-3xl shadow-2xl border border-gray-100 overflow-hidden">
 
                 {/* Header */}
                 <div className="bg-[#2529a1] px-8 py-6">
-                    <h1 className="text-2xl font-bold text-white">
-                        Welcome back
-                    </h1>
+                    <h1 className="text-2xl font-bold text-white">Welcome back</h1>
                     <p className="text-indigo-100 text-sm mt-1">
                         Log in to continue to Jobify
                     </p>
                 </div>
 
                 {/* Form */}
-                <form
-                    onSubmit={handleLogin}
-                    className="px-8 py-8 space-y-5"
-                >
-                    {/* Email */}
+                <form onSubmit={handleLogin} className="px-8 py-8 space-y-5">
                     <div>
                         <label className="text-sm font-medium text-gray-700">
                             Email address
@@ -79,7 +87,6 @@ export default function Login() {
                         />
                     </div>
 
-                    {/* Password */}
                     <div>
                         <label className="text-sm font-medium text-gray-700">
                             Password
@@ -94,7 +101,6 @@ export default function Login() {
                         />
                     </div>
 
-                    {/* Submit */}
                     <button
                         type="submit"
                         disabled={loading}
@@ -106,7 +112,14 @@ export default function Login() {
                         {loading ? "Logging in..." : "Login"}
                     </button>
 
-                    {/* Footer */}
+                    <button
+                        type="button"
+                        onClick={handleForgotPassword}
+                        className="w-full text-sm text-gray-600 hover:text-[#2529a1]"
+                    >
+                        Forgot password?
+                    </button>
+
                     <p className="text-center text-xs text-gray-500 pt-2">
                         Don’t have an account?{" "}
                         <span

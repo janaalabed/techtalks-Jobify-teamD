@@ -1,3 +1,4 @@
+
 import Navbar from "@/components/landingPageComponents/NavBar";
 import Hero from "@/components/landingPageComponents/Hero";
 import PlatformOverview from "@/components/landingPageComponents/PlatformOverview";
@@ -26,3 +27,10 @@ export default function Home() {
     </>
   );
 }
+
+// import {redirect } from "next/navigation";
+// export default function Home()
+// {
+//   redirect("/api_containers/company/profile");
+// }
+
