@@ -1,4 +1,9 @@
 @import "tailwindcss";
+
+html {
+  scroll-behavior: smooth;
+}
+
 :root {
   /* Primary */
   --blue: #0A66C2;
@@ -42,7 +47,7 @@ body {
 }
  
 a { color: inherit; text-decoration: none; }
-a:hover { text-decoration: underline; }
+a:hover { text-decoration: none; }
  
 .container-app {
   max-width: var(--max);
@@ -68,3 +73,4 @@ a:hover { text-decoration: underline; }
   background: var(--bg);
 }
  
+

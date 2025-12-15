@@ -3,12 +3,13 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { getSupabase } from "../../lib/supabaseClient";
+import { redirectToDashboard } from "@/lib/redirectToDashboardPlaceholder";
 
 export default function Login() {
+    const router = useRouter();
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [loading, setLoading] = useState(false);
-    const router = useRouter();
 
     const handleLogin = async (e) => {
         e.preventDefault();
@@ -17,177 +18,118 @@ export default function Login() {
         let supabase;
         try {
             supabase = getSupabase();
-        } catch (err) {
-            console.error(err.message);
-            alert("Supabase is not configured. Add env vars to .env.local (see console).");
+        } catch {
+            alert("Supabase is not configured.");
             setLoading(false);
             return;
         }
 
-        try {
-            const { data, error } = await supabase.auth.signInWithPassword({
-                email,
-                password,
-            });
+        const { data, error } = await supabase.auth.signInWithPassword({
+            email,
+            password,
+        });
 
-            if (error) {
-                console.error("Login error:", error);
-                alert("Login failed: " + (error.message || JSON.stringify(error)));
-                setLoading(false);
-                return;
-            }
-
-            console.log("Login success:", data);
-            alert("Logged in successfully!");
+        if (error) {
+            alert(error.message || "Login failed");
             setLoading(false);
-            // redirect to dashboard/home page if needed
-        } catch (err) {
-            console.error("Unexpected error:", err);
-            setLoading(false);
+            return;
         }
+
+        localStorage.setItem("token", data.user?.id || email);
+        localStorage.setItem("role", data.user?.role || "job_seeker");
+
+        setLoading(false);
+        redirectToDashboard(data.user?.role || "job_seeker", router);
     };
 
     const handleForgotPassword = async () => {
+        const supabase = getSupabase();
+
         if (!email) {
-            alert("Enter your email first to reset password.");
+            alert("Please enter your email first.");
             return;
         }
 
-        let supabase;
-        try {
-            supabase = getSupabase();
-        } catch (err) {
-            console.error(err.message);
-            alert("Supabase is not configured.");
-            return;
-        }
+        const { error } = await supabase.auth.resetPasswordForEmail(email);
 
-        try {
-            const { data, error } = await supabase.auth.resetPasswordForEmail(email);
-            if (error) {
-                alert("Error: " + (error.message || JSON.stringify(error)));
-                return;
-            }
-            alert("Password reset email sent! Check your inbox.");
-            console.log(data);
-        } catch (err) {
-            console.error(err);
+        if (error) {
+            alert(error.message);
+        } else {
+            alert("Password reset email sent.");
         }
     };
 
     return (
-        <div
-            style={{
-                minHeight: "100vh",
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                background: "#f0f2f5",
-                fontFamily: "Arial, sans-serif",
-            }}
-        >
-            <div
-                style={{
-                    background: "#fff",
-                    padding: "40px 30px",
-                    borderRadius: 12,
-                    boxShadow: "0 4px 20px rgba(0,0,0,0.1)",
-                    width: 350,
-                }}
-            >
-                <h1 style={{ textAlign: "center", marginBottom: 24, color: "#333" }}>Login</h1>
+        <div className="min-h-screen bg-gradient-to-br from-[#2529a1]/10 via-white to-indigo-50 flex items-center justify-center px-4">
+            <div className="w-full max-w-md bg-white rounded-3xl shadow-2xl border border-gray-100 overflow-hidden">
 
-                <form onSubmit={handleLogin}>
-                    <label style={{ display: "block", marginBottom: 6, color: "#555" }} htmlFor="email">
-                        Email
-                    </label>
-                    <input
-                        id="email"
-                        type="email"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        required
-                        style={{
-                            width: "100%",
-                            padding: "10px",
-                            marginBottom: 16,
-                            borderRadius: 6,
-                            border: "1px solid #ccc",
-                            fontSize: 14,
-                        }}
-                    />
+                {/* Header */}
+                <div className="bg-[#2529a1] px-8 py-6">
+                    <h1 className="text-2xl font-bold text-white">Welcome back</h1>
+                    <p className="text-indigo-100 text-sm mt-1">
+                        Log in to continue to Jobify
+                    </p>
+                </div>
 
-                    <label style={{ display: "block", marginBottom: 6, color: "#555" }} htmlFor="password">
-                        Password
-                    </label>
-                    <input
-                        id="password"
-                        type="password"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        required
-                        style={{
-                            width: "100%",
-                            padding: "10px",
-                            marginBottom: 16,
-                            borderRadius: 6,
-                            border: "1px solid #ccc",
-                            fontSize: 14,
-                        }}
-                    />
+                {/* Form */}
+                <form onSubmit={handleLogin} className="px-8 py-8 space-y-5">
+                    <div>
+                        <label className="text-sm font-medium text-gray-700">
+                            Email address
+                        </label>
+                        <input
+                            type="email"
+                            required
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                            placeholder="you@example.com"
+                            className="mt-2 w-full rounded-xl border border-gray-300 px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-[#2529a1]/40"
+                        />
+                    </div>
+
+                    <div>
+                        <label className="text-sm font-medium text-gray-700">
+                            Password
+                        </label>
+                        <input
+                            type="password"
+                            required
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                            placeholder="••••••••"
+                            className="mt-2 w-full rounded-xl border border-gray-300 px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-[#2529a1]/40"
+                        />
+                    </div>
 
                     <button
                         type="submit"
                         disabled={loading}
-                        style={{
-                            width: "100%",
-                            padding: "12px",
-                            background: "#4f46e5",
-                            color: "#fff",
-                            border: "none",
-                            borderRadius: 6,
-                            fontSize: 16,
-                            cursor: "pointer",
-                            transition: "0.3s",
-                            marginBottom: 12,
-                        }}
-                        onMouseOver={(e) => (e.target.style.background = "#4338ca")}
-                        onMouseOut={(e) => (e.target.style.background = "#4f46e5")}
+                        className={`w-full rounded-xl py-3.5 font-semibold transition-all ${loading
+                                ? "bg-gray-300 text-gray-500 cursor-not-allowed"
+                                : "bg-[#2529a1] text-white hover:-translate-y-0.5 hover:shadow-xl"
+                            }`}
                     >
                         {loading ? "Logging in..." : "Login"}
                     </button>
-                </form>
 
-                <button
-                    type="button"
-                    onClick={handleForgotPassword}
-                    style={{
-                        width: "100%",
-                        padding: "10px",
-                        background: "#f0f0f0",
-                        border: "1px solid #ccc",
-                        borderRadius: 6,
-                        cursor: "pointer",
-                        color: "#333",
-                        fontSize: 14,
-                        marginBottom: 12,
-                    }}
-                    onMouseOver={(e) => (e.target.style.background = "#e0e0e0")}
-                    onMouseOut={(e) => (e.target.style.background = "#f0f0f0")}
-                >
-                    Forgot Password?
-                </button>
-
-                {/* Create Account Link */}
-                <p style={{ textAlign: "center", marginTop: 16, fontSize: 14 }}>
-                    Don&apos;t have an account?{" "}
-                    <span
-                        onClick={() => router.push("/register")}
-                        style={{ color: "#1E3A8A", cursor: "pointer", fontWeight: 600 }}
+                    <button
+                        type="button"
+                        onClick={handleForgotPassword}
+                        className="w-full text-sm text-gray-600 hover:text-[#2529a1]"
                     >
-                        Create Account
-                    </span>
-                </p>
+                        Forgot password?
+                    </button>
+
+                    <p className="text-center text-xs text-gray-500 pt-2">
+                        Don’t have an account?{" "}
+                        <span
+                            onClick={() => router.push("/register")}
+                            className="text-[#2529a1] font-medium cursor-pointer hover:underline"
+                        >
+                            Sign up
+                        </span>
+                    </p>
+                </form>
             </div>
         </div>
     );
