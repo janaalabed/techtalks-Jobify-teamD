@@ -1,55 +1,7 @@
-import { NextResponse } from "next/server";
-import {supabaseServer} from "@/lib/supabaseServer";
-import { Server } from "mysql2/typings/mysql/lib/Server";
-const MOCK_USER_ID ="company-user-1";
-export async function GET()
-{  try{
-      const {data , error} = await supabaseServer.from("jobs").select("*").eq("comapny_user_1",MOCK_USER_ID).order("create_at",{ ascending :false});
-      if(error)
-      {
-        console.error("SuperBase Get jobs error:",error);
-        return NextResponse.json({error: "server error"},{status :500});
-      }
-     return NextResponse.json(data || []);
-    }
-   catch(err){
-    console.error("Get /api/company/jobs");
-     return NextResponse.json({error: "server error"},{status :500});
-   }
-}
-export async function POST(request)
-{
-   try{
-      const body = await request.json();
-      const payload= { 
-        company_user_id: MOCK_USER_ID,title:body.title, description:body.description ,requirements : body.requirements || null,
-        job_type :body.jobType, role_type:body.roleType , paid_status:body.paidStatus,salary : body.salary || null , location : body.location ,is_filled : false, 
-      };
-      if(!payload.title || !payload.description || payload.location)
-      {
-        return NextResponse.json({error:"Missing required fields"},{status : 400});
-      }
-      const {error} = await supabaseServer.from("jobs").insert([payload]);
-      if(error)
-      {
-        console.error("Supabase Post job error: ",error);
-        return NextResponse.json({error:"Server error"},{status : 500});
-      }
-       return NextResponse.json({ok : true });
-    }
-      catch(err)
-      {
-        console.error("Post /api/company/jobs",err);
-         return NextResponse.json({error:"Server error"},{status : 500});
-      }
-}
-   
-
-   
 "use client";
- 
+
 import React, { useState } from "react";
- 
+
 export default function NewJobPage() {
   const [saving, setSaving] = useState(false);
   const [form, setForm] = useState({
@@ -62,37 +14,37 @@ export default function NewJobPage() {
     salary: "",
     location: "",
   });
- 
+
   function onChange(e) {
     setForm((p) => ({ ...p, [e.target.name]: e.target.value }));
   }
- 
+
   async function onSubmit(e) {
     e.preventDefault();
     setSaving(true);
- 
+
     const res = await fetch("/api/company/jobs", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(form),
     });
- 
+
     setSaving(false);
- 
+
     if (!res.ok) {
       alert("Failed to publish job");
       return;
     }
- 
+
     alert("Published ✅");
     window.location.href = "/dashboard";
   }
- 
+
   return (
     <div className="min-h-screen bg-[#F5F5F5] text-[#1A1A1A]">
       <div className="mx-auto max-w-4xl px-4 py-10 space-y-6">
         <h1 className="text-2xl font-semibold">Create Job Post</h1>
- 
+
         <div className="bg-white rounded-xl shadow-sm border border-[#E5E7EB] p-6">
           <form onSubmit={onSubmit} className="space-y-6">
             <div>
@@ -106,7 +58,7 @@ export default function NewJobPage() {
                 focus:outline-none focus:ring-2 focus:ring-[#0A66C2] focus:border-[#0A66C2]"
               />
             </div>
- 
+
             <div>
               <label className="text-sm font-medium">Description *</label>
               <textarea
@@ -118,7 +70,7 @@ export default function NewJobPage() {
                 focus:outline-none focus:ring-2 focus:ring-[#0A66C2] focus:border-[#0A66C2]"
               />
             </div>
- 
+
             <div>
               <label className="text-sm font-medium">Requirements</label>
               <textarea
@@ -129,7 +81,7 @@ export default function NewJobPage() {
                 focus:outline-none focus:ring-2 focus:ring-[#0A66C2] focus:border-[#0A66C2]"
               />
             </div>
- 
+
             <div className="grid gap-4 md:grid-cols-3">
               <div>
                 <label className="text-sm font-medium">Job Type</label>
@@ -145,7 +97,7 @@ export default function NewJobPage() {
                   <option value="hybrid">Hybrid</option>
                 </select>
               </div>
- 
+
               <div>
                 <label className="text-sm font-medium">Role Type</label>
                 <select
@@ -160,7 +112,7 @@ export default function NewJobPage() {
                   <option value="part-time">Part-time</option>
                 </select>
               </div>
- 
+
               <div>
                 <label className="text-sm font-medium">Paid</label>
                 <select
@@ -175,7 +127,7 @@ export default function NewJobPage() {
                 </select>
               </div>
             </div>
- 
+
             <div className="grid gap-4 md:grid-cols-2">
               <div>
                 <label className="text-sm font-medium">Salary (optional)</label>
@@ -187,7 +139,7 @@ export default function NewJobPage() {
                   focus:outline-none focus:ring-2 focus:ring-[#0A66C2]"
                 />
               </div>
- 
+
               <div>
                 <label className="text-sm font-medium">Location *</label>
                 <input
@@ -200,7 +152,7 @@ export default function NewJobPage() {
                 />
               </div>
             </div>
- 
+
             <div className="flex justify-end gap-3">
               <a
                 href="/dashboard"
@@ -224,4 +176,3 @@ export default function NewJobPage() {
     </div>
   );
 }
- 
