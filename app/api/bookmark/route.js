@@ -3,7 +3,7 @@ import { getServerUser } from "@/lib/auth";
 import { toggleBookmark, getBookmarks } from "@/db/queries/bookmarkQueries";
 
 export async function GET(request) {
-    const user = getServerUser();
+    const user = await getServerUser();
     if (!user) {
         return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
@@ -18,7 +18,7 @@ export async function GET(request) {
 }
 
 export async function POST(request) {
-    const user = getServerUser();
+    const user = await getServerUser();
     if (!user) {
         return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }

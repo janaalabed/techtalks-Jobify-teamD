@@ -2,9 +2,11 @@ import pkg from "pg";
 const { Pool: PgPool } = pkg;
 
 // Patch hostname if needed (system fails to resolve db. subdomain)
-const connectionString = process.env.DATABASE_URL
-  ? process.env.DATABASE_URL.replace('db.cjnbcpbzumrsfcsmflvk.supabase.co', 'cjnbcpbzumrsfcsmflvk.supabase.co')
-  : '';
+const rawConnectionString = process.env.DATABASE_URL || '';
+const connectionString = rawConnectionString.replace('db.cjnbcpbzumrsfcsmflvk.supabase.co', 'cjnbcpbzumrsfcsmflvk.supabase.co');
+
+console.log("DEBUG: Raw DB URL:", rawConnectionString);
+console.log("DEBUG: Final DB URL:", connectionString);
 
 const pgPool = new PgPool({
   connectionString,
