@@ -41,5 +41,7 @@ dev.env
 *.tsbuildinfo
 next-env.d.ts
 #assets
-job.md
 DB.PNG
+Bookmark.md
+
+

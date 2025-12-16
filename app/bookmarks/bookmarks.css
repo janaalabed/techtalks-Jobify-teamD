@@ -1,0 +1,41 @@
+/* Bookmarks Page Layout */
+.bookmarks-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.bookmarks-header {
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+.bookmarks-title {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #1f2937;
+  margin-bottom: 0.5rem;
+}
+
+.bookmarks-subtitle {
+  color: #6b7280;
+}
+
+.bookmarks-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.5rem;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 4rem 0;
+  color: #6b7280;
+}
+
+.empty-state-link {
+  color: #2563eb;
+  text-decoration: underline;
+  margin-top: 1rem;
+  display: inline-block;
+}

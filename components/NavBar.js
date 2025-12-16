@@ -16,7 +16,7 @@ export default function NavBar() {
         { name: 'Jobs', href: '/jobs' },
         { name: 'Profile', href: '/profile' },
         { name: 'My Applications', href: '/applications' },
-        { name: 'Saved Jobs', href: '/saved-jobs' },
+        { name: 'Saved Jobs', href: '/bookmarks' },
     ];
 
     return (
