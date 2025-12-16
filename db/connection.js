@@ -1,17 +1,25 @@
 import pkg from "pg";
 const { Pool: PgPool } = pkg;
 
-// Patch hostname if needed (system fails to resolve db. subdomain)
-const rawConnectionString = process.env.DATABASE_URL || '';
-const connectionString = rawConnectionString.replace('db.cjnbcpbzumrsfcsmflvk.supabase.co', 'cjnbcpbzumrsfcsmflvk.supabase.co');
+// Use DATABASE_URL directly from environment
+const connectionString = process.env.DATABASE_URL || '';
 
-console.log("DEBUG: Raw DB URL:", rawConnectionString);
-console.log("DEBUG: Final DB URL:", connectionString);
+console.log("DEBUG: Using DB URL length:", connectionString.length);
 
 const pgPool = new PgPool({
   connectionString,
   ssl: { rejectUnauthorized: false }
 });
+
+// Test connection on startup
+pgPool.connect()
+  .then(client => {
+    console.log("✅ Database connected successfully");
+    client.release();
+  })
+  .catch(err => {
+    console.error("❌ Database connection failed:", err.message);
+  });
 
 export const pg = {
   query: (text, params) => pgPool.query(text, params),
@@ -21,8 +29,13 @@ export const pg = {
 // Helper to match the mysql2 execute signature (sql, params) -> rows
 // pg query returns { rows: [], ... }
 export async function pgQuery(sql, params = []) {
-  const result = await pg.query(sql, params);
-  return result.rows;
+  try {
+    const result = await pg.query(sql, params);
+    return result.rows;
+  } catch (error) {
+    console.error("❌ Database query failed:", error.message);
+    throw error;
+  }
 }
 
 import mysql from "mysql2/promise";
