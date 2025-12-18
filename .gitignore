@@ -33,7 +33,7 @@ yarn-error.log*
 dev.env
 .env
 .env.local
-local.env
+
 # vercel
 .vercel
 
@@ -41,5 +41,7 @@ local.env
 *.tsbuildinfo
 next-env.d.ts
 #assets
-job.md
 DB.PNG
+Bookmark.md
+
+

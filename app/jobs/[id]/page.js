@@ -7,7 +7,13 @@ export default async function JobDetailsPage({ params }) {
     const jobId = parseInt(resolvedParams.id);
 
     // Fetch job from database
-    const job = await getJobById(jobId);
+    let job = null;
+    try {
+        job = await getJobById(jobId);
+    } catch (error) {
+        console.error("Error fetching job:", error);
+        // Fall through to "Job Not Found" or handle specifically
+    }
 
     if (!job) {
         return (

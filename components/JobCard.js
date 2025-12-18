@@ -1,11 +1,63 @@
 import Link from 'next/link';
 import Image from 'next/image';
+import { useState } from 'react';
+import { FaBookmark, FaRegBookmark } from 'react-icons/fa';
 
-export default function JobCard({ job }) {
+export default function JobCard({ job, initialBookmarked = false, onToggleBookmark }) {
+    const [isBookmarked, setIsBookmarked] = useState(initialBookmarked);
+    const [isLoading, setIsLoading] = useState(false);
+
+    const handleBookmarkClick = async (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+
+        if (isLoading) return;
+        setIsLoading(true);
+
+        try {
+            const res = await fetch('/api/bookmark', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ job_id: job.id }),
+            });
+
+            if (res.status === 401) {
+                alert('Please log in to bookmark jobs');
+                return;
+            }
+
+            if (!res.ok) throw new Error('Failed to update bookmark');
+
+            const data = await res.json();
+            setIsBookmarked(data.bookmarked);
+
+            if (onToggleBookmark) {
+                onToggleBookmark(data.bookmarked);
+            }
+        } catch (error) {
+            console.error('Error toggling bookmark:', error);
+            alert('Failed to update bookmark');
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
     return (
         <Link href={`/jobs/${job.id}`}>
-            <div className="bg-white rounded-lg shadow-md p-6 hover:shadow-xl transition-shadow duration-300 cursor-pointer border border-gray-200 hover:border-blue-400 h-full flex flex-col">
-                <div className="flex items-start justify-between mb-4">
+            <div className="bg-white rounded-lg shadow-md p-6 hover:shadow-xl transition-shadow duration-300 cursor-pointer border border-gray-200 hover:border-blue-400 h-full flex flex-col relative group">
+                <button
+                    onClick={handleBookmarkClick}
+                    className="absolute top-4 right-4 p-2 text-gray-400 hover:text-blue-600 transition-colors z-10"
+                    title={isBookmarked ? "Remove bookmark" : "Save job"}
+                >
+                    {isBookmarked ? (
+                        <FaBookmark className="w-6 h-6 text-blue-600" />
+                    ) : (
+                        <FaRegBookmark className="w-6 h-6" />
+                    )}
+                </button>
+
+                <div className="flex items-start justify-between mb-4 pr-10">
                     <div className="flex-1">
                         <h3 className="text-xl font-semibold text-gray-900 mb-1">
                             {job.title}
