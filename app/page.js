@@ -1,5 +1,12 @@
-import { redirect } from "next/navigation";
+import Hero from '../components/landingPageComponents/Hero.jsx'
+import React from 'react'
 
-export default function Home() {
-  redirect("/employers/dashboard");
+const page = () => {
+  return (
+   <>
+   <Hero/>
+   </>
+  )
 }
+
+export default page

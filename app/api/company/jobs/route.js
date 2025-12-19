@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { supabaseServer } from "@/lib/supabaseServer";
+import { supabaseServer } from "../../../../lib/supabaseServer";
 
 const MOCK_USER_ID = "company-user-1";
 

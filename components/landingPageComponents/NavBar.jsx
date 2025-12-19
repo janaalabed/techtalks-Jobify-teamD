@@ -1,11 +1,11 @@
 "use client";
 import { useState, useEffect } from "react";
-import { getSession } from "@/lib/authPlaceholder";
+import { getSession } from "../../lib/authPlaceholder";
 import { useRouter } from "next/navigation";
-import { redirectToDashboard } from "@/lib/redirectToDashboardPlaceholder";
+import { redirectToDashboard } from "../../lib/redirectToDashboardPlaceholder";
 import Image from "next/image";
 import Link from "next/link";
-import logo from "@/public/uploads/logo2.png";
+
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
@@ -42,7 +42,7 @@ export default function Navbar() {
     >
       <div className="max-w-7xl mx-auto flex items-center justify-between px-6 h-[80px]">
         <Link href="/" className="flex items-center">
-          <Image src={logo} alt="Jobify" width={150} height={32} />
+          <Image src={"/uploads/logo2.png"} alt="Jobify" width={150} height={32} />
         </Link>
 
         {/* Desktop Menu */}
