@@ -3,8 +3,8 @@
 
 import { useState, useMemo } from "react";
 import { useRouter } from "next/navigation";
-import { getSupabase } from "../../lib/supabaseClient";
-import { redirectToDashboard } from "@/lib/redirectToDashboardPlaceholder";
+import  getSupabase  from "../../lib/supabaseClient";
+import { redirectToDashboard } from "../../lib/redirectToDashboardPlaceholder";
 
 export default function Register() {
     const router = useRouter();

@@ -24,7 +24,6 @@ export async function POST(req) {
       );
     }
 
-    const userId = userData.user.id;
     const formData = await req.formData();
 
     const companyName = String(formData.get("company_name") || "").trim();
@@ -45,7 +44,7 @@ export async function POST(req) {
 
     if (logoFile && typeof logoFile === "object" && logoFile.size > 0) {
       const ext = logoFile.name.split(".").pop() || "png";
-      const filePath = `company-logos/${userId}-${crypto.randomUUID()}.${ext}`;
+      const filePath = `company-logos/${crypto.randomUUID()}.${ext}`;
 
       const buffer = Buffer.from(await logoFile.arrayBuffer());
 
@@ -73,7 +72,6 @@ export async function POST(req) {
     const { error: insertError } = await supabaseServer
       .from("employers")
       .insert({
-        user_id: userId,
         company_name: companyName,
         logo_url: logoUrl,
         website,
