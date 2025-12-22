@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import JobCard from "@/components/JobCard";
+import JobCard from "@/components/jobListingsComponents/JobCard";
 import "./bookmarks.css";
 import Link from "next/link";
 

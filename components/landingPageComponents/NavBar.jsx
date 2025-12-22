@@ -1,36 +1,62 @@
 "use client";
 import { useState, useEffect } from "react";
-import { getSession } from "../../lib/authPlaceholder";
-import { useRouter } from "next/navigation";
-import { redirectToDashboard } from "../../lib/redirectToDashboardPlaceholder";
+import { useRouter, usePathname } from "next/navigation";
+import { redirectToDashboard } from "../../lib/redirectToDashboard";
+import getSupabase from "../../lib/supabaseClient";
 import Image from "next/image";
 import Link from "next/link";
-
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [session, setSession] = useState(null);
   const [scrolled, setScrolled] = useState(false);
+
   const router = useRouter();
+  const pathname = usePathname();
+  const supabase = getSupabase();
 
   useEffect(() => {
-    const sess = getSession();
-    setSession(sess);
-
-    const handleScroll = () => {
-      setScrolled(window.scrollY > 0);
+    // Get current Supabase session
+    const fetchSession = async () => {
+      const { data } = await supabase.auth.getSession();
+      setSession(data.session?.user ?? null);
     };
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+    fetchSession();
 
-  const handleGoToDashboard = () => {
+    // Listen to auth changes
+    const { data: listener } = supabase.auth.onAuthStateChange((_event, session) => {
+      setSession(session?.user ?? null);
+    });
+
+    // Scroll effect
+    const handleScroll = () => setScrolled(window.scrollY > 0);
+    window.addEventListener("scroll", handleScroll);
+
+    return () => {
+      listener.subscription.unsubscribe();
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, [supabase]);
+
+  const handleGoToDashboard = async () => {
     if (!session) {
       router.push("/login");
-    } else {
-      redirectToDashboard(session.role, router);
+      return;
     }
+
+    const { data: profile } = await supabase
+      .from("profiles")
+      .select("role")
+      .eq("id", session.id)
+      .single();
+
+    redirectToDashboard(profile?.role, router);
   };
+
+  // Render nothing if not on landing page
+  if (pathname !== "/") {
+    return <></>;
+  }
 
   return (
     <nav
@@ -42,7 +68,7 @@ export default function Navbar() {
     >
       <div className="max-w-7xl mx-auto flex items-center justify-between px-6 h-[80px]">
         <Link href="/" className="flex items-center">
-          <Image src={"/uploads/logo2.png"} alt="Jobify" width={150} height={32} />
+          <Image src="/uploads/logo2.png" alt="Jobify" width={150} height={32} />
         </Link>
 
         {/* Desktop Menu */}

@@ -1,38 +1,34 @@
 import { NextResponse } from "next/server";
-import { getServerUser } from "@/lib/auth";
-import { toggleBookmark, getBookmarks } from "@/db/queries/bookmarkQueries";
+import getSupabase from "../../../lib/supabaseClient";
 
-export async function GET(request) {
-    const user = await getServerUser();
-    if (!user) {
-        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
+export async function POST(req) {
+  const supabase = getSupabase();
+  const { jobId } = await req.json();
 
-    try {
-        const bookmarks = await getBookmarks(user.id);
-        return NextResponse.json(bookmarks);
-    } catch (error) {
-        console.error("Error fetching bookmarks:", error);
-        return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
-    }
-}
+  const { data: userData } = await supabase.auth.getUser();
+  if (!userData.user) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
 
-export async function POST(request) {
-    const user = await getServerUser();
-    if (!user) {
-        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
+  const userId = userData.user.id;
 
-    try {
-        const { job_id } = await request.json();
-        if (!job_id) {
-            return NextResponse.json({ error: "Job ID is required" }, { status: 400 });
-        }
+  // Toggle bookmark
+  const { data: existing } = await supabase
+    .from("bookmarks")
+    .select("id")
+    .eq("user_id", userId)
+    .eq("job_id", jobId)
+    .single();
 
-        const result = await toggleBookmark(user.id, job_id);
-        return NextResponse.json(result);
-    } catch (error) {
-        console.error("Error toggling bookmark:", error);
-        return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
-    }
+  if (existing) {
+    await supabase.from("bookmarks").delete().eq("id", existing.id);
+    return NextResponse.json({ bookmarked: false });
+  }
+
+  await supabase.from("bookmarks").insert({
+    user_id: userId,
+    job_id: jobId,
+  });
+
+  return NextResponse.json({ bookmarked: true });
 }
