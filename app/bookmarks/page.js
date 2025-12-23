@@ -1,70 +1,91 @@
+
 "use client";
 
 import { useEffect, useState } from "react";
-import JobCard from "@/components/jobListingsComponents/JobCard";
-import "./bookmarks.css";
-import Link from "next/link";
+import JobCard from "../../components/jobListingsComponents/JobCard";
+import getSupabase from "../../lib/supabaseClient";
+import Navbar from "../../components/jobListingsComponents/NavBar";
+import { toast } from "react-hot-toast";
 
-export default function BookmarksPage() {
-    const [bookmarks, setBookmarks] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
+export default function SavedJobsPage() {
+    const supabase = getSupabase();
+    const [savedJobs, setSavedJobs] = useState([]);
+
+    async function fetchSavedJobs() {
+        try {
+            const { data: { user } } = await supabase.auth.getUser();
+            if (!user) return;
+
+            const { data, error } = await supabase
+                .from("bookmarks")
+                .select(`
+          jobs (
+            id,
+            title,
+            description,
+            salary,
+            type,
+            paid,
+            location,
+            created_at
+          )
+        `)
+                .eq("user_id", user.id);
+
+            if (error) throw error;
+
+            // Flatten array: bookmarks → jobs
+            setSavedJobs(data.map((b) => b.jobs));
+        } catch (err) {
+            console.error(err);
+            toast.error("Failed to load saved jobs");
+        }
+    }
 
     useEffect(() => {
-        fetchBookmarks();
+        fetchSavedJobs();
     }, []);
 
-    const fetchBookmarks = async () => {
+    const handleToggleBookmark = async (jobId) => {
         try {
-            const res = await fetch("/api/bookmark");
-            if (res.status === 401) {
-                setError("Please log in to view bookmarks");
-                setLoading(false);
-                return;
-            }
-            if (!res.ok) throw new Error("Failed to fetch bookmarks");
-            const data = await res.json();
-            setBookmarks(data);
+            const { data: { user } } = await supabase.auth.getUser();
+            if (!user) return;
+
+            // Delete bookmark
+            await supabase.from("bookmarks").delete()
+                .eq("user_id", user.id)
+                .eq("job_id", jobId);
+
+            // Remove from local state immediately
+            setSavedJobs((prev) => prev.filter((job) => job.id !== jobId));
+            toast("Job removed from bookmarks", { icon: "🗑️" });
         } catch (err) {
-            setError(err.message);
-        } finally {
-            setLoading(false);
+            console.error(err);
+            toast.error("Failed to remove bookmark");
         }
     };
 
-    const handleUnbookmark = (jobId) => {
-        setBookmarks((prev) => prev.filter((job) => job.id !== jobId));
-    };
-
-    if (loading) return <div className="bookmarks-container">Loading...</div>;
-    if (error) return <div className="bookmarks-container">{error}</div>;
-
     return (
-        <div className="bookmarks-container">
-            <div className="bookmarks-header">
-                <h1 className="bookmarks-title">Saved Jobs</h1>
-                <p className="bookmarks-subtitle">Manage your bookmarked opportunities</p>
-            </div>
+        <>
+            <Navbar />
+            <div className="max-w-5xl mx-auto p-6 space-y-6">
+                <h1 className="text-2xl font-bold">Saved Jobs</h1>
 
-            {bookmarks.length === 0 ? (
-                <div className="empty-state">
-                    <p>You haven't saved any jobs yet.</p>
-                    <Link href="/jobs" className="empty-state-link">
-                        Browse Jobs
-                    </Link>
-                </div>
-            ) : (
-                <div className="bookmarks-grid">
-                    {bookmarks.map((job) => (
+                {savedJobs.length === 0 && (
+                    <p className="text-gray-500 text-center">No saved jobs yet</p>
+                )}
+
+                <div className="space-y-4">
+                    {savedJobs.map((job) => (
                         <JobCard
                             key={job.id}
                             job={job}
-                            initialBookmarked={true}
-                            onToggleBookmark={() => handleUnbookmark(job.id)}
+                            bookmarked={true} // All jobs here are bookmarked
+                            onToggleBookmark={handleToggleBookmark}
                         />
                     ))}
                 </div>
-            )}
-        </div>
+            </div>
+        </>
     );
 }

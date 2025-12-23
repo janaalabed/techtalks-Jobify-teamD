@@ -1,11 +1,13 @@
 "use client";
-
+import { useState } from "react";
 import { useRouter } from "next/navigation";
+import Image from "next/image"; 
 import getSupabase from "../../lib/supabaseClient";
 
 export default function Navbar() {
   const supabase = getSupabase();
   const router = useRouter();
+   const [scrolled, setScrolled] = useState(false);
 
   const handleLogout = async () => {
     await supabase.auth.signOut();
@@ -13,12 +15,24 @@ export default function Navbar() {
   };
 
   return (
-    <nav className="bg-white shadow-md fixed top-0 left-0 w-full z-50">
-      <div className="max-w-6xl mx-auto px-6 py-3 flex items-center justify-between">
+    <nav className={`sticky top-0 z-80 backdrop-blur transition-shadow duration-300 border-b ${
+        scrolled
+          ? "bg-white/90 shadow-md border-gray-200"
+          : "bg-white/80 border-gray-200"
+      }`}>
+      <div className="max-w-7xl mx-auto flex items-center justify-between px-6 h-[80px]">
         {/* Logo */}
-        <div className="flex items-center gap-2 font-bold text-xl text-blue-600 cursor-pointer" onClick={() => router.push("/")}>
-         
-          <span>{ "Jobify logo"}</span>
+        <div
+          className="flex items-center gap-2 cursor-pointer"
+          onClick={() => router.push("/")}
+        >
+          <Image
+            src="/uploads/logo2.png"  // path to your logo in public folder
+            alt="Jobify Logo"
+            width={150}      // adjust as needed
+            height={32}     // adjust as needed
+          />
+          
         </div>
 
         {/* Links */}

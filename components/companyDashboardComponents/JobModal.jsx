@@ -253,7 +253,7 @@ export default function JobModal({ mode, jobId, onClose, onSuccess }) {
           <button
             type="button"
             onClick={onClose}
-            className="px-4 py-2 rounded border"
+            className="px-6 py-2 rounded border"
           >
             Cancel
           </button>
@@ -261,7 +261,7 @@ export default function JobModal({ mode, jobId, onClose, onSuccess }) {
           <button
             type="submit"
             disabled={saving}
-            className="px-5 py-2 rounded bg-blue-600 text-white disabled:opacity-50"
+            className="bg-[#2529a1] text-white px-6 py-2 rounded-lg"
           >
             {saving ? "Saving..." : "Save Job"}
           </button>

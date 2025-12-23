@@ -21,7 +21,7 @@ export default function EmployerDashboardPage() {
   const [editJobId, setEditJobId] = useState(null);
   const [deleteJobId, setDeleteJobId] = useState(null);
 
-  /* 🔐 Load authenticated user */
+  /*  Load authenticated user */
   useEffect(() => {
     const loadUser = async () => {
       const { data } = await supabase.auth.getUser();
@@ -37,7 +37,7 @@ export default function EmployerDashboardPage() {
     loadUser();
   }, [router, supabase]);
 
-  /* 🏢 Load employer record */
+  /*  Load employer record */
   useEffect(() => {
     if (!user) return;
 
@@ -88,7 +88,7 @@ export default function EmployerDashboardPage() {
       
       {/* Header */}
       <div className="mb-8 flex items-center justify-between">
-        <h1 className="text-3xl font-semibold">
+        <h1 className="text-2xl font-bold mb-8 text-[#2529a1]">
           {employer?.company_name} Dashboard
         </h1>
 
@@ -96,7 +96,7 @@ export default function EmployerDashboardPage() {
         <div className="flex gap-3">
           <button
             onClick={() => setShowCreateModal(true)}
-            className="bg-blue-600 text-white px-5 py-2.5 rounded-lg"
+            className="bg-[#2529a1] text-white px-6 py-2 rounded-lg"
           >
             Create Job
           </button>
@@ -125,7 +125,7 @@ export default function EmployerDashboardPage() {
                 <div className="flex gap-2">
                   <button
                     onClick={() => setEditJobId(job.id)}
-                    className="text-blue-600"
+                    className="text-[#2529a1]"
                   >
                     Edit
                   </button>
