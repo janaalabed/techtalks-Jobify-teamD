@@ -1,7 +1,7 @@
 "use client";
-
 import { useEffect, useState } from "react";
 import getSupabase from "../../lib/supabaseClient";
+import { X, Save, Info } from "lucide-react";
 
 export default function JobModal({ mode, jobId, onClose, onSuccess }) {
   const supabase = getSupabase();
@@ -22,251 +22,123 @@ export default function JobModal({ mode, jobId, onClose, onSuccess }) {
     salary: "",
   });
 
-  /* 🔐 Get authenticated user */
   useEffect(() => {
-    const loadUser = async () => {
-      const { data } = await supabase.auth.getUser();
-      if (!data?.user) {
-        setError("You must be logged in");
-        return;
-      }
-      setUser(data.user);
-    };
-    loadUser();
-  }, [supabase]);
+    const loadData = async () => {
+      const { data: userData } = await supabase.auth.getUser();
+      if (!userData?.user) return;
+      setUser(userData.user);
 
-  /* 📄 Load job when editing */
-  useEffect(() => {
-    if (!isEdit || !jobId || !user) return;
-
-    const loadJob = async () => {
-      setLoading(true);
-      setError("");
-
-      const { data: employer } = await supabase
-        .from("employers")
-        .select("id")
-        .eq("user_id", user.id)
-        .single();
-
-      if (!employer) {
-        setError("Employer profile not found");
+      if (isEdit && jobId) {
+        setLoading(true);
+        const { data: job } = await supabase.from("jobs").select("*").eq("id", jobId).single();
+        if (job) setForm({ ...job });
         setLoading(false);
-        return;
       }
-
-      const { data, error } = await supabase
-        .from("jobs")
-        .select("*")
-        .eq("id", jobId)
-        .eq("employer_id", employer.id)
-        .single();
-
-      if (error) {
-        setError(error.message);
-        setLoading(false);
-        return;
-      }
-
-      setForm({
-        title: data.title ?? "",
-        location: data.location ?? "",
-        description: data.description ?? "",
-        requirements: data.requirements ?? "",
-        type: data.type ?? "",
-        paid: data.paid ?? true,
-        salary: data.salary ?? "",
-      });
-
-      setLoading(false);
     };
+    loadData();
+  }, [isEdit, jobId, supabase]);
 
-    loadJob();
-  }, [isEdit, jobId, user, supabase]);
-
-  function handleChange(e) {
+  const handleChange = (e) => {
     const { name, type, value, checked } = e.target;
-    setForm((prev) => ({
-      ...prev,
-      [name]: type === "checkbox" ? checked : value,
-    }));
-  }
+    setForm(prev => ({ ...prev, [name]: type === "checkbox" ? checked : value }));
+  };
 
   async function handleSubmit(e) {
     e.preventDefault();
-    if (!user) return;
-
     setSaving(true);
-    setError("");
-
-    const { data: employer } = await supabase
-      .from("employers")
-      .select("id")
-      .eq("user_id", user.id)
-      .single();
-
-    if (!employer) {
-      setError("You must create a company profile first.");
-      setSaving(false);
-      return;
-    }
-
-    const payload = {
-      employer_id: employer.id,
-      title: form.title.trim(),
-      description: form.description.trim(),
-      requirements: form.requirements.trim(),
-      location: form.location.trim(),
-      type: form.type,
-      paid: form.paid,
-      salary: form.paid ? form.salary.trim() : null,
-    };
-
-    const query = isEdit
-      ? supabase.from("jobs").update(payload).eq("id", jobId)
-      : supabase.from("jobs").insert([payload]);
-
+    const { data: emp } = await supabase.from("employers").select("id").eq("user_id", user.id).single();
+    
+    const payload = { ...form, employer_id: emp.id };
+    const query = isEdit ? supabase.from("jobs").update(payload).eq("id", jobId) : supabase.from("jobs").insert([payload]);
+    
     const { error } = await query;
-    setSaving(false);
-
-    if (error) {
-      setError(error.message);
-      return;
-    }
-
-    onSuccess();
+    if (error) { setError(error.message); setSaving(false); }
+    else onSuccess();
   }
 
-  if (loading) {
-    return (
-      <div className="fixed inset-0 flex items-center justify-center bg-black/40">
-        <div className="bg-white px-6 py-4 rounded-lg shadow">
-          Loading job...
-        </div>
-      </div>
-    );
-  }
+  if (loading) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-      <form
-        onSubmit={handleSubmit}
-        className="bg-white w-full max-w-2xl rounded-2xl p-6 space-y-5 shadow-lg"
-      >
-        {/* Header */}
-        <div className="flex justify-between items-center border-b pb-3">
-          <h2 className="text-xl font-semibold">
-            {isEdit ? "Edit Job" : "Create Job"}
-          </h2>
-          <button
-            type="button"
-            onClick={onClose}
-            className="text-gray-400 hover:text-black"
-          >
-            ✕
+    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-[#170e2c]/60 backdrop-blur-sm">
+      <div className="bg-white w-full max-w-2xl rounded-2xl shadow-2xl overflow-hidden animate-in fade-in zoom-in duration-200">
+        <div className="bg-[#3e3875] p-6 text-white flex justify-between items-center">
+          <div>
+            <h2 className="text-xl font-bold">{isEdit ? "Update Job Posting" : "Post a New Job"}</h2>
+            <p className="text-indigo-200 text-sm">Fill in the details for your new opening.</p>
+          </div>
+          <button onClick={onClose} className="p-2 hover:bg-white/10 rounded-full transition-colors">
+            <X size={24} />
           </button>
         </div>
 
-        {error && (
-          <div className="bg-red-50 text-red-600 p-3 rounded text-sm">
-            {error}
+        <form onSubmit={handleSubmit} className="p-8 space-y-5 max-h-[70vh] overflow-y-auto">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="space-y-1">
+              <label className="text-sm font-semibold text-slate-700">Job Title</label>
+              <input name="title" value={form.title} onChange={handleChange} required
+                className="w-full border border-slate-200 rounded-xl px-4 py-3 focus:ring-2 focus:ring-[#3e3875]/20 outline-none" placeholder="Software Engineer" />
+            </div>
+            <div className="space-y-1">
+              <label className="text-sm font-semibold text-slate-700">Location</label>
+              <input name="location" value={form.location} onChange={handleChange} required
+                className="w-full border border-slate-200 rounded-xl px-4 py-3 focus:ring-2 focus:ring-[#3e3875]/20 outline-none" placeholder="Remote / Beirut" />
+            </div>
           </div>
-        )}
 
-        {/* Inputs */}
-       {/* Inputs */}
-<div className="grid grid-cols-1 gap-4">
-  <input
-    className="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
-    name="title"
-    placeholder="Job title"
-    value={form.title}
-    onChange={handleChange}
-    required
-  />
+          <div className="space-y-1">
+            <label className="text-sm font-semibold text-slate-700">Description</label>
+            <textarea name="description" value={form.description} onChange={handleChange} required rows={3}
+              className="w-full border border-slate-200 rounded-xl px-4 py-3 focus:ring-2 focus:ring-[#3e3875]/20 outline-none" placeholder="Tell us about the role..." />
+          </div>
 
-  <input
-    className="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
-    name="location"
-    placeholder="Location"
-    value={form.location}
-    onChange={handleChange}
-    required
-  />
+          <div className="space-y-1">
+            <label className="text-sm font-semibold text-slate-700">Requirements</label>
+            <textarea name="requirements" value={form.requirements} onChange={handleChange} required rows={3}
+              className="w-full border border-slate-200 rounded-xl px-4 py-3 focus:ring-2 focus:ring-[#3e3875]/20 outline-none" placeholder="Skills, years of experience..." />
+          </div>
 
-  <textarea
-    className="w-full border rounded-lg px-3 py-2 min-h-[100px] focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
-    name="description"
-    placeholder="Job description"
-    value={form.description}
-    onChange={handleChange}
-    required
-  />
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="space-y-1">
+              <label className="text-sm font-semibold text-slate-700">Job Type</label>
+              <select name="type" value={form.type} onChange={handleChange} required
+                className="w-full border border-slate-200 rounded-xl px-4 py-3 focus:ring-2 focus:ring-[#3e3875]/20 outline-none bg-white">
+                <option value="">Select Type</option>
+                <option value="full-time">Full-time</option>
+                <option value="part-time">Part-time</option>
+                <option value="internship">Internship</option>
+              </select>
+            </div>
+            <div className="space-y-1">
+              <label className="text-sm font-semibold text-slate-700">Compensation</label>
+              <div className="flex items-center gap-4 mt-3">
+                <label className="relative inline-flex items-center cursor-pointer">
+                  <input type="checkbox" name="paid" checked={form.paid} onChange={handleChange} className="sr-only peer" />
+                  <div className="w-11 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#3e3875]"></div>
+                  <span className="ml-3 text-sm font-medium text-slate-600">Paid Position</span>
+                </label>
+              </div>
+            </div>
+          </div>
 
-  <textarea
-    className="w-full border rounded-lg px-3 py-2 min-h-[100px] focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
-    name="requirements"
-    placeholder="Job requirements"
-    value={form.requirements}
-    onChange={handleChange}
-    required
-  />
+          {form.paid && (
+            <div className="bg-indigo-50 p-4 rounded-xl space-y-1 border border-indigo-100">
+              <label className="text-sm font-semibold text-[#3e3875]">Salary Range / Amount</label>
+              <input name="salary" value={form.salary} onChange={handleChange} required={form.paid}
+                className="w-full border border-indigo-200 rounded-lg px-4 py-2 outline-none focus:border-[#3e3875]" placeholder="e.g. $1,200 - $1,500" />
+            </div>
+          )}
+        </form>
 
-  <select
-    className="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
-    name="type"
-    value={form.type}
-    onChange={handleChange}
-    required
-  >
-    <option value="">Select job type</option>
-    <option value="full-time">Full-time</option>
-    <option value="part-time">Part-time</option>
-    <option value="internship">Internship</option>
-  </select>
-
-  <label className="flex items-center gap-3">
-    <input
-      type="checkbox"
-      name="paid"
-      checked={form.paid}
-      onChange={handleChange}
-    />
-    <span className="text-sm">Paid position</span>
-  </label>
-
-  {form.paid && (
-    <input
-      className="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
-      name="salary"
-      placeholder="Salary (e.g. 1000$)"
-      value={form.salary}
-      onChange={handleChange}
-      required
-    />
-  )}
-</div>
-
-
-        {/* Actions */}
-        <div className="flex justify-end gap-3 pt-4 border-t">
-          <button
-            type="button"
-            onClick={onClose}
-            className="px-6 py-2 rounded border"
-          >
+        <div className="p-6 bg-slate-50 flex justify-end gap-3">
+          <button onClick={onClose} className="px-6 py-2.5 rounded-xl border border-slate-300 font-semibold text-slate-700 hover:bg-white transition-all">
             Cancel
           </button>
-
-          <button
-            type="submit"
-            disabled={saving}
-            className="bg-[#2529a1] text-white px-6 py-2 rounded-lg"
-          >
-            {saving ? "Saving..." : "Save Job"}
+          <button onClick={handleSubmit} disabled={saving}
+            className="bg-[#3e3875] text-white px-8 py-2.5 rounded-xl font-bold shadow-lg hover:bg-[#170e2c] transition-all flex items-center gap-2">
+            {saving ? "Saving..." : <><Save size={18} /> Save Job</>}
           </button>
         </div>
-      </form>
+      </div>
     </div>
   );
 }

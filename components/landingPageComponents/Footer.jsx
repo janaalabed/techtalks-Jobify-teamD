@@ -1,40 +1,73 @@
-
 "use client";
-import Link from "next/link";
+
+import React from "react";
+import Link from "next/link"; // Import Link
+import Image from "next/image"; // Import Image
 
 export default function Footer() {
   return (
-    <footer className="bg-gray-900 text-gray-400 py-20">
-      <div className="max-w-7xl mx-auto px-6 grid md:grid-cols-4 gap-12">
+    <footer className="bg-[#0f0a1d] pt-20 pb-10 border-t border-white/5">
+      <div className="max-w-7xl mx-auto px-6 grid grid-cols-2 md:grid-cols-4 gap-12 text-gray-400">
         
-        <div>
-          <h4 className="text-white font-semibold mb-4">Jobify</h4>
-          <p className="text-sm">
-            Connecting talent and opportunity in one modern platform.
+        {/* Brand Column */}
+        <div className="col-span-2 md:col-span-1">
+          {/* <Image 
+            src="logo2.png" 
+            alt="Jobify" 
+            width={100} 
+            height={24} 
+            className="brightness-0 invert mb-6" 
+          /> */}
+          <p className="text-sm leading-relaxed">
+            Connecting the next generation of talent with global opportunities through a smarter hiring experience.
           </p>
         </div>
 
+        {/* Product Column */}
         <div>
-          <h4 className="text-white font-semibold mb-4">Product</h4>
-          <Link href="#features" className="block hover:text-white">Features</Link>
-          <Link href="#how-it-works" className="block hover:text-white">How it works</Link>
+          <h4 className="text-white font-bold mb-6">Product</h4>
+          <ul className="space-y-4 text-sm">
+            <li>
+              <Link href="#features" className="hover:text-[#7270b1] transition-colors">
+                Features
+              </Link>
+            </li>
+            <li>
+              <Link href="#how-it-works" className="hover:text-[#7270b1] transition-colors">
+                How it works
+              </Link>
+            </li>
+          </ul>
         </div>
 
+        {/* Legal Column */}
         <div>
-          <h4 className="text-white font-semibold mb-4">Support</h4>
-          <Link href="/faq" className="block hover:text-white">FAQ</Link>
-          <Link href="/terms" className="block hover:text-white">Terms & Privacy</Link>
+          <h4 className="text-white font-bold mb-6">Legal</h4>
+          <ul className="space-y-4 text-sm">
+            <li>
+              <Link href="/terms" className="hover:text-[#7270b1] transition-colors">
+                Privacy Policy
+              </Link>
+            </li>
+            <li>
+              <Link href="/terms" className="hover:text-[#7270b1] transition-colors">
+                Terms of Service
+              </Link>
+            </li>
+          </ul>
         </div>
 
+        {/* Support Column */}
         <div>
-          <h4 className="text-white font-semibold mb-4">Contact</h4>
-          <p>support@jobify.com</p>
-          <p>+961 123 456</p>
+          <h4 className="text-white font-bold mb-6">Support</h4>
+          <p className="text-sm mb-2">support@jobify.com</p>
+          <p className="text-sm">+961 123 456</p>
         </div>
       </div>
 
-      <div className="mt-16 text-center text-sm border-t border-gray-700 pt-6">
-        © {new Date().getFullYear()} Jobify. All rights reserved.
+      {/* Bottom Bar */}
+      <div className="max-w-7xl mx-auto px-6 mt-20 pt-8 border-t border-white/5 text-center text-xs tracking-widest uppercase text-gray-500">
+        © {new Date().getFullYear()} Jobify Platform. Built for the future.
       </div>
     </footer>
   );

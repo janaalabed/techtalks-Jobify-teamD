@@ -1,52 +1,106 @@
 "use client";
-import { useState } from "react";
-import { useRouter } from "next/navigation";
-import Image from "next/image"; 
+
+import { useRouter, usePathname } from "next/navigation";
 import getSupabase from "../../lib/supabaseClient";
+import Image from "next/image"; 
+import { useState, useEffect } from "react";
+import { LayoutDashboard, UserCircle, Users, Bookmark, LogOut } from "lucide-react";
 
 export default function Navbar() {
   const supabase = getSupabase();
   const router = useRouter();
-   const [scrolled, setScrolled] = useState(false);
+  const pathname = usePathname();
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 10);
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   const handleLogout = async () => {
     await supabase.auth.signOut();
     router.push("/login");
   };
 
+  const navLinks = [
+    { id: "dashboard", name: "Dashboard", path: "/jobs-list", icon: <LayoutDashboard size={18} /> },
+    { id: "profile", name: "Profile", path: "/profile/previewApplicantProfile", icon: <UserCircle size={18} /> },
+    { id: "applicants", name: "Applicants", path: "/applicants", icon: <Users size={18} /> },
+    { id: "saved", name: "Saved Jobs", path: "/bookmarks", icon: <Bookmark size={18} /> },
+  ];
+
   return (
-    <nav className={`sticky top-0 z-80 backdrop-blur transition-shadow duration-300 border-b ${
-        scrolled
-          ? "bg-white/90 shadow-md border-gray-200"
-          : "bg-white/80 border-gray-200"
-      }`}>
-      <div className="max-w-7xl mx-auto flex items-center justify-between px-6 h-[80px]">
-        {/* Logo */}
+    <nav className={`w-full z-[100] transition-all duration-300 border-b shrink-0 h-[72px] flex items-center ${
+      scrolled
+        ? "bg-white/95 backdrop-blur-md shadow-sm border-slate-200"
+        : "bg-white border-slate-100"
+    }`}>
+      <div className="w-full mx-auto flex items-center justify-between px-8">
+        
+        {/* Logo Section - Increased Width and Height */}
         <div
-          className="flex items-center gap-2 cursor-pointer"
+          className="flex items-center cursor-pointer transition-transform hover:scale-[1.02] active:scale-95"
           onClick={() => router.push("/")}
         >
-          <Image
-            src="/uploads/logo2.png"  // path to your logo in public folder
-            alt="Jobify Logo"
-            width={150}      // adjust as needed
-            height={32}     // adjust as needed
-          />
-          
+          <div className="relative w-[260px] h-[114px]">
+            <Image
+              src="/uploads/logo2.png"
+              alt="Jobify Logo"
+              fill
+              className="object-contain object-left"
+              priority
+            />
+          </div>
         </div>
 
-        {/* Links */}
-        <div className="flex items-center gap-6">
-          <button onClick={() => router.push("/jobs-list")} className="hover:text-blue-600">Home</button>
-          <button onClick={() => router.push("/profile/previewApplicantProfile")} className="hover:text-blue-600">Profile</button>
-          <button onClick={() => router.push("/jobs-list")} className="hover:text-blue-600">Applications</button>
-          <button onClick={() => router.push("/bookmarks")} className="hover:text-blue-600">Saved Jobs</button>
+        <div className="hidden md:flex items-center gap-1">
+          {navLinks.map((link) => {
+            const isActive = pathname === link.path;
+            return (
+              <button
+                key={link.id} 
+                onClick={() => router.push(link.path)}
+                className={`flex items-center gap-2 px-4 py-2 rounded-xl text-[13px] font-bold transition-all relative group ${
+                  isActive 
+                    ? "text-[#3e3875] bg-[#3e3875]/5" 
+                    : "text-slate-500 hover:text-[#5f5aa7] hover:bg-slate-50"
+                }`}
+              >
+                <span className={`${isActive ? "text-[#5f5aa7]" : "text-slate-400 group-hover:text-[#5f5aa7]"}`}>
+                  {link.icon}
+                </span>
+                {link.name}
+              </button>
+            );
+          })}
+
+          <div className="h-6 w-[1px] bg-slate-200 mx-4" />
+
           <button
             onClick={handleLogout}
-            className="border border-red-500 text-red-600 px-3 py-1 rounded hover:bg-red-50"
+            className="flex items-center gap-2 px-4 py-2 rounded-xl text-[13px] font-bold text-slate-400 hover:text-rose-600 hover:bg-rose-50 transition-all"
           >
+            <LogOut size={18} />
             Logout
           </button>
+        </div>
+
+        <div className="md:hidden">
+        <button
+  onClick={handleLogout}
+  className="flex items-center gap-2 px-4 py-2 rounded-xl text-[13px] font-bold text-rose-600 bg-transparent hover:bg-rose-50 hover:shadow-[0_8px_20px_-6px_rgba(225,29,72,0.35)] transition-all duration-300 group"
+>
+  <LogOut 
+    size={18} 
+    className="text-rose-600 transition-colors" 
+  />
+  <span className="text-rose-600 transition-colors">
+    Logout
+  </span>
+</button>
         </div>
       </div>
     </nav>

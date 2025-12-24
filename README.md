@@ -45,8 +45,6 @@ app/... → routing folder (Pages, layouts, route groups)
 -lobal.css : css of the whole website (tailwind css)
 -page.js : main page of the project (landing page)
 app/api/... → All backend API routes
-db/ → MySQL connection + queries
-lib/ → Auth, validation, utilities
 components/ → Reusable UI components
 public/ => for images, icons ...
 .gitignore : file to be ignored by git (includes .env file)

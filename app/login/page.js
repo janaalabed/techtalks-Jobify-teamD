@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import getSupabase from "../../lib/supabaseClient";
 import { redirectToDashboard } from "../../lib/redirectToDashboard";
+import { Mail, Lock, ArrowRight, Loader2 } from "lucide-react";
 
 export default function Login() {
     const router = useRouter();
@@ -18,7 +19,6 @@ export default function Login() {
         setLoading(true);
 
         try {
-            // 1️⃣ Sign in user
             const { data, error } = await supabase.auth.signInWithPassword({
                 email,
                 password,
@@ -29,7 +29,6 @@ export default function Login() {
             const user = data.user;
             if (!user) throw new Error("Login failed");
 
-            // 2️⃣ Get role from profiles
             const { data: profile, error: profileError } = await supabase
                 .from("profiles")
                 .select("role")
@@ -38,7 +37,6 @@ export default function Login() {
 
             if (profileError || !profile) throw new Error("User profile not found");
 
-            // ✅ Redirect based on role
             redirectToDashboard(profile.role, router);
         } catch (err) {
             alert(err.message);
@@ -47,16 +45,12 @@ export default function Login() {
         }
     };
 
-
-
     const handleForgotPassword = async () => {
         if (!email) {
             alert("Please enter your email first.");
             return;
         }
-
         const { error } = await supabase.auth.resetPasswordForEmail(email);
-
         if (error) {
             alert(error.message);
         } else {
@@ -65,75 +59,97 @@ export default function Login() {
     };
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-[#2529a1]/10 via-white to-indigo-50 flex items-center justify-center px-4">
-            <div className="w-full max-w-md bg-white rounded-3xl shadow-2xl border border-gray-100 overflow-hidden">
+        <div className="min-h-screen bg-white relative flex items-center justify-center px-4 py-12 overflow-hidden">
+            {/* Background Decor - Matches Register Style */}
+            <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] [background-size:20px_20px] opacity-30" />
+            <div className="absolute -top-24 -right-24 w-96 h-96 bg-[#5f5aa7]/10 rounded-full blur-[100px]" />
+            <div className="absolute -bottom-24 -left-24 w-96 h-96 bg-[#7270b1]/10 rounded-full blur-[100px]" />
 
-                <div className="bg-[#2529a1] px-8 py-6">
-                    <h1 className="text-2xl font-bold text-white">Welcome back</h1>
-                    <p className="text-indigo-100 text-sm mt-1">
-                        Log in to continue to Jobify
-                    </p>
+            <div className="w-full max-w-lg relative z-10">
+                {/* Header */}
+                <div className="text-center mb-10">
+                    <h1 className="text-3xl md:text-4xl font-bold text-[#170e2c] tracking-tight">
+                        Welcome <span className="text-[#5f5aa7]">Back</span>
+                    </h1>
+                    <p className="text-slate-500 mt-2">Log in to continue to your Jobify dashboard.</p>
                 </div>
 
-                <form onSubmit={handleLogin} className="px-8 py-8 space-y-5">
+                {/* Card */}
+                <div className="bg-white/80 backdrop-blur-xl rounded-[2.5rem] shadow-[0_20px_50px_rgba(0,0,0,0.05)] border border-slate-100 p-8 md:p-12">
+                    <form onSubmit={handleLogin} className="space-y-6">
 
-                    <div>
-                        <label className="text-sm font-medium text-gray-700">
-                            Email address
-                        </label>
-                        <input
-                            type="email"
-                            required
-                            value={email}
-                            onChange={(e) => setEmail(e.target.value)}
-                            placeholder="you@example.com"
-                            className="mt-2 w-full rounded-xl border border-gray-300 px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-[#2529a1]/40"
-                        />
-                    </div>
+                        {/* Email Field */}
+                        <div className="space-y-2">
+                            <label className="text-sm font-semibold text-slate-700 ml-1">Email Address</label>
+                            <div className="relative group">
+                                <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400 group-focus-within:text-[#5f5aa7] transition-colors" />
+                                <input
+                                    type="email"
+                                    required
+                                    value={email}
+                                    onChange={(e) => setEmail(e.target.value)}
+                                    placeholder="name@company.com"
+                                    className="w-full bg-slate-50 border-none rounded-2xl pl-12 pr-4 py-4 text-slate-900 placeholder:text-slate-400 focus:ring-2 focus:ring-[#5f5aa7]/20 transition-all outline-none"
+                                />
+                            </div>
+                        </div>
 
-                    <div>
-                        <label className="text-sm font-medium text-gray-700">
-                            Password
-                        </label>
-                        <input
-                            type="password"
-                            required
-                            value={password}
-                            onChange={(e) => setPassword(e.target.value)}
-                            placeholder="••••••••"
-                            className="mt-2 w-full rounded-xl border border-gray-300 px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-[#2529a1]/40"
-                        />
-                    </div>
+                        {/* Password Field */}
+                        <div className="space-y-2">
+                            <div className="flex justify-between items-center ml-1">
+                                <label className="text-sm font-semibold text-slate-700">Password</label>
+                                <button
+                                    type="button"
+                                    onClick={handleForgotPassword}
+                                    className="text-xs font-bold text-[#5f5aa7] hover:underline"
+                                >
+                                    Forgot?
+                                </button>
+                            </div>
+                            <div className="relative group">
+                                <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400 group-focus-within:text-[#5f5aa7] transition-colors" />
+                                <input
+                                    type="password"
+                                    required
+                                    value={password}
+                                    onChange={(e) => setPassword(e.target.value)}
+                                    placeholder="••••••••"
+                                    className="w-full bg-slate-50 border-none rounded-2xl pl-12 pr-4 py-4 text-slate-900 placeholder:text-slate-400 focus:ring-2 focus:ring-[#5f5aa7]/20 transition-all outline-none"
+                                />
+                            </div>
+                        </div>
 
-                    <button
-                        type="submit"
-                        disabled={loading}
-                        className={`w-full rounded-xl py-3.5 font-semibold transition-all ${loading
-                            ? "bg-gray-300 text-gray-500 cursor-not-allowed"
-                            : "bg-[#2529a1] text-white hover:-translate-y-0.5 hover:shadow-xl"
-                            }`}
-                    >
-                        {loading ? "Logging in..." : "Login"}
-                    </button>
-
-                    <button
-                        type="button"
-                        onClick={handleForgotPassword}
-                        className="w-full text-sm text-gray-600 hover:text-[#2529a1]"
-                    >
-                        Forgot password?
-                    </button>
-
-                    <p className="text-center text-xs text-gray-500 pt-2">
-                        Don’t have an account?{" "}
-                        <span
-                            onClick={() => router.push("/register")}
-                            className="text-[#2529a1] font-medium cursor-pointer hover:underline"
+                        {/* Login Button */}
+                        <button
+                            type="submit"
+                            disabled={loading}
+                            className="w-full bg-[#170e2c] text-white rounded-2xl py-4 font-bold flex items-center justify-center gap-2 hover:bg-[#3e3875] disabled:opacity-70 disabled:cursor-not-allowed transition-all shadow-xl shadow-[#170e2c]/10 active:scale-[0.98] mt-2"
                         >
-                            Sign up
-                        </span>
-                    </p>
-                </form>
+                            {loading ? (
+                                <Loader2 className="w-5 h-5 animate-spin" />
+                            ) : (
+                                <>
+                                    Sign In
+                                    <ArrowRight size={18} />
+                                </>
+                            )}
+                        </button>
+
+                        {/* Register Link */}
+                        <div className="pt-4 text-center">
+                            <p className="text-sm text-slate-500">
+                                Don’t have an account yet?{" "}
+                                <button
+                                    type="button"
+                                    onClick={() => router.push("/register")}
+                                    className="text-[#5f5aa7] font-bold hover:underline"
+                                >
+                                    Create one now
+                                </button>
+                            </p>
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
     );

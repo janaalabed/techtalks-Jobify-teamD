@@ -3,50 +3,42 @@ import Image from "next/image";
 
 export default function Hero() {
   return (
-    <section className="relative overflow-hidden bg-gradient-to-b from-[#849cfb] to-white">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-12 py-12 sm:py-20 lg:py-28">
-        <div className="flex flex-col-reverse lg:flex-row items-center gap-8 sm:gap-12 lg:gap-14">
-          
-          {/* Text */}
-          <div className="flex-1 space-y-4 sm:space-y-6 text-center lg:text-left w-full">
-            <span className="inline-block bg-blue-100 text-[#2529a1] px-3 sm:px-4 py-1 sm:py-1.5 rounded-full text-xs sm:text-sm font-medium">
-              For students & employers
-            </span>
+    <section className="relative pt-40 pb-20 bg-[#170e2c] overflow-hidden">
+      {/* Background Decor */}
+      <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-[#5f5aa7]/20 rounded-full blur-[120px]" />
+      <div className="absolute bottom-[10%] right-[-5%] w-[30%] h-[30%] bg-[#3e3875]/30 rounded-full blur-[100px]" />
 
-            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold text-gray-900 leading-tight">
-              The easiest way to land{" "}
-              <span className="text-[#2529a1]">jobs & internships</span>
-            </h1>
-
-            <p className="text-gray-600 text-base sm:text-lg lg:text-xl max-w-xl mx-auto lg:mx-0">
-              Jobify connects talent and companies through a fast, modern, and transparent hiring platform.
-            </p>
-
-            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center lg:justify-start pt-2 sm:pt-4">
-              
-              <a  href="../register/"
-                className="bg-[#2529a1] text-white px-6 sm:px-8 py-3 sm:py-4 rounded-xl font-semibold shadow hover:shadow-lg transition-all text-sm sm:text-base"
-              >
-                Get Started
-              </a>
-              
-               <a href="#how-it-works"
-                className="border border-gray-300 px-6 sm:px-8 py-3 sm:py-4 rounded-xl font-semibold hover:bg-gray-100 transition-all text-sm sm:text-base"
-              >
-                Learn more
-              </a>
-            </div>
+      <div className="max-w-7xl mx-auto px-6 relative z-10 flex flex-col lg:flex-row items-center gap-16">
+        <div className="flex-1 text-center lg:text-left">
+          <div className="inline-flex items-center gap-2 bg-[#3e3875]/30 border border-white/10 px-4 py-1.5 rounded-full mb-6">
+            <span className="w-2 h-2 bg-[#7270b1] rounded-full animate-pulse" />
+            <span className="text-xs font-semibold uppercase tracking-wider text-gray-300">New: One-Click Apply is Live</span>
           </div>
 
-          {/* Image */}
-          <div className="flex-1 w-full max-w-md sm:max-w-lg lg:max-w-none relative aspect-square sm:aspect-auto sm:min-h-[400px] lg:min-h-[500px]">
-            <Image
-              src={"/uploads/hero-illustration.png"}
-              alt="Jobify Illustration"
-              priority
-              fill
-              className="object-contain"
-            />
+          <h1 className="text-5xl md:text-6xl xl:text-7xl font-bold text-white leading-[1.1] mb-6">
+            Find Internships & Jobs <br />
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#5f5aa7] to-[#7270b1]">
+              Smarter with Jobify
+            </span>
+          </h1>
+
+          <p className="text-gray-400 text-lg md:text-xl max-w-xl mx-auto lg:mx-0 mb-10 leading-relaxed">
+            A modern hiring ecosystem where ambitious students meet forward-thinking companies.
+          </p>
+
+          <div className="flex flex-col sm:flex-row justify-center lg:justify-start gap-5">
+            <a href="/register" className="bg-white text-[#170e2c] px-8 py-4 rounded-xl font-bold shadow-xl hover:bg-gray-100 transition-all active:scale-95">
+              Get Started for Free
+            </a>
+            <a href="#how-it-works" className="bg-[#3e3875]/30 border border-white/10 text-white px-8 py-4 rounded-xl font-bold hover:bg-[#3e3875]/50 transition-all">
+              See How It Works
+            </a>
+          </div>
+        </div>
+
+        <div className="flex-1 w-full max-w-xl relative">
+          <div className="relative z-10 bg-gradient-to-tr from-[#3e3875]/40 to-transparent p-4 rounded-3xl border border-white/10 backdrop-blur-sm">
+            <Image src="/uploads/purple2.jpg" alt="Platform" width={600} height={450} className="rounded-2xl shadow-2xl" priority />
           </div>
         </div>
       </div>
