@@ -26,7 +26,7 @@ export const pg = {
   pool: pgPool
 };
 
-// Helper to match the mysql2 execute signature (sql, params) -> rows
+
 // pg query returns { rows: [], ... }
 export async function pgQuery(sql, params = []) {
   try {

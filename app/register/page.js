@@ -22,7 +22,7 @@ export default function Register() {
         special: false,
     });
 
-    // Removed the ": string" type annotation
+    
     const handlePasswordChange = (value) => {
         setPassword(value);
         setRequirements({
@@ -41,7 +41,7 @@ export default function Register() {
     const passwordsMatch = password === confirmPassword && confirmPassword !== "";
     const isFormValid = allRequirementsMet && passwordsMatch && email && role;
 
-    // Removed the ": React.FormEvent" type annotation
+
     const handleRegister = async (e) => {
         e.preventDefault();
         const { data, error } = await supabase.auth.signUp({ email, password });

@@ -40,7 +40,7 @@ export default function Navbar() {
     }`}>
       <div className="w-full mx-auto flex items-center justify-between px-8">
         
-        {/* Logo Section - Increased Width and Height */}
+      
         <div
           className="flex items-center cursor-pointer transition-transform hover:scale-[1.02] active:scale-95"
           onClick={() => router.push("/")}

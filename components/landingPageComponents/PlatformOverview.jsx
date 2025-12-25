@@ -27,7 +27,7 @@ const overviewItems = [
 export default function PlatformOverview() {
   return (
     <section className="py-24 bg-[#170e2c] relative overflow-hidden">
-      {/* Decorative Radial Gradient */}
+     
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-[radial-gradient(circle_at_center,#3e3875_0%,transparent_70%)] opacity-10 pointer-events-none" />
 
       <div className="max-w-6xl mx-auto px-6 relative z-10">
