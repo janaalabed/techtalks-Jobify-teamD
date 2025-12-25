@@ -38,7 +38,7 @@ export default function Hero() {
 
         <div className="flex-1 w-full max-w-xl relative">
           <div className="relative z-10 bg-gradient-to-tr from-[#3e3875]/40 to-transparent p-4 rounded-3xl border border-white/10 backdrop-blur-sm">
-            <Image src="/uploads/purple2.jpg" alt="Platform" width={600} height={450} className="rounded-2xl shadow-2xl" priority />
+            <Image src="/uploads/purple3.jpg" alt="Platform" width={600} height={450} className="rounded-2xl shadow-2xl" priority />
           </div>
         </div>
       </div>
