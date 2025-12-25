@@ -34,7 +34,7 @@ export default function SavedJobsPage() {
 
             if (error) throw error;
 
-            // Flatten array: bookmarks → jobs
+            
             setSavedJobs(data.map((b) => b.jobs));
         } catch (err) {
             console.error(err);
@@ -80,7 +80,7 @@ export default function SavedJobsPage() {
                         <JobCard
                             key={job.id}
                             job={job}
-                            bookmarked={true} // All jobs here are bookmarked
+                            bookmarked={true} 
                             onToggleBookmark={handleToggleBookmark}
                         />
                     ))}
