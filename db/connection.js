@@ -38,25 +38,6 @@ export async function pgQuery(sql, params = []) {
   }
 }
 
-import mysql from "mysql2/promise";
-
-let Pool;
-
-export function getPool() {
-  if (!Pool) {
-    Pool = mysql.createPool({
-      host: process.env.DB_HOST,
-      user: process.env.DB_USER,
-      password: process.env.DB_PASS,
-      database: process.env.DB_NAME,
-      waitForConnections: true,
-      connectionLimit: 10,
-      queueLimit: 0,
-    });
-  }
-  return Pool;
-}
-
 export async function mysqlQuery(sql, params = []) {
   const [rows] = await getPool().execute(sql, params);
   return rows;
