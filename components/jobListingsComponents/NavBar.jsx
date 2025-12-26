@@ -28,7 +28,7 @@ export default function Navbar() {
   const navLinks = [
     { id: "dashboard", name: "Dashboard", path: "/jobs-list", icon: <LayoutDashboard size={18} /> },
     { id: "profile", name: "Profile", path: "/profile/previewApplicantProfile", icon: <UserCircle size={18} /> },
-    { id: "applicants", name: "Applicants", path: "/applicants", icon: <Users size={18} /> },
+    { id: "applications", name: "My Applications", path: "/applicants", icon: <Users size={18} /> },
     { id: "saved", name: "Saved Jobs", path: "/bookmarks", icon: <Bookmark size={18} /> },
   ];
 
