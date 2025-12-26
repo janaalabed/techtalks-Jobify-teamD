@@ -1,12 +1,12 @@
 "use client";
 
 import React from "react";
-import Link from "next/link"; // Import Link
-import Image from "next/image"; // Import Image
+import Link from "next/link";
+import Image from "next/image"; 
 
 export default function Footer() {
   return (
-    <footer className="bg-[#0f0a1d] pt-20 pb-10 border-t border-white/5">
+    <footer id="contact" className="bg-[#0f0a1d] pt-20 pb-10 border-t border-white/5">
       <div className="max-w-7xl mx-auto px-6 grid grid-cols-2 md:grid-cols-4 gap-12 text-gray-400">
         
         {/* Brand Column */}
