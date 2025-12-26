@@ -28,7 +28,7 @@ export default function Navbar() {
   const navLinks = [
     { id: "dashboard", name: "Dashboard", path: "/jobs-list", icon: <LayoutDashboard size={18} /> },
     { id: "profile", name: "Profile", path: "/profile/previewApplicantProfile", icon: <UserCircle size={18} /> },
-    { id: "applications", name: "My Applications", path: "/applicants", icon: <Users size={18} /> },
+    { id: "applications", name: "My Applications", path: "/applications", icon: <Users size={18} /> },
     { id: "saved", name: "Saved Jobs", path: "/bookmarks", icon: <Bookmark size={18} /> },
   ];
 
@@ -91,7 +91,7 @@ export default function Navbar() {
         <div className="md:hidden">
         <button
   onClick={handleLogout}
-  className="flex items-center gap-2 px-4 py-2 rounded-xl text-[13px] font-bold text-rose-600 bg-transparent hover:bg-rose-50 hover:shadow-[0_8px_20px_-6px_rgba(225,29,72,0.35)] transition-all duration-300 group"
+  className="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-bold text-rose-600 hover:bg-rose-50 transition-all"
 >
   <LogOut 
     size={18} 
