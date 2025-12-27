@@ -22,7 +22,6 @@ export default function Register() {
         special: false,
     });
 
-    
     const handlePasswordChange = (value) => {
         setPassword(value);
         setRequirements({
@@ -41,12 +40,14 @@ export default function Register() {
     const passwordsMatch = password === confirmPassword && confirmPassword !== "";
     const isFormValid = allRequirementsMet && passwordsMatch && email && role;
 
-
     const handleRegister = async (e) => {
         e.preventDefault();
         const { data, error } = await supabase.auth.signUp({ email, password });
 
-        if (error) { alert(error.message); return; }
+        if (error) {
+            alert(error.message);
+            return;
+        }
         const user = data.user;
         if (!user) return;
 
@@ -54,7 +55,10 @@ export default function Register() {
             .from("profiles")
             .insert({ id: user.id, role });
 
-        if (profileError) { alert(profileError.message); return; }
+        if (profileError) {
+            alert(profileError.message);
+            return;
+        }
 
         if (role === "applicant") {
             await supabase.from("applicants").insert({ user_id: user.id });
@@ -77,33 +81,40 @@ export default function Register() {
                     <h1 className="text-3xl md:text-4xl font-bold text-[#170e2c] tracking-tight">
                         Join <span className="text-[#5f5aa7]">Jobify</span>
                     </h1>
-                    <p className="text-slate-500 mt-2">Create your account to start your journey.</p>
+                    <p className="text-slate-500 mt-2">
+                        Create your account to start your journey.
+                    </p>
                 </div>
 
                 <div className="bg-white/80 backdrop-blur-xl rounded-[2.5rem] shadow-[0_20px_50px_rgba(0,0,0,0.05)] border border-slate-100 p-8 md:p-12">
                     <form onSubmit={handleRegister} className="space-y-5">
-
-                        {/* Role Selection Blocks */}
+                        {/* Role Selection */}
                         <div className="grid grid-cols-2 gap-4 mb-8">
                             <button
                                 type="button"
                                 onClick={() => setRole("applicant")}
-                                className={`p-4 rounded-2xl border-2 transition-all flex flex-col items-center gap-2 ${role === "applicant"
+                                className={`p-4 rounded-2xl border-2 transition-all flex flex-col items-center gap-2 ${
+                                    role === "applicant"
                                         ? "border-[#5f5aa7] bg-[#5f5aa7]/5 text-[#5f5aa7]"
                                         : "border-slate-100 text-slate-400 hover:border-slate-200"
-                                    }`}
+                                }`}
                             >
-                                <span className="text-xs font-bold uppercase tracking-wider">Applicant</span>
+                                <span className="text-xs font-bold uppercase tracking-wider">
+                                    Applicant
+                                </span>
                             </button>
                             <button
                                 type="button"
                                 onClick={() => setRole("employer")}
-                                className={`p-4 rounded-2xl border-2 transition-all flex flex-col items-center gap-2 ${role === "employer"
+                                className={`p-4 rounded-2xl border-2 transition-all flex flex-col items-center gap-2 ${
+                                    role === "employer"
                                         ? "border-[#5f5aa7] bg-[#5f5aa7]/5 text-[#5f5aa7]"
                                         : "border-slate-100 text-slate-400 hover:border-slate-200"
-                                    }`}
+                                }`}
                             >
-                                <span className="text-xs font-bold uppercase tracking-wider">Employer</span>
+                                <span className="text-xs font-bold uppercase tracking-wider">
+                                    Employer
+                                </span>
                             </button>
                         </div>
 
@@ -133,7 +144,7 @@ export default function Register() {
                             />
                         </div>
 
-                        {/* Password Requirements Grid */}
+                        {/* Password Requirements */}
                         <div className="grid grid-cols-2 gap-2 px-2 py-2">
                             {[
                                 { label: "8+ characters", met: requirements.length },
@@ -141,7 +152,12 @@ export default function Register() {
                                 { label: "One number", met: requirements.number },
                                 { label: "Special char", met: requirements.special },
                             ].map((req) => (
-                                <div key={req.label} className={`flex items-center gap-2 text-[11px] font-medium ${req.met ? "text-emerald-600" : "text-slate-400"}`}>
+                                <div
+                                    key={req.label}
+                                    className={`flex items-center gap-2 text-[11px] font-medium ${
+                                        req.met ? "text-emerald-600" : "text-slate-400"
+                                    }`}
+                                >
                                     {req.met ? <CheckCircle2 size={14} /> : <Circle size={14} />}
                                     {req.label}
                                 </div>
@@ -157,11 +173,15 @@ export default function Register() {
                                 value={confirmPassword}
                                 onChange={(e) => setConfirmPassword(e.target.value)}
                                 placeholder="Confirm password"
-                                className={`w-full bg-slate-50 border-none rounded-2xl pl-12 pr-4 py-4 text-slate-900 placeholder:text-slate-400 focus:ring-2 transition-all outline-none ${passwordsMatch ? "focus:ring-emerald-500/20" : "focus:ring-[#5f5aa7]/20"
-                                    }`}
+                                className={`w-full bg-slate-50 border-none rounded-2xl pl-12 pr-4 py-4 text-slate-900 placeholder:text-slate-400 focus:ring-2 transition-all outline-none ${
+                                    passwordsMatch
+                                        ? "focus:ring-emerald-500/20"
+                                        : "focus:ring-[#5f5aa7]/20"
+                                }`}
                             />
                         </div>
 
+                        {/* Submit Button */}
                         <button
                             type="submit"
                             disabled={!isFormValid}
