@@ -77,7 +77,7 @@ export default function CreateCompanyProfilePage() {
 
   return (
     <div className="min-h-screen bg-[#f8fafc]">
-      {/* Premium Header Background */}
+      
       <div className="bg-[#170e2c] h-64 w-full absolute top-0 left-0 z-0">
          <div className="absolute inset-0 bg-gradient-to-r from-[#3e3875]/40 to-transparent" />
       </div>
@@ -89,7 +89,7 @@ export default function CreateCompanyProfilePage() {
         </div>
 
         <div className="grid lg:grid-cols-12 gap-8">
-          {/* Main Form Area */}
+         
           <div className="lg:col-span-8">
             <div className="bg-white rounded-[2.5rem] shadow-xl shadow-[#170e2c]/5 border border-slate-200 overflow-hidden">
               <div className="border-b border-slate-100 px-8 py-8 bg-slate-50/50">
@@ -98,7 +98,7 @@ export default function CreateCompanyProfilePage() {
               </div>
 
               <form ref={formRef} onSubmit={handleSubmit} className="p-8 space-y-8">
-                {/* Company Name */}
+                
                 <div>
                   <label className="block text-[11px] font-black text-[#7270b1] uppercase tracking-widest mb-3">
                     Company Name <span className="text-red-500 font-bold">*</span>
@@ -114,7 +114,7 @@ export default function CreateCompanyProfilePage() {
                   </div>
                 </div>
 
-                {/* Two Column Grid */}
+                
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
                     <label className="block text-[11px] font-black text-[#7270b1] uppercase tracking-widest mb-3">Website</label>
@@ -141,7 +141,7 @@ export default function CreateCompanyProfilePage() {
                   </div>
                 </div>
 
-                {/* Location */}
+                
                 <div>
                   <label className="block text-[11px] font-black text-[#7270b1] uppercase tracking-widest mb-3">Location</label>
                   <div className="relative">
@@ -154,7 +154,7 @@ export default function CreateCompanyProfilePage() {
                   </div>
                 </div>
 
-                {/* Description */}
+                
                 <div>
                   <label className="block text-[11px] font-black text-[#7270b1] uppercase tracking-widest mb-3">About the Company</label>
                   <textarea
@@ -165,7 +165,7 @@ export default function CreateCompanyProfilePage() {
                   />
                 </div>
 
-                {/* Logo Upload Box */}
+                
                 <div>
                   <label className="block text-[11px] font-black text-[#7270b1] uppercase tracking-widest mb-3">Company Logo</label>
                   <label className="flex flex-col items-center justify-center w-full h-40 border-2 border-dashed border-[#7270b1]/30 rounded-[2rem] cursor-pointer bg-slate-50/50 hover:bg-[#5f5aa7]/5 hover:border-[#5f5aa7]/50 transition-all group">
@@ -182,7 +182,7 @@ export default function CreateCompanyProfilePage() {
                   </label>
                 </div>
 
-                {/* Status Message */}
+                
                 {message && (
                   <div className={`rounded-2xl px-5 py-4 text-sm font-semibold flex items-center gap-3 transition-all ${
                     message.toLowerCase().includes("success")
@@ -194,7 +194,7 @@ export default function CreateCompanyProfilePage() {
                   </div>
                 )}
 
-                {/* Action Buttons */}
+                
                 <div className="flex flex-col sm:flex-row gap-4 pt-4">
                   <button 
                     type="submit" 
@@ -214,7 +214,7 @@ export default function CreateCompanyProfilePage() {
             </div>
           </div>
 
-          {/* Sidebar Helper */}
+          
           <div className="lg:col-span-4 space-y-6">
             <div className="bg-[#3e3875] rounded-[2.5rem] p-8 text-white shadow-xl shadow-[#3e3875]/10">
               <h3 className="font-bold text-lg mb-4">Why fill this out?</h3>

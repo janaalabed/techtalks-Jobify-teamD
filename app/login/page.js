@@ -60,13 +60,13 @@ export default function Login() {
 
     return (
         <div className="min-h-screen bg-white relative flex items-center justify-center px-4 py-12 overflow-hidden">
-            {/* Background Decor - Matches Register Style */}
+            
             <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] [background-size:20px_20px] opacity-30" />
             <div className="absolute -top-24 -right-24 w-96 h-96 bg-[#5f5aa7]/10 rounded-full blur-[100px]" />
             <div className="absolute -bottom-24 -left-24 w-96 h-96 bg-[#7270b1]/10 rounded-full blur-[100px]" />
 
             <div className="w-full max-w-lg relative z-10">
-                {/* Header */}
+                
                 <div className="text-center mb-10">
                     <h1 className="text-3xl md:text-4xl font-bold text-[#170e2c] tracking-tight">
                         Welcome <span className="text-[#5f5aa7]">Back</span>
@@ -74,11 +74,11 @@ export default function Login() {
                     <p className="text-slate-500 mt-2">Log in to continue to your Jobify dashboard.</p>
                 </div>
 
-                {/* Card */}
+                
                 <div className="bg-white/80 backdrop-blur-xl rounded-[2.5rem] shadow-[0_20px_50px_rgba(0,0,0,0.05)] border border-slate-100 p-8 md:p-12">
                     <form onSubmit={handleLogin} className="space-y-6">
 
-                        {/* Email Field */}
+                        
                         <div className="space-y-2">
                             <label className="text-sm font-semibold text-slate-700 ml-1">Email Address</label>
                             <div className="relative group">
@@ -94,7 +94,7 @@ export default function Login() {
                             </div>
                         </div>
 
-                        {/* Password Field */}
+                        
                         <div className="space-y-2">
                             <div className="flex justify-between items-center ml-1">
                                 <label className="text-sm font-semibold text-slate-700">Password</label>
@@ -119,7 +119,7 @@ export default function Login() {
                             </div>
                         </div>
 
-                        {/* Login Button */}
+                        
                         <button
                             type="submit"
                             disabled={loading}
@@ -135,7 +135,7 @@ export default function Login() {
                             )}
                         </button>
 
-                        {/* Register Link */}
+                        
                         <div className="pt-4 text-center">
                             <p className="text-sm text-slate-500">
                                 Don’t have an account yet?{" "}

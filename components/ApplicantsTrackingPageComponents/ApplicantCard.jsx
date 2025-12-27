@@ -4,15 +4,15 @@ export default function ApplicantCard({ app, onReview, onAccept, onReject }) {
     const skills = Array.isArray(app.applicants?.skills) ? app.applicants.skills : [];
 
     return (
-        <div className="group relative bg-white p-5 rounded-1xl border border-[#7270b1]/10 shadow-[0_4px_20px_-4px_rgba(114,112,177,0.08)] hover:shadow-[0_20px_40px_-12px_rgba(62,56,117,0.15)] transition-all duration-500 ease-out">
+        <div className="group relative bg-[#edf0f7] p-5 rounded-1xl border border-[#7270b1]/10 shadow-[0_4px_20px_-4px_rgba(114,112,177,0.08)] hover:shadow-[0_20px_40px_-12px_rgba(62,56,117,0.15)] transition-all duration-500 ease-out">
             
-            {/* Top Row: Avatar & Tag */}
+            
             <div className="flex justify-between items-center mb-5">
                 <div className="relative">
                     <div className="w-11 h-11 rounded-1xl bg-gradient-to-br from-[#f6f7ff] to-[#e2e4ff] flex items-center justify-center text-[#3e3875] font-black shadow-sm border border-white">
                         {app.applicants?.profiles?.name?.charAt(0) || '?'}
                     </div>
-                    {/* Status indicator dot */}
+                    
                     <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-white rounded-full flex items-center justify-center shadow-sm">
                         <div className={`w-2 h-2 rounded-full ${app.status === 'accepted' ? 'bg-green-500' : 'bg-[#5f5aa7]'}`}></div>
                     </div>

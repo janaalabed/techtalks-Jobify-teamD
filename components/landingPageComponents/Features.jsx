@@ -29,7 +29,7 @@ const features = [
 export default function Features() {
   return (
     <section id="features" className="py-24 bg-[#170e2c] relative overflow-hidden">
-      {/* Subtle background glow */}
+     
       <div className="absolute top-0 left-1/4 w-96 h-96 bg-[#3e3875] rounded-full blur-[120px] opacity-20 pointer-events-none" />
       
       <div className="max-w-7xl mx-auto px-6 relative z-10">
@@ -48,7 +48,7 @@ export default function Features() {
               key={i}
               className="group relative p-8 rounded-2xl border border-white/5 bg-[#3e3875]/20 backdrop-blur-sm transition-all duration-500 hover:bg-[#3e3875]/40 hover:border-[#5f5aa7]/50 hover:-translate-y-2"
             >
-              {/* Icon with palette mapping */}
+             
               <div className="inline-flex items-center justify-center w-12 h-12 rounded-lg bg-[#5f5aa7]/10 text-[#5f5aa7] mb-6 group-hover:scale-110 group-hover:bg-[#5f5aa7] group-hover:text-white transition-all duration-300">
                 {f.icon}
               </div>

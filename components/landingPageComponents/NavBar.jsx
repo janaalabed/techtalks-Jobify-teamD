@@ -58,7 +58,7 @@ export default function Navbar() {
         </button>
       </div>
 
-      {/* Mobile Menu */}
+     
       {isOpen && (
         <div className="absolute top-full left-0 w-full bg-[#170e2c] border-b border-white/10 p-6 space-y-4 md:hidden">
           {["Features", "How It Works", "Footer"].map((item) => (

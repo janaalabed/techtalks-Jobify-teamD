@@ -40,7 +40,7 @@ export default function Navbar() {
     }`}>
       <div className="w-full mx-auto flex items-center justify-between px-8">
         
-        {/* Logo */}
+       
         <div
           className="flex items-center gap-2 cursor-pointer transition-transform hover:scale-105"
           onClick={() => router.push("/")}
@@ -54,7 +54,7 @@ export default function Navbar() {
           />
         </div>
 
-        {/* Links */}
+       
         <div className="hidden md:flex items-center gap-2">
           {navLinks.map((link) => {
             const isActive = pathname === link.path;
@@ -85,7 +85,7 @@ export default function Navbar() {
           </button>
         </div>
 
-        {/* Mobile Logout (Only visible on small screens) */}
+        
         <div className="md:hidden">
             <button onClick={handleLogout} className="p-2 text-rose-600">
                 <LogOut size={24} />
