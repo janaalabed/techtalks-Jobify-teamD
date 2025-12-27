@@ -29,18 +29,18 @@ export default function Navbar() {
   const navLinks = [
     { name: "Dashboard", path: "/employers/dashboard", icon: <LayoutDashboard size={18} /> },
     { name: "Profile", path: "/profile/previewCompanyProfile", icon: <UserCircle size={18} /> },
-    { name: "Applicants", path: "/employers/applicants", icon: <Users size={18} /> },
+    { name: "Applicants", path: "/employer-ApplicantsTracking", icon: <Users size={18} /> },
   ];
 
   return (
-    <nav className={`sticky top-0 z-[100] transition-all duration-300 border-b ${
+      <nav className={`w-full z-[100] transition-all duration-300 border-b shrink-0 h-[72px] flex items-center ${
       scrolled
-        ? "bg-white/90 backdrop-blur-md shadow-sm border-gray-200 py-2"
-        : "bg-white border-transparent py-4"
+        ? "bg-white/95 backdrop-blur-md shadow-sm border-slate-200"
+        : "bg-white border-slate-100"
     }`}>
-      <div className="max-w-7xl mx-auto flex items-center justify-between px-6">
+      <div className="w-full mx-auto flex items-center justify-between px-8">
         
-        {/* Logo */}
+       
         <div
           className="flex items-center gap-2 cursor-pointer transition-transform hover:scale-105"
           onClick={() => router.push("/")}
@@ -54,7 +54,7 @@ export default function Navbar() {
           />
         </div>
 
-        {/* Links */}
+       
         <div className="hidden md:flex items-center gap-2">
           {navLinks.map((link) => {
             const isActive = pathname === link.path;
@@ -85,7 +85,7 @@ export default function Navbar() {
           </button>
         </div>
 
-        {/* Mobile Logout (Only visible on small screens) */}
+        
         <div className="md:hidden">
             <button onClick={handleLogout} className="p-2 text-rose-600">
                 <LogOut size={24} />

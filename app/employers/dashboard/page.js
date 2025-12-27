@@ -62,11 +62,11 @@ export default function EmployerDashboardPage() {
   }, [employer]);
 
   return (
-    <div className="min-h-screen bg-slate-50">
+    <div className="min-h-screen bg-[#edf0f7]">
       <Navbar companyName={employer?.company_name} />
       
       <main className="max-w-6xl mx-auto px-6 py-10">
-        {/* Welcome Header */}
+        
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-10">
           <div>
             <h1 className="text-3xl font-bold text-[#170e2c] flex items-center gap-3">
@@ -84,7 +84,7 @@ export default function EmployerDashboardPage() {
           </button>
         </div>
 
-        {/* Quick Stats */}
+        
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
           <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
             <div className="flex items-center gap-4">
@@ -97,10 +97,10 @@ export default function EmployerDashboardPage() {
               </div>
             </div>
           </div>
-          {/* Add more stats here as you build your applicants table */}
+          
         </div>
 
-        {/* Jobs List Section */}
+       
         <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
           <div className="px-6 py-4 border-b border-slate-100 bg-slate-50/50">
             <h2 className="font-bold text-[#170e2c]">Your Job Openings</h2>
@@ -165,7 +165,7 @@ export default function EmployerDashboardPage() {
           </div>
         </div>
 
-        {/* Modals remain the same but will receive updated styles */}
+        
         {showCreateModal && (
           <JobModal
             mode="create"

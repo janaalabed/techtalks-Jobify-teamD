@@ -4,7 +4,7 @@ import Image from "next/image";
 export default function Hero() {
   return (
     <section className="relative pt-40 pb-20 bg-[#170e2c] overflow-hidden">
-      {/* Background Decor */}
+      
       <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-[#5f5aa7]/20 rounded-full blur-[120px]" />
       <div className="absolute bottom-[10%] right-[-5%] w-[30%] h-[30%] bg-[#3e3875]/30 rounded-full blur-[100px]" />
 
