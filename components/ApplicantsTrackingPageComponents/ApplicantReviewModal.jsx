@@ -136,7 +136,7 @@ export default function ApplicantModal({ app, onClose, onUpdateStatus }) {
                                     </button>
                                     <button 
                                         onClick={() => onUpdateStatus(app.id, 'accepted', app.applicants.user_id)} 
-                                        className="px-5 py-4 bg-[#44bd42] text-white rounded-1xl font-bold text-sm hover:bg-[#45db75] transition-all shadow-xl shadow-[#3e3875]/20 active:scale-[0.98]"
+                                        className="px-5 py-4 bg-green-500 text-white rounded-1xl font-bold text-sm hover:bg-[#45db75] transition-all shadow-xl shadow-[#3e3875]/20 active:scale-[0.98]"
                                     >
                                         Approve Candidate
                                     </button>

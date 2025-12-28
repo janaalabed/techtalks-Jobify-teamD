@@ -1,13 +1,16 @@
 "use client";
 
-import { useState, useMemo } from "react";
-import { useRouter } from "next/navigation";
+import { useState, useMemo, useEffect, Suspense } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import getSupabase from "../../lib/supabaseClient";
 import { redirectAfterRegister } from "../../lib/redirectAfterRegister";
 import { Mail, Lock, CheckCircle2, Circle, ArrowRight } from "lucide-react";
 
-export default function Register() {
+
+
+function RegisterForm() {
     const router = useRouter();
+    const searchParams = useSearchParams();
     const supabase = getSupabase();
 
     const [email, setEmail] = useState("");
@@ -21,6 +24,16 @@ export default function Register() {
         number: false,
         special: false,
     });
+
+    // Automatically set role based on URL parameter (?role=applicants or ?role=employers)
+    useEffect(() => {
+        const roleParam = searchParams.get("role");
+        if (roleParam === "applicants") {
+            setRole("applicant");
+        } else if (roleParam === "employers") {
+            setRole("employer");
+        }
+    }, [searchParams]);
 
     const handlePasswordChange = (value) => {
         setPassword(value);
@@ -51,6 +64,7 @@ export default function Register() {
         const user = data.user;
         if (!user) return;
 
+        // Insert into the profiles table
         const { error: profileError } = await supabase
             .from("profiles")
             .insert({ id: user.id, role });
@@ -60,6 +74,7 @@ export default function Register() {
             return;
         }
 
+        // Insert into role-specific tables
         if (role === "applicant") {
             await supabase.from("applicants").insert({ user_id: user.id });
         } else if (role === "employer") {
@@ -71,7 +86,8 @@ export default function Register() {
 
     return (
         <div className="min-h-screen bg-white relative flex items-center justify-center px-4 py-12 overflow-hidden">
-           
+            
+            {/* Background Decorations */}
             <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] [background-size:20px_20px] opacity-30" />
             <div className="absolute -top-24 -left-24 w-96 h-96 bg-[#5f5aa7]/10 rounded-full blur-[100px]" />
             <div className="absolute -bottom-24 -right-24 w-96 h-96 bg-[#7270b1]/10 rounded-full blur-[100px]" />
@@ -88,12 +104,8 @@ export default function Register() {
 
                 <div className="bg-white/80 backdrop-blur-xl rounded-[2.5rem] shadow-[0_20px_50px_rgba(0,0,0,0.05)] border border-slate-100 p-8 md:p-12">
                     <form onSubmit={handleRegister} className="space-y-5">
-<<<<<<< HEAD:app/register/page.jsx
-                        {/* Role Selection */}
-=======
 
-                        
->>>>>>> 0444041237d962ee3a59d6764343bf621f669dab:app/register/page.js
+                        {/* Role Selection Buttons */}
                         <div className="grid grid-cols-2 gap-4 mb-8">
                             <button
                                 type="button"
@@ -123,7 +135,7 @@ export default function Register() {
                             </button>
                         </div>
 
-                        
+                        {/* Email Input */}
                         <div className="relative group">
                             <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400 group-focus-within:text-[#5f5aa7] transition-colors" />
                             <input
@@ -136,7 +148,7 @@ export default function Register() {
                             />
                         </div>
 
-                        
+                        {/* Password Input */}
                         <div className="relative group">
                             <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400 group-focus-within:text-[#5f5aa7] transition-colors" />
                             <input
@@ -149,11 +161,7 @@ export default function Register() {
                             />
                         </div>
 
-<<<<<<< HEAD:app/register/page.jsx
-                        {/* Password Requirements */}
-=======
-                        
->>>>>>> 0444041237d962ee3a59d6764343bf621f669dab:app/register/page.js
+                        {/* Password Requirements Grid */}
                         <div className="grid grid-cols-2 gap-2 px-2 py-2">
                             {[
                                 { label: "8+ characters", met: requirements.length },
@@ -173,7 +181,7 @@ export default function Register() {
                             ))}
                         </div>
 
-                        
+                        {/* Confirm Password Input */}
                         <div className="relative group">
                             <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400 group-focus-within:text-[#5f5aa7] transition-colors" />
                             <input
@@ -214,5 +222,14 @@ export default function Register() {
                 </div>
             </div>
         </div>
+    );
+}
+
+// Final Export wrapped in Suspense to handle the useSearchParams hook correctly
+export default function Register() {
+    return (
+        <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading...</div>}>
+            <RegisterForm />
+        </Suspense>
     );
 }

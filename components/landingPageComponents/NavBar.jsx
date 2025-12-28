@@ -37,7 +37,7 @@ export default function Navbar() {
     }`}>
       <div className="max-w-7xl mx-auto flex items-center justify-between px-6">
         <Link href="/" className="transition hover:opacity-80">
-          <Image src="/uploads/logo2.png" alt="Jobify" width={120} height={28} className="brightness-0 invert" />
+          <Image src="/uploads/logo2.png" alt="Jobify" width={150} height={28} className="brightness-0 invert" />
         </Link>
 
         <div className="hidden md:flex items-center gap-10">
