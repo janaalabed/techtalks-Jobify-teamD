@@ -30,18 +30,68 @@ export default function ApplicantProfilePage() {
     const [experience, setExperience] = useState([]);
     const [profileImage, setProfileImage] = useState(null);
     const [cvFile, setCvFile] = useState(null);
+    const [existingPhoto, setExistingPhoto] = useState(null);
+    const [existingCv, setExistingCv] = useState(null);
     const [loading, setLoading] = useState(false);
+    const [isEditing, setIsEditing] = useState(false);
 
     useEffect(() => {
-        const checkAuth = async () => {
+        const checkAuthAndFetchData = async () => {
             const { data } = await supabase.auth.getUser();
-            if (!data.user) {
+            const user = data?.user;
+
+            if (!user) {
                 router.push("/login");
-            } else {
-                setLoadingAuth(false);
+                return;
+            }
+            
+            setLoadingAuth(false);
+
+            try {
+                // Fetch profile (name)
+                const { data: profile } = await supabase
+                    .from("profiles")
+                    .select("name")
+                    .eq("id", user.id)
+                    .single();
+                
+                if (profile) setName(profile.name || "");
+
+                // Fetch applicant details
+                const { data: applicant } = await supabase
+                    .from("applicants")
+                    .select("*")
+                    .eq("user_id", user.id)
+                    .single();
+
+                if (applicant) {
+                    // Parse JSON strings to arrays if needed
+                    const parsedSkills = typeof applicant.skills === 'string' ? JSON.parse(applicant.skills) : applicant.skills;
+                    const parsedEducation = typeof applicant.education === 'string' ? JSON.parse(applicant.education) : applicant.education;
+                    const parsedExperience = typeof applicant.experience === 'string' ? JSON.parse(applicant.experience) : applicant.experience;
+                    
+                    // Check if the user has actually filled out any meaningful data
+                    const hasData = applicant.bio || 
+                                   (Array.isArray(parsedSkills) && parsedSkills.length > 0) || 
+                                   (Array.isArray(parsedEducation) && parsedEducation.length > 0) ||
+                                   (Array.isArray(parsedExperience) && parsedExperience.length > 0);
+
+                    if (hasData) {
+                         setIsEditing(true);
+                    }
+
+                    setBio(applicant.bio || "");
+                    setSkills(Array.isArray(parsedSkills) ? parsedSkills : []);
+                    setEducation(Array.isArray(parsedEducation) ? parsedEducation : []);
+                    setExperience(Array.isArray(parsedExperience) ? parsedExperience : []);
+                    setExistingPhoto(applicant.photo_url);
+                    setExistingCv(applicant.cv_url);
+                }
+            } catch (error) {
+                console.error("Error fetching profile:", error);
             }
         };
-        checkAuth();
+        checkAuthAndFetchData();
     }, [router, supabase]);
 
     const uploadFile = async (file, path) => {
@@ -67,8 +117,8 @@ export default function ApplicantProfilePage() {
         }
 
         try {
-            let profileImageUrl = null;
-            let cvUrl = null;
+            let profileImageUrl = existingPhoto;
+            let cvUrl = existingCv;
 
             if (profileImage) {
                 profileImageUrl = await uploadFile(
@@ -95,7 +145,7 @@ export default function ApplicantProfilePage() {
             }).eq("user_id", user.id);
 
             setMessage("Profile saved successfully ✅");
-            router.push("/jobs-list");
+            router.push("/profile/previewApplicantProfile");
         } catch (err) {
             setMessage(err.message);
         }
@@ -128,6 +178,17 @@ export default function ApplicantProfilePage() {
         );
     }
 
+    // Helper to extract filename from URL
+    const getFileNameFromUrl = (url) => {
+        if (!url) return null;
+        try {
+            const parts = url.split('/');
+            return parts[parts.length - 1];
+        } catch (e) {
+            return "Existing File";
+        }
+    };
+
     return (
         <div className="min-h-screen bg-[#f1f5f9] relative py-12 px-4 overflow-hidden">
             {/* Soft Ambient Background Elements */}
@@ -136,8 +197,8 @@ export default function ApplicantProfilePage() {
 
             <div className="max-w-3xl mx-auto relative z-10">
                 <div className="text-center mb-12">
-                    <h1 className="text-4xl font-extrabold text-[#1e293b]">Create Your <span className="text-indigo-600">Profile</span></h1>
-                    <p className="text-slate-500 mt-3 font-medium">Complete your professional details to get noticed by top employers.</p>
+                    <h1 className="text-4xl font-extrabold text-[#1e293b]">{isEditing ? "Edit Your" : "Create Your"} <span className="text-indigo-600">Profile</span></h1>
+                    <p className="text-slate-500 mt-3 font-medium">{isEditing ? "Update your professional details to keep your profile fresh." : "Complete your professional details to get noticed by top employers."}</p>
                 </div>
 
                 <form onSubmit={handleSave} className="space-y-8">
@@ -209,19 +270,45 @@ export default function ApplicantProfilePage() {
                         </div>
                     </Section>
 
+                    {/* Work Experience */}
+                    <Section
+                        title="Work Experience"
+                        icon={<Briefcase size={18} />}
+                        action={<button type="button" onClick={addExperience} className="text-xs font-bold text-indigo-600 hover:text-indigo-700 flex items-center gap-1 transition-colors"><Plus size={14} /> Add Experience</button>}
+                    >
+                        <div className="space-y-4">
+                            {experience.map((exp) => (
+                                <div key={exp.id} className="relative p-6 bg-slate-50/50 rounded-2xl border border-slate-100 group">
+                                    <button type="button" onClick={() => removeExperience(exp.id)} className="absolute top-4 right-4 text-slate-300 hover:text-red-500 transition-colors"><Trash2 size={16} /></button>
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                        <input className="input-field-balanced" placeholder="Job Title / Role" value={exp.role} onChange={(e) => updateExperience(exp.id, "role", e.target.value)} />
+                                        <input className="input-field-balanced" placeholder="Company Name" value={exp.company} onChange={(e) => updateExperience(exp.id, "company", e.target.value)} />
+                                        <div className="md:col-span-2">
+                                            <input className="input-field-balanced" placeholder="Year Range (e.g., 2020 - Present)" value={exp.year} onChange={(e) => updateExperience(exp.id, "year", e.target.value)} />
+                                        </div>
+                                        <div className="md:col-span-2">
+                                            <textarea className="input-field-balanced min-h-[100px] resize-none" placeholder="Describe your responsibilities and achievements..." value={exp.description} onChange={(e) => updateExperience(exp.id, "description", e.target.value)} />
+                                        </div>
+                                    </div>
+                                </div>
+                            ))}
+                            {experience.length === 0 && <EmptyState text="No work experience added yet." />}
+                        </div>
+                    </Section>
+
                     {/* File Uploads */}
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <FileUploadBox
                             label="Profile Photo"
                             icon={<Upload size={18} />}
-                            fileName={profileImage?.name}
+                            fileName={profileImage?.name || getFileNameFromUrl(existingPhoto)}
                             onChange={(e) => setProfileImage(e.target.files[0])}
                             accept="image/*"
                         />
                         <FileUploadBox
                             label="CV / Resume"
                             icon={<FileText size={18} />}
-                            fileName={cvFile?.name}
+                            fileName={cvFile?.name || getFileNameFromUrl(existingCv)}
                             onChange={(e) => setCvFile(e.target.files[0])}
                             accept=".pdf"
                         />
