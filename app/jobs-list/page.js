@@ -44,7 +44,7 @@ export default function JobsListPage() {
   }, []);
 
   return (
-    <div className="flex flex-col h-screen bg-[#f8fafc] overflow-hidden">
+    <div className="flex flex-col h-screen bg-[#edf0f7] overflow-hidden">
       <Navbar />
 
       
@@ -123,7 +123,7 @@ export default function JobsListPage() {
           </div>
         </header>
 
-        {/* Body content following the header in the scroll flow */}
+        
         <main className="p-8">
           <div className="max-w-4xl mx-auto">
             <div className="flex items-center justify-between mb-6">

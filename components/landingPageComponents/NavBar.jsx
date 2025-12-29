@@ -37,7 +37,7 @@ export default function Navbar() {
     }`}>
       <div className="max-w-7xl mx-auto flex items-center justify-between px-6">
         <Link href="/" className="transition hover:opacity-80">
-          <Image src="/uploads/logo2.png" alt="Jobify" width={120} height={28} className="brightness-0 invert" />
+          <Image src="/uploads/logo2.png" alt="Jobify" width={150} height={28} className="brightness-0 invert" />
         </Link>
 
         <div className="hidden md:flex items-center gap-10">
@@ -58,7 +58,7 @@ export default function Navbar() {
         </button>
       </div>
 
-      {/* Mobile Menu */}
+     
       {isOpen && (
         <div className="absolute top-full left-0 w-full bg-[#170e2c] border-b border-white/10 p-6 space-y-4 md:hidden">
           {["Features", "How It Works", "Footer"].map((item) => (

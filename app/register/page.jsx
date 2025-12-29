@@ -1,13 +1,16 @@
 "use client";
 
-import { useState, useMemo } from "react";
-import { useRouter } from "next/navigation";
+import { useState, useMemo, useEffect, Suspense } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import getSupabase from "../../lib/supabaseClient";
 import { redirectAfterRegister } from "../../lib/redirectAfterRegister";
 import { Mail, Lock, CheckCircle2, Circle, ArrowRight } from "lucide-react";
 
-export default function Register() {
+
+
+function RegisterForm() {
     const router = useRouter();
+    const searchParams = useSearchParams();
     const supabase = getSupabase();
 
     const [email, setEmail] = useState("");
@@ -22,7 +25,16 @@ export default function Register() {
         special: false,
     });
 
-    
+    // Automatically set role based on URL parameter (?role=applicants or ?role=employers)
+    useEffect(() => {
+        const roleParam = searchParams.get("role");
+        if (roleParam === "applicants") {
+            setRole("applicant");
+        } else if (roleParam === "employers") {
+            setRole("employer");
+        }
+    }, [searchParams]);
+
     const handlePasswordChange = (value) => {
         setPassword(value);
         setRequirements({
@@ -41,21 +53,28 @@ export default function Register() {
     const passwordsMatch = password === confirmPassword && confirmPassword !== "";
     const isFormValid = allRequirementsMet && passwordsMatch && email && role;
 
-
     const handleRegister = async (e) => {
         e.preventDefault();
         const { data, error } = await supabase.auth.signUp({ email, password });
 
-        if (error) { alert(error.message); return; }
+        if (error) {
+            alert(error.message);
+            return;
+        }
         const user = data.user;
         if (!user) return;
 
+        // Insert into the profiles table
         const { error: profileError } = await supabase
             .from("profiles")
             .insert({ id: user.id, role });
 
-        if (profileError) { alert(profileError.message); return; }
+        if (profileError) {
+            alert(profileError.message);
+            return;
+        }
 
+        // Insert into role-specific tables
         if (role === "applicant") {
             await supabase.from("applicants").insert({ user_id: user.id });
         } else if (role === "employer") {
@@ -67,7 +86,8 @@ export default function Register() {
 
     return (
         <div className="min-h-screen bg-white relative flex items-center justify-center px-4 py-12 overflow-hidden">
-            {/* Background Subtle Accents */}
+            
+            {/* Background Decorations */}
             <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] [background-size:20px_20px] opacity-30" />
             <div className="absolute -top-24 -left-24 w-96 h-96 bg-[#5f5aa7]/10 rounded-full blur-[100px]" />
             <div className="absolute -bottom-24 -right-24 w-96 h-96 bg-[#7270b1]/10 rounded-full blur-[100px]" />
@@ -77,33 +97,41 @@ export default function Register() {
                     <h1 className="text-3xl md:text-4xl font-bold text-[#170e2c] tracking-tight">
                         Join <span className="text-[#5f5aa7]">Jobify</span>
                     </h1>
-                    <p className="text-slate-500 mt-2">Create your account to start your journey.</p>
+                    <p className="text-slate-500 mt-2">
+                        Create your account to start your journey.
+                    </p>
                 </div>
 
                 <div className="bg-white/80 backdrop-blur-xl rounded-[2.5rem] shadow-[0_20px_50px_rgba(0,0,0,0.05)] border border-slate-100 p-8 md:p-12">
                     <form onSubmit={handleRegister} className="space-y-5">
 
-                        {/* Role Selection Blocks */}
+                        {/* Role Selection Buttons */}
                         <div className="grid grid-cols-2 gap-4 mb-8">
                             <button
                                 type="button"
                                 onClick={() => setRole("applicant")}
-                                className={`p-4 rounded-2xl border-2 transition-all flex flex-col items-center gap-2 ${role === "applicant"
+                                className={`p-4 rounded-2xl border-2 transition-all flex flex-col items-center gap-2 ${
+                                    role === "applicant"
                                         ? "border-[#5f5aa7] bg-[#5f5aa7]/5 text-[#5f5aa7]"
                                         : "border-slate-100 text-slate-400 hover:border-slate-200"
-                                    }`}
+                                }`}
                             >
-                                <span className="text-xs font-bold uppercase tracking-wider">Applicant</span>
+                                <span className="text-xs font-bold uppercase tracking-wider">
+                                    Applicant
+                                </span>
                             </button>
                             <button
                                 type="button"
                                 onClick={() => setRole("employer")}
-                                className={`p-4 rounded-2xl border-2 transition-all flex flex-col items-center gap-2 ${role === "employer"
+                                className={`p-4 rounded-2xl border-2 transition-all flex flex-col items-center gap-2 ${
+                                    role === "employer"
                                         ? "border-[#5f5aa7] bg-[#5f5aa7]/5 text-[#5f5aa7]"
                                         : "border-slate-100 text-slate-400 hover:border-slate-200"
-                                    }`}
+                                }`}
                             >
-                                <span className="text-xs font-bold uppercase tracking-wider">Employer</span>
+                                <span className="text-xs font-bold uppercase tracking-wider">
+                                    Employer
+                                </span>
                             </button>
                         </div>
 
@@ -141,14 +169,19 @@ export default function Register() {
                                 { label: "One number", met: requirements.number },
                                 { label: "Special char", met: requirements.special },
                             ].map((req) => (
-                                <div key={req.label} className={`flex items-center gap-2 text-[11px] font-medium ${req.met ? "text-emerald-600" : "text-slate-400"}`}>
+                                <div
+                                    key={req.label}
+                                    className={`flex items-center gap-2 text-[11px] font-medium ${
+                                        req.met ? "text-emerald-600" : "text-slate-400"
+                                    }`}
+                                >
                                     {req.met ? <CheckCircle2 size={14} /> : <Circle size={14} />}
                                     {req.label}
                                 </div>
                             ))}
                         </div>
 
-                        {/* Confirm Password */}
+                        {/* Confirm Password Input */}
                         <div className="relative group">
                             <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400 group-focus-within:text-[#5f5aa7] transition-colors" />
                             <input
@@ -157,11 +190,15 @@ export default function Register() {
                                 value={confirmPassword}
                                 onChange={(e) => setConfirmPassword(e.target.value)}
                                 placeholder="Confirm password"
-                                className={`w-full bg-slate-50 border-none rounded-2xl pl-12 pr-4 py-4 text-slate-900 placeholder:text-slate-400 focus:ring-2 transition-all outline-none ${passwordsMatch ? "focus:ring-emerald-500/20" : "focus:ring-[#5f5aa7]/20"
-                                    }`}
+                                className={`w-full bg-slate-50 border-none rounded-2xl pl-12 pr-4 py-4 text-slate-900 placeholder:text-slate-400 focus:ring-2 transition-all outline-none ${
+                                    passwordsMatch
+                                        ? "focus:ring-emerald-500/20"
+                                        : "focus:ring-[#5f5aa7]/20"
+                                }`}
                             />
                         </div>
 
+                        {/* Submit Button */}
                         <button
                             type="submit"
                             disabled={!isFormValid}
@@ -185,5 +222,14 @@ export default function Register() {
                 </div>
             </div>
         </div>
+    );
+}
+
+// Final Export wrapped in Suspense to handle the useSearchParams hook correctly
+export default function Register() {
+    return (
+        <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading...</div>}>
+            <RegisterForm />
+        </Suspense>
     );
 }

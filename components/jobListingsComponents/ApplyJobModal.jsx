@@ -20,14 +20,14 @@ export default function ApplyJobModal({ jobId, onClose }) {
     setLoading(true);
 
     try {
-      // 1️⃣ Get authenticated user
+     
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) {
         toast.error("Login required");
         return;
       }
 
-      // 2️⃣ Get applicant ID
+     
       const { data: applicant, error: applicantError } = await supabase
         .from("applicants")
         .select("id")
@@ -38,7 +38,7 @@ export default function ApplyJobModal({ jobId, onClose }) {
         throw new Error("Applicant profile not found");
       }
 
-      // 3️⃣ Prevent duplicate application
+      
       const { data: existing } = await supabase
         .from("applications")
         .select("id")
@@ -52,12 +52,13 @@ export default function ApplyJobModal({ jobId, onClose }) {
         return;
       }
 
-      // 4️⃣ Upload CV to Supabase Storage
+      
       const fileExt = cvFile.name.split(".").pop();
       const filePath = `cvs/${applicant.id}/${jobId}_${Date.now()}.${fileExt}`;
 
       const { error: uploadError } = await supabase.storage
-        .from("applicant-assets") // ✅ CORRECT BUCKET
+        .from("applicant-assets") 
+      
         .upload(filePath, cvFile);
 
       if (uploadError) throw uploadError;
@@ -66,7 +67,7 @@ export default function ApplyJobModal({ jobId, onClose }) {
         .from("applicant-assets")
         .getPublicUrl(filePath);
 
-      // 5️⃣ Insert application record
+      
       const { error: insertError } = await supabase
         .from("applications")
         .insert({

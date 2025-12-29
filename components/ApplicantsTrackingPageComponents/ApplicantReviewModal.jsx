@@ -15,7 +15,7 @@ export default function ApplicantModal({ app, onClose, onUpdateStatus }) {
         <div className="fixed inset-0 bg-[#170e2c]/60 backdrop-blur-sm flex items-center justify-center z-[100] p-4 md:p-10">
             <div className="bg-white w-full max-w-5xl max-h-[95vh] rounded-[0.3rem] shadow-[0_32px_64px_-12px_rgba(23,14,44,0.2)] overflow-hidden flex flex-col border border-white">
                 
-                {/* Minimalist Header */}
+               
                 <div className="px-8 md:px-12 py-8 flex justify-between items-center border-b border-[#f6f7ff] shrink-0">
                     <div className="flex items-center gap-6">
                         <div className="w-14 h-14 rounded-2xl bg-[#f6f7ff] flex items-center justify-center text-[#3e3875] text-xl font-black border border-[#3e3875]/5 shadow-inner">
@@ -40,12 +40,12 @@ export default function ApplicantModal({ app, onClose, onUpdateStatus }) {
                     </button>
                 </div>
 
-                {/* Main Scrollable Content Area */}
+                
                 <div className="flex-1 overflow-y-auto custom-scrollbar">
                     <div className="p-8 md:p-12">
                         <div className="grid grid-cols-1 lg:grid-cols-12 gap-16">
                             
-                            {/* Main Content (Left) */}
+                            
                             <div className="lg:col-span-8 space-y-12">
                                 <section className="space-y-4">
                                     <h4 className="text-[10px] font-black text-[#5f5aa7] uppercase tracking-[0.25em] flex items-center gap-2">
@@ -120,7 +120,7 @@ export default function ApplicantModal({ app, onClose, onUpdateStatus }) {
                             </div>
                         </div>
 
-                        {/* FULL WIDTH DECISION ACTIONS - MOVED HERE */}
+                       
                         <div className="mt-16 pt-10 border-t border-[#f6f7ff]">
                             <div className="flex flex-col md:flex-row md:items-center justify-between gap-8">
                                 <div className="space-y-1">
@@ -136,7 +136,7 @@ export default function ApplicantModal({ app, onClose, onUpdateStatus }) {
                                     </button>
                                     <button 
                                         onClick={() => onUpdateStatus(app.id, 'accepted', app.applicants.user_id)} 
-                                        className="px-5 py-4 bg-[#44bd42] text-white rounded-1xl font-bold text-sm hover:bg-[#45db75] transition-all shadow-xl shadow-[#3e3875]/20 active:scale-[0.98]"
+                                        className="px-5 py-4 bg-green-500 text-white rounded-1xl font-bold text-sm hover:bg-[#45db75] transition-all shadow-xl shadow-[#3e3875]/20 active:scale-[0.98]"
                                     >
                                         Approve Candidate
                                     </button>
@@ -146,7 +146,7 @@ export default function ApplicantModal({ app, onClose, onUpdateStatus }) {
                     </div>
                 </div>
 
-                {/* Sticky Footer Status Bar */}
+                
                 <div className="px-12 py-5 bg-[#fcfcff] border-t border-[#f6f7ff] flex items-center justify-between shrink-0">
                     <div className="flex items-center gap-3">
                         <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>

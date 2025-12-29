@@ -1,9 +1,18 @@
 "use client";
 import { CheckCircle2 } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 export default function HowItWorks() {
+  const router = useRouter();
+
   const applicantSteps = ["Create profile", "Upload CV once", "One-click apply", "Track status"];
   const employerSteps = ["Company profile", "Post job offers", "Review talent", "Hire faster"];
+
+  // Fixed: Removed the ": string" type annotation
+  const handleJoinClick = (role) => {
+    const userRole = role.toLowerCase();
+    router.push(`/register?role=${userRole}`);
+  };
 
   return (
     <section id="how-it-works" className="py-24 bg-[#170e2c]">
@@ -33,7 +42,12 @@ export default function HowItWorks() {
                   </li>
                 ))}
               </ul>
-              <button style={{ backgroundColor: card.color }} className="w-full py-4 rounded-xl text-white font-bold hover:opacity-90 transition shadow-lg">
+              
+              <button 
+                onClick={() => handleJoinClick(card.title.split(' ')[1])}
+                style={{ backgroundColor: card.color }} 
+                className="w-full py-4 rounded-xl text-white font-bold hover:opacity-90 transition shadow-lg"
+              >
                 Join as {card.title.split(' ')[1]}
               </button>
             </div>

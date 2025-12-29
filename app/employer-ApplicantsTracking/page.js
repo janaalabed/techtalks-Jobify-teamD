@@ -20,6 +20,7 @@ export default function ApplicantsBoard() {
             setLoading(true);
             const { data: { session } } = await supabase.auth.getSession();
             if (!session) return;
+
             const { data: employer } = await supabase.from('employers').select('id').eq('user_id', session.user.id).single();
             if (!employer) return;
 
@@ -30,15 +31,51 @@ export default function ApplicantsBoard() {
             `).eq('jobs.employer_id', employer.id).order('applied_at', { ascending: false });
 
             if (error) throw error;
-            setApplications(data || []);
-        } catch (error) { console.error('Fetch error:', error); } finally { setLoading(false); }
+
+           
+            
+            const formattedData = data.map(app => {
+                if (app.cv_url && !app.cv_url.startsWith('http')) {
+                    const { data: publicUrlData } = supabase
+                        .storage
+                        .from('applicant-assets')
+                        .getPublicUrl(app.cv_url);
+
+                    return { ...app, cv_url: publicUrlData.publicUrl };
+                }
+                return app;
+            });
+
+            setApplications(formattedData || []);
+        } catch (error) {
+            console.error('Fetch error:', error);
+        } finally {
+            setLoading(false);
+        }
     };
 
+  
     const updateStatus = async (applicationId, newStatus, applicantUserId) => {
-        const { error } = await supabase.from('applications').update({ status: newStatus }).eq('id', applicationId);
-        if (error) return;
-        setApplications(prev => prev.map(app => app.id === applicationId ? { ...app, status: newStatus } : app));
-        if (selectedApp?.id === applicationId) setSelectedApp(prev => ({ ...prev, status: newStatus }));
+        try {
+            const { error } = await supabase
+                .from('applications')
+                .update({ status: newStatus })
+                .eq('id', applicationId);
+
+            if (error) throw error;
+
+           
+            setApplications(prev =>
+                prev.map(app => app.id === applicationId ? { ...app, status: newStatus } : app)
+            );
+
+         
+            if (selectedApp?.id === applicationId) {
+                setSelectedApp(prev => ({ ...prev, status: newStatus }));
+            }
+        } catch (error) {
+            console.error('Update status error:', error);
+        }
     };
 
     if (loading) return (
@@ -49,10 +86,9 @@ export default function ApplicantsBoard() {
     );
 
     return (
-        <div className="flex flex-col h-screen bg-[#fcfcff] font-sans antialiased text-[#170e2c]">
+        <div className="flex flex-col h-screen bg-[#edf0f7] font-sans antialiased text-[#170e2c]">
             <Navbar />
 
-            {/* Sub-Header */}
             <header className="px-10 pt-10 pb-6 flex justify-between items-center">
                 <div className="flex items-center gap-3 bg-white px-4 py-2 rounded-xl shadow-sm border border-[#7270b1]/5">
                     <div className="w-2 h-2 rounded-full bg-[#5f5aa7]"></div>
@@ -62,13 +98,9 @@ export default function ApplicantsBoard() {
                 </div>
             </header>
 
-            {/* Board Layout */}
             <main className="px-10 pb-10 flex-1 flex overflow-x-auto gap-8 items-start scrollbar-hide">
                 {columns.map((col) => (
-                    
                     <section key={col} className="min-w-[340px] max-w-[340px] h-full flex flex-col bg-[#e0e2ff]/50 p-5 rounded-[0.5rem] border border-[#f1f2ff]">
-
-                        {/* Cleaner Column Header */}
                         <div className="flex items-center justify-between mb-6 group px-1">
                             <div className="flex items-center gap-2.5">
                                 <h2 className="text-[11px] font-black uppercase tracking-[0.1em] text-[#3e3875] opacity-80 group-hover:opacity-100 transition-opacity">
@@ -80,7 +112,6 @@ export default function ApplicantsBoard() {
                             </span>
                         </div>
 
-                        {/* Column Content Area */}
                         <div className="flex-1 overflow-y-auto space-y-4 pr-1 custom-scrollbar hover:scrollbar-thumb-[#7270b1]/20 transition-colors">
                             {applications.filter(app => (app.status || 'pending') === col).length > 0 ? (
                                 applications.filter(app => (app.status || 'pending') === col).map(app => (
