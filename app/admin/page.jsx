@@ -2,8 +2,15 @@
 
 import { useEffect, useState } from "react";
 import getSupabase from "../../lib/supabaseClient";
-import { Loader2, Trash2, Users, Briefcase, FileText, Eye, X } from "lucide-react";
-import "./AdminDashboard.css"; 
+import {
+  Loader2,
+  Trash2,
+  Users,
+  Briefcase,
+  FileText,
+  Eye,
+  X,
+} from "lucide-react";
 
 export default function AdminPage() {
   const supabase = getSupabase();
@@ -19,15 +26,21 @@ export default function AdminPage() {
   const [userFilter, setUserFilter] = useState("all");
   const [selectedJob, setSelectedJob] = useState(null);
 
-
+  /* ---------------- DATA ---------------- */
   const fetchAll = async () => {
     setLoading(true);
-    const [{ data: profiles }, { data: jobs }, { data: applications }] =
-      await Promise.all([
-        supabase.from("profiles").select("*"),
-        supabase.from("jobs").select("*"),
-        supabase.from("applications").select("*"),
-      ]);
+
+    const [{ data: profiles, error: userError },
+           { data: jobs, error: jobsError },
+           { data: applications, error: applicationsError }] = await Promise.all([
+      supabase.from("profiles").select("*"),
+      supabase.from("jobs").select("*"),
+      supabase.from("applications").select("*"),
+    ]);
+
+    if (userError) console.error("Users fetch error:", userError);
+    if (jobsError) console.error("Jobs fetch error:", jobsError);
+    if (applicationsError) console.error("Applications fetch error:", applicationsError);
 
     setUsers(profiles || []);
     setJobs(jobs || []);
@@ -35,8 +48,8 @@ export default function AdminPage() {
 
     setStats({
       users: profiles?.length || 0,
-      applicants: profiles?.filter(u => u.role === "applicant").length || 0,
-      employers: profiles?.filter(u => u.role === "employer").length || 0,
+      applicants: profiles?.filter((u) => u.role === "applicant").length || 0,
+      employers: profiles?.filter((u) => u.role === "employer").length || 0,
       jobs: jobs?.length || 0,
       applications: applications?.length || 0,
     });
@@ -48,55 +61,29 @@ export default function AdminPage() {
     fetchAll();
   }, []);
 
-
+  /* ---------------- ACTIONS ---------------- */
   const deleteRow = async (table, id) => {
-    if (!confirm("Are you sure?")) return;
+    if (!confirm("Are you sure you want to delete this item?")) return;
 
-    const { error } = await supabase.from(table).delete().eq("id", id);
-    if (!error) fetchAll();
-    else alert(error.message);
-  };
-
-
-  const filteredUsers =
-    userFilter === "all"
-      ? users
-      : users.filter(u => u.role === userFilter);
-
-
-  const handleCardClick = label => {
-    switch (label) {
-      case "Users":
-        setActiveTab("users");
-        setUserFilter("all");
-        break;
-      case "Applicants":
-        setActiveTab("users");
-        setUserFilter("applicant");
-        break;
-      case "Employers":
-        setActiveTab("users");
-        setUserFilter("employer");
-        break;
-      case "Jobs":
-        setActiveTab("jobs");
-        break;
-      case "Applications":
-        setActiveTab("applications");
-        break;
-      default:
-        break;
+    try {
+      const { error } = await supabase.from(table).delete().eq("id", id);
+      if (error) throw error;
+      fetchAll();
+    } catch (err) {
+      console.error(`Error deleting ${table} with id ${id}:`, err);
+      alert(`Delete failed: ${err.message}`);
     }
   };
 
-  return (
-    <div className="dashboard-bg">
-      <div className="max-w-7xl mx-auto p-8 relative z-10">
-        <h1 className="text-4xl md:text-5xl font-bold mb-10">
-          Admin Dashboard
-        </h1>
+  const filteredUsers = userFilter === "all" ? users : users.filter((u) => u.role === userFilter);
 
-        {}
+  /* ---------------- UI ---------------- */
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-[#3f2b6b] via-[#5f3ea1] to-[#170e2c] text-white">
+      <div className="max-w-7xl mx-auto p-8">
+        <h1 className="text-4xl font-bold mb-10">Admin Dashboard</h1>
+
+        {/* STATS */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-12">
           {[
             ["Users", stats.users, Users],
@@ -104,96 +91,94 @@ export default function AdminPage() {
             ["Employers", stats.employers, Users],
             ["Jobs", stats.jobs, Briefcase],
             ["Applications", stats.applications, FileText],
-          ].map(([label, value, Icon], idx) => (
+          ].map(([label, value, Icon]) => (
             <div
               key={label}
-              onClick={() => handleCardClick(label)}
-              className={`card cursor-pointer ${
-                idx % 2 === 0 ? "bg-purple-light" : "bg-purple-dark"
-              }`}
+              onClick={() => {
+                if (label === "Jobs") setActiveTab("jobs");
+                if (label === "Applications") setActiveTab("applications");
+                if (label === "Users") { setActiveTab("users"); setUserFilter("all"); }
+                if (label === "Applicants") { setActiveTab("users"); setUserFilter("applicant"); }
+                if (label === "Employers") { setActiveTab("users"); setUserFilter("employer"); }
+              }}
+              className="cursor-pointer bg-purple-500/30 p-6 rounded-xl shadow-lg hover:shadow-2xl hover:-translate-y-1 transition"
             >
-              <div className="flex items-center gap-3 mb-4">
-                <div className="card-icon">
-                  <Icon size={20} />
-                </div>
+              <div className="flex items-center gap-3">
+                <Icon />
                 <div>
-                  <p className="text-sm text-purple-text">{label}</p>
-                  <p className="text-2xl md:text-3xl font-bold">{value}</p>
+                  <p className="text-sm opacity-80">{label}</p>
+                  <p className="text-3xl font-bold">{value}</p>
                 </div>
               </div>
             </div>
           ))}
         </div>
 
-        {}
+        {/* TABS */}
         <div className="flex gap-3 mb-6">
-          {[
-            ["users", Users],
-            ["jobs", Briefcase],
-            ["applications", FileText],
-          ].map(([tab, Icon]) => (
+          {["users", "jobs", "applications"].map((tab) => (
             <button
               key={tab}
               onClick={() => setActiveTab(tab)}
-              className={`tab-button ${
-                activeTab === tab ? "active" : ""
+              className={`flex-1 py-2 rounded-lg capitalize transition ${
+                activeTab === tab ? "bg-purple-600 shadow-lg" : "bg-purple-800/40"
               }`}
             >
-              <Icon size={18} />
-              {tab.charAt(0).toUpperCase() + tab.slice(1)}
+              {tab}
             </button>
           ))}
         </div>
 
-        {}
-        <div className="card p-6">
+        {/* TABLE */}
+        <div className="bg-purple-900/30 rounded-xl p-6">
           {loading ? (
             <div className="flex justify-center py-12">
-              <Loader2 className="animate-spin text-purple-accent" size={32} />
+              <Loader2 className="animate-spin" />
             </div>
           ) : (
             <>
-              {}
+              {/* USERS */}
               {activeTab === "users" && (
                 <Table
                   headers={["Name", "Role", "Joined", "Actions"]}
-                  rows={filteredUsers.map(u => [
+                  rows={filteredUsers.map((u) => [
                     u.name || "—",
                     u.role,
                     new Date(u.created_at).toLocaleDateString(),
-                    deleteAction(() => deleteRow("profiles", u.id)),
+                    <DeleteButton key={u.id} onClick={() => deleteRow("profiles", u.id)} />,
                   ])}
                 />
               )}
 
-              {}
+              {/* JOBS */}
               {activeTab === "jobs" && (
                 <Table
                   headers={["Title", "Company", "Paid", "Actions"]}
-                  rows={jobs.map(j => [
+                  rows={jobs.map((j) => [
                     j.title,
                     j.company_name || "—",
                     j.paid ? "Yes" : "No",
-                    jobActions(
-                      () => setSelectedJob(j),
-                      () => deleteRow("jobs", j.id)
-                    ),
+                    <div key={j.id} className="flex gap-2">
+                      <button
+                        onClick={() => setSelectedJob(j)}
+                        className="px-3 py-1 bg-purple-600 rounded-lg flex items-center gap-1"
+                      >
+                        <Eye size={14} /> View
+                      </button>
+                      <DeleteButton onClick={() => deleteRow("jobs", j.id)} />
+                    </div>,
                   ])}
                 />
               )}
 
-              {}
+              {/* APPLICATIONS */}
               {activeTab === "applications" && (
                 <Table
                   headers={["Job", "Applicant", "Status"]}
-                  rows={applications.map(a => {
-                    const job = jobs.find(j => j.id === a.job_id);
-                    const applicant = users.find(u => u.id === a.applicant_id);
-                    return [
-                      job?.title || "—",
-                      applicant?.name || "—",
-                      a.status,
-                    ];
+                  rows={applications.map((a) => {
+                    const job = jobs.find((j) => j.id === a.job_id);
+                    const user = users.find((u) => u.id === a.applicant_id);
+                    return [job?.title || "—", user?.name || "—", a.status];
                   })}
                 />
               )}
@@ -202,30 +187,24 @@ export default function AdminPage() {
         </div>
       </div>
 
-      {}
+      {/* JOB MODAL */}
       {selectedJob && (
-        <div className="modal-bg">
-          <div className="modal-card">
+        <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
+          <div className="bg-white text-black p-8 rounded-2xl w-[90%] max-w-xl relative">
             <button
               onClick={() => setSelectedJob(null)}
-              className="modal-close"
+              className="absolute top-4 right-4"
             >
-              <X size={20} />
+              <X />
             </button>
 
-            <h2 className="text-2xl font-bold mb-4 text-purple-dark">
-              {selectedJob.title}
-            </h2>
-
-            <div className="space-y-2 text-sm text-purple-dark">
-              <p><b>Company:</b> {selectedJob.company_name}</p>
-              <p><b>Description:</b> {selectedJob.description}</p>
-              <p><b>Requirements:</b> {selectedJob.requirements}</p>
-              <p><b>Salary:</b> {selectedJob.salary || "—"}</p>
-              <p><b>Type:</b> {selectedJob.type}</p>
-              <p><b>Location:</b> {selectedJob.location}</p>
-              <p><b>Paid:</b> {selectedJob.paid ? "Yes" : "No"}</p>
-            </div>
+            <h2 className="text-2xl font-bold mb-4">{selectedJob.title}</h2>
+            <p><b>Company:</b> {selectedJob.company_name}</p>
+            <p><b>Description:</b> {selectedJob.description}</p>
+            <p><b>Requirements:</b> {selectedJob.requirements}</p>
+            <p><b>Salary:</b> {selectedJob.salary || "—"}</p>
+            <p><b>Location:</b> {selectedJob.location}</p>
+            <p><b>Paid:</b> {selectedJob.paid ? "Yes" : "No"}</p>
           </div>
         </div>
       )}
@@ -233,24 +212,22 @@ export default function AdminPage() {
   );
 }
 
-
+/* ---------------- COMPONENTS ---------------- */
 function Table({ headers, rows }) {
   return (
-    <table className="w-full text-left border-collapse">
+    <table className="w-full text-left">
       <thead>
         <tr>
-          {headers.map(h => (
-            <th key={h} className="p-4 border-b text-sm font-medium">
-              {h}
-            </th>
+          {headers.map((h) => (
+            <th key={h} className="p-3 border-b border-white/20">{h}</th>
           ))}
         </tr>
       </thead>
       <tbody>
         {rows.map((row, i) => (
-          <tr key={i} className={`table-row ${i % 2 === 0 ? "even" : "odd"}`}>
+          <tr key={i} className="odd:bg-white/5">
             {row.map((cell, j) => (
-              <td key={j} className="p-4 text-sm">{cell}</td>
+              <td key={j} className="p-3">{cell}</td>
             ))}
           </tr>
         ))}
@@ -259,20 +236,13 @@ function Table({ headers, rows }) {
   );
 }
 
-const deleteAction = del => (
-  <button className="button-delete" onClick={del}>
-    <Trash2 size={16} />
-    Delete
-  </button>
-);
-
-const jobActions = (view, del) => (
-  <div className="flex gap-3">
-    <button className="button-primary" onClick={view}>
-      <Eye size={14} /> View
-    </button>
-    <button className="button-delete" onClick={del}>
+function DeleteButton({ onClick }) {
+  return (
+    <button
+      onClick={onClick}
+      className="px-3 py-1 bg-red-500 hover:bg-red-600 rounded-lg flex items-center gap-1"
+    >
       <Trash2 size={14} /> Delete
     </button>
-  </div>
-);
+  );
+}
