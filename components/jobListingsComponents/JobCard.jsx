@@ -1,9 +1,8 @@
-
 "use client";
 
 import { useState } from "react";
 import { toast } from "react-hot-toast";
-import { Bookmark, MapPin, Clock, DollarSign, Calendar } from "lucide-react";
+import { Bookmark, MapPin, Clock, DollarSign, Calendar, ChevronDown, ChevronUp } from "lucide-react";
 import getSupabase from "../../lib/supabaseClient";
 import ApplyJobModal from "./ApplyJobModal";
 
@@ -11,7 +10,8 @@ export default function JobCard({ job, bookmarked, onToggleBookmark }) {
   const supabase = getSupabase();
   const [loading, setLoading] = useState(false);
   const [showApplyModal, setShowApplyModal] = useState(false);
-
+  // New state to handle text expansion
+  const [isExpanded, setIsExpanded] = useState(false);
 
   async function toggleBookmark(e) {
     e.stopPropagation();
@@ -72,9 +72,27 @@ export default function JobCard({ job, bookmarked, onToggleBookmark }) {
               )}
             </div>
 
-            <p className="text-slate-500 text-sm line-clamp-1 mb-4">
-              {job.description}
-            </p>
+            {/* Corrected Description Section */}
+            <div className="mb-4">
+              <p className={`text-slate-500 text-sm transition-all duration-300 ${isExpanded ? "" : "line-clamp-1"}`}>
+                {job.description}
+              </p>
+              {job.description && job.description.length > 60 && (
+                <button 
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setIsExpanded(!isExpanded);
+                  }}
+                  className="text-[#5f5aa7] text-xs font-bold mt-1 hover:underline flex items-center gap-0.5"
+                >
+                  {isExpanded ? (
+                    <>Show Less <ChevronUp size={12} /></>
+                  ) : (
+                    <>Read More <ChevronDown size={12} /></>
+                  )}
+                </button>
+              )}
+            </div>
 
             <div className="flex items-center justify-between pt-4 border-t border-slate-50">
               <div className="flex items-center gap-6">

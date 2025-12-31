@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
-import { Globe, Briefcase, MapPin, Building2, Image as ImageIcon, CheckCircle2, AlertCircle } from "lucide-react";
+import { Globe, Briefcase, MapPin, Building2, Image as ImageIcon, CheckCircle2, AlertCircle, ArrowLeft } from "lucide-react";
 import getSupabase from "../../../lib/supabaseClient";
 
 export default function CreateCompanyProfilePage() {
@@ -11,6 +11,9 @@ export default function CreateCompanyProfilePage() {
   const [logoFile, setLogoFile] = useState(null);
   const [existingLogo, setExistingLogo] = useState(null);
   
+  // Ref for the form
+  const formRef = useRef(null);
+
   // Controlled inputs
   const [companyName, setCompanyName] = useState("");
   const [website, setWebsite] = useState("");
@@ -27,10 +30,7 @@ export default function CreateCompanyProfilePage() {
       const supabase = getSupabase();
       const { data: { user } } = await supabase.auth.getUser();
 
-      if (!user) {
-        // user not logged in, handled in submit but good to redirect or show error
-        return;
-      }
+      if (!user) return;
 
       const { data, error } = await supabase
         .from("employers")
@@ -67,9 +67,8 @@ export default function CreateCompanyProfilePage() {
     }
     const user = userData.user;
 
-    let logoUrl = existingLogo; // Default to existing logo
+    let logoUrl = existingLogo;
 
-    // If new logo selected, upload it
     if (logoFile) {
       const fileExt = logoFile.name.split(".").pop();
       const filePath = `company-logos/${user.id}-${Date.now()}.${fileExt}`;
@@ -109,7 +108,6 @@ export default function CreateCompanyProfilePage() {
     setLoading(false);
   }
 
-  // Helper to extract filename from URL
   const getFileNameFromUrl = (url) => {
       if (!url) return null;
       try {
@@ -122,19 +120,32 @@ export default function CreateCompanyProfilePage() {
 
   return (
     <div className="min-h-screen bg-[#f8fafc]">
-      
+      {/* Hero Background Decor */}
       <div className="bg-[#170e2c] h-64 w-full absolute top-0 left-0 z-0">
          <div className="absolute inset-0 bg-gradient-to-r from-[#3e3875]/40 to-transparent" />
       </div>
 
       <div className="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pt-16 pb-20">
+           {/* Header Navigation */}
+                <div className="flex items-center justify-between mb-8">
+                    <button
+                        onClick={() => router.back()}
+                        className="flex items-center gap-2 text-white/80 hover:text-white font-bold transition-colors"
+                    >
+                        <ArrowLeft size={20} /> Back
+                    </button>
+                </div>
         <div className="mb-8 text-white">
-          <h1 className="text-3xl font-bold tracking-tight">{isEditing ? "Edit Company Profile" : "Create Company Profile"}</h1>
-          <p className="text-[#7270b1] mt-2">{isEditing ? "Update your company details" : "Create your professional presence to start hiring"}</p>
+          <h1 className="text-3xl font-bold tracking-tight">
+            {isEditing ? "Edit Company Profile" : "Create Company Profile"}
+          </h1>
+          <p className="text-[#7270b1] mt-2">
+            {isEditing ? "Update your company details" : "Create your professional presence to start hiring"}
+          </p>
         </div>
 
         <div className="grid lg:grid-cols-12 gap-8">
-         
+          {/* Main Form Section */}
           <div className="lg:col-span-8">
             <div className="bg-white rounded-[2.5rem] shadow-xl shadow-[#170e2c]/5 border border-slate-200 overflow-hidden">
               <div className="border-b border-slate-100 px-8 py-8 bg-slate-50/50">
@@ -143,8 +154,6 @@ export default function CreateCompanyProfilePage() {
               </div>
 
               <form ref={formRef} onSubmit={handleSubmit} className="p-8 space-y-8">
-                
-              <form onSubmit={handleSubmit} className="p-8 space-y-8">
                 {/* Company Name */}
                 <div>
                   <label className="block text-[11px] font-black text-[#7270b1] uppercase tracking-widest mb-3">
@@ -163,7 +172,7 @@ export default function CreateCompanyProfilePage() {
                   </div>
                 </div>
 
-                
+                {/* Website & Industry */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
                     <label className="block text-[11px] font-black text-[#7270b1] uppercase tracking-widest mb-3">Website</label>
@@ -194,7 +203,7 @@ export default function CreateCompanyProfilePage() {
                   </div>
                 </div>
 
-                
+                {/* Location */}
                 <div>
                   <label className="block text-[11px] font-black text-[#7270b1] uppercase tracking-widest mb-3">Location</label>
                   <div className="relative">
@@ -209,7 +218,7 @@ export default function CreateCompanyProfilePage() {
                   </div>
                 </div>
 
-                
+                {/* Description */}
                 <div>
                   <label className="block text-[11px] font-black text-[#7270b1] uppercase tracking-widest mb-3">About the Company</label>
                   <textarea
@@ -222,7 +231,7 @@ export default function CreateCompanyProfilePage() {
                   />
                 </div>
 
-                
+                {/* Logo Upload */}
                 <div>
                   <label className="block text-[11px] font-black text-[#7270b1] uppercase tracking-widest mb-3">Company Logo</label>
                   <label className="flex flex-col items-center justify-center w-full h-40 border-2 border-dashed border-[#7270b1]/30 rounded-[2rem] cursor-pointer bg-slate-50/50 hover:bg-[#5f5aa7]/5 hover:border-[#5f5aa7]/50 transition-all group">
@@ -239,7 +248,7 @@ export default function CreateCompanyProfilePage() {
                   </label>
                 </div>
 
-                
+                {/* Feedback Message */}
                 {message && (
                   <div className={`rounded-2xl px-5 py-4 text-sm font-semibold flex items-center gap-3 transition-all ${
                     message.toLowerCase().includes("success")
@@ -251,32 +260,25 @@ export default function CreateCompanyProfilePage() {
                   </div>
                 )}
 
-                
-                <div className="flex flex-col sm:flex-row gap-4 pt-4">
-                  <button 
-                    type="submit" 
-                    disabled={loading} 
-                    className="flex-1 px-8 py-4 rounded-2xl bg-[#3e3875] text-white text-sm font-bold hover:bg-[#170e2c] shadow-lg shadow-[#3e3875]/20 transition-all active:scale-95 flex items-center justify-center gap-2"
-                  >
-                    {loading ? "Saving Profile..." : (isEditing ? "Save Changes" : "Create Company Profile")}
-                  </button>
-                  <button 
-                    type="button" 
-                    onClick={() => router.back()}
-                    className="px-8 py-4 rounded-2xl border border-slate-200 text-sm font-bold text-[#7270b1] hover:bg-slate-50 transition-colors"
-                  >
-                    Cancel
-                  </button>
-                </div>
+                {/* Submit */}
+                    <div className="pt-10">
+                        <button
+                            disabled={loading}
+                            className="w-full bg-[#170e2c] hover:bg-[#3e3875] text-white font-black py-6 rounded-[2rem] shadow-2xl shadow-[#170e2c]/20 flex items-center justify-center gap-3 transition-all active:scale-[0.98] disabled:opacity-50"
+                        >
+                            {loading ? "Saving Profile..." : (isEditing ? "Save Changes" : "Create Applicant Profile")}
+                            {/* {loading ? <div className="w-6 h-6 border-3 border-white/30 border-t-white rounded-full animate-spin" /> : <><CheckCircle size={22} /> SAVE PROFILE</>} */}
+                        </button>
+                    </div>
               </form>
             </div>
           </div>
 
-          
+          {/* Sidebar Section */}
           <div className="lg:col-span-4 space-y-6">
             <div className="bg-[#3e3875] rounded-[2.5rem] p-8 text-white shadow-xl shadow-[#3e3875]/10">
               <h3 className="font-bold text-lg mb-4">Why fill this out?</h3>
-              <ul className="space-y-4 text-sm text-[#7270b1]/30">
+              <ul className="space-y-4 text-sm">
                 <li className="flex gap-3 text-indigo-100">
                   <div className="w-5 h-5 rounded-full bg-[#5f5aa7] flex items-center justify-center shrink-0">✓</div>
                   <span>Profiles with logos get 4x more applicants.</span>
@@ -285,27 +287,13 @@ export default function CreateCompanyProfilePage() {
                   <div className="w-5 h-5 rounded-full bg-[#5f5aa7] flex items-center justify-center shrink-0">✓</div>
                   <span>Clear descriptions attract higher-quality talent.</span>
                 </li>
+                <li className="flex gap-3 text-indigo-100">
+                  <div className="w-5 h-5 rounded-full bg-[#5f5aa7] flex items-center justify-center shrink-0">✓</div>
+                  <span>Build trust with professional branding.</span>
+                </li>
               </ul>
             </div>
           </div>
-          {/* Sidebar Helper - Only show during initial signup */}
-          {!isEditing && (
-            <div className="lg:col-span-4 space-y-6">
-              <div className="bg-[#3e3875] rounded-[2.5rem] p-8 text-white shadow-xl shadow-[#3e3875]/10">
-                <h3 className="font-bold text-lg mb-4">Why fill this out?</h3>
-                <ul className="space-y-4 text-sm text-[#7270b1]/30">
-                  <li className="flex gap-3 text-indigo-100">
-                    <div className="w-5 h-5 rounded-full bg-[#5f5aa7] flex items-center justify-center shrink-0">✓</div>
-                    <span>Profiles with logos get 4x more applicants.</span>
-                  </li>
-                  <li className="flex gap-3 text-indigo-100">
-                    <div className="w-5 h-5 rounded-full bg-[#5f5aa7] flex items-center justify-center shrink-0">✓</div>
-                    <span>Clear descriptions attract higher-quality talent.</span>
-                  </li>
-                </ul>
-              </div>
-            </div>
-          )}
         </div>
       </div>
     </div>

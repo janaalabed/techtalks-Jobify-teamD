@@ -86,7 +86,7 @@ export default function ApplicantsBoard() {
     );
 
     return (
-        <div className="flex flex-col h-screen bg-[#edf0f7] font-sans antialiased text-[#170e2c]">
+        <div className="flex flex-col h-screen bg-[#e0e2ff]/50 font-sans antialiased text-[#170e2c]">
             <Navbar />
 
             <header className="px-10 pt-10 pb-6 flex justify-between items-center">

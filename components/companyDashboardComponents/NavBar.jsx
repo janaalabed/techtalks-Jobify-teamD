@@ -28,8 +28,8 @@ export default function Navbar() {
 
   const navLinks = [
     { name: "Dashboard", path: "/employers/dashboard", icon: <LayoutDashboard size={18} /> },
-    { name: "Profile", path: "/profile/previewCompanyProfile", icon: <UserCircle size={18} /> },
     { name: "Applicants", path: "/employer-ApplicantsTracking", icon: <Users size={18} /> },
+     { name: "Profile", path: "/profile/previewCompanyProfile", icon: <UserCircle size={18} /> },
   ];
 
   return (

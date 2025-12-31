@@ -19,7 +19,7 @@ export default function Login() {
     setLoading(true);
 
     try {
-      // ---- Hard-coded admin login ----
+     
       const adminEmail = "admin@jobify.com";
       const adminPassword = "Admin1234";
 
