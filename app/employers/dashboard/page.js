@@ -62,81 +62,86 @@ export default function EmployerDashboardPage() {
   }, [employer]);
 
   return (
-    <div className="min-h-screen bg-[#edf0f7]">
+    <div className="min-h-screen bg-[#f8fafc]">
       <Navbar companyName={employer?.company_name} />
 
-      <main className="max-w-6xl mx-auto px-6 py-10">
-
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-10">
+      <main className="max-w-6xl mx-auto px-4 md:px-6 py-8 md:py-12">
+        {/* Header Section */}
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-10">
           <div>
-            <h1 className="text-3xl font-bold text-[#170e2c] flex items-center gap-3">
-              <LayoutDashboard className="text-[#3e3875]" />
-              {employer?.company_name} Dashboard
+            <h1 className="text-3xl md:text-4xl font-black text-[#170e2c] flex items-center gap-3">
+              <LayoutDashboard className="text-[#3e3875]" size={32} />
+              Dashboard
             </h1>
-            <p className="text-slate-500 mt-1">Manage your job listings and track applicants.</p>
+            <p className="text-[#7270b1] mt-1 font-medium">
+              Welcome back, <span className="text-[#3e3875] font-bold">{employer?.company_name}</span>
+            </p>
           </div>
           <button
             onClick={() => setShowCreateModal(true)}
-            className="flex items-center justify-center gap-2 bg-[#3e3875] hover:bg-[#170e2c] text-white px-6 py-3 rounded-xl shadow-lg transition-all active:scale-95 font-semibold"
+            className="group flex items-center justify-center gap-2 bg-[#170e2c] hover:bg-[#3e3875] text-white px-8 py-4 rounded-2xl shadow-xl shadow-[#170e2c]/10 transition-all active:scale-95 font-black uppercase tracking-tight text-sm"
           >
-            <Plus size={20} />
+            <Plus size={20} className="group-hover:rotate-90 transition-transform" />
             Post New Job
           </button>
         </div>
 
-
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
-          <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
+        {/* Stats Quick View */}
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-12">
+          <div className="bg-white p-6 rounded-[2rem] border border-slate-100 shadow-sm shadow-[#170e2c]/5">
             <div className="flex items-center gap-4">
-              <div className="p-3 bg-indigo-50 text-[#3e3875] rounded-lg">
-                <Briefcase size={24} />
+              <div className="p-4 bg-[#5f5aa7]/10 text-[#3e3875] rounded-2xl">
+                <Briefcase size={28} />
               </div>
               <div>
-                <p className="text-sm text-slate-500 font-medium">Active Listings</p>
-                <p className="text-2xl font-bold text-slate-900">{jobs.length}</p>
+                <p className="text-[11px] font-black text-[#7270b1] uppercase tracking-widest">Active Listings</p>
+                <p className="text-3xl font-black text-[#170e2c]">{jobs.length}</p>
               </div>
             </div>
           </div>
-
         </div>
 
-
-        <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
-          <div className="px-6 py-4 border-b border-slate-100 bg-slate-50/50">
-            <h2 className="font-bold text-[#170e2c]">Your Job Openings</h2>
+        {/* Job List Container */}
+        <div className="bg-white rounded-[2.5rem] border border-slate-100 shadow-xl shadow-[#170e2c]/5 overflow-hidden">
+          <div className="px-8 py-6 border-b border-slate-50 bg-slate-50/30 flex justify-between items-center">
+            <h2 className="font-black text-[#170e2c] uppercase tracking-tight">Your Job Openings</h2>
+            <span className="text-xs font-bold bg-[#3e3875]/10 text-[#3e3875] px-3 py-1 rounded-full">
+              {jobs.length} Total
+            </span>
           </div>
 
-          <div className="p-6">
+          <div className="p-4 md:p-8">
             {loading ? (
-              <div className="flex justify-center py-10">
-                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#3e3875]"></div>
+              <div className="flex flex-col items-center justify-center py-20 gap-4">
+                <div className="animate-spin rounded-full h-10 w-10 border-4 border-[#3e3875]/20 border-t-[#3e3875]"></div>
+                <p className="text-sm font-bold text-[#7270b1]">Loading your listings...</p>
               </div>
             ) : jobs.length === 0 ? (
-              <div className="text-center py-12">
-                <div className="bg-slate-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <Briefcase className="text-slate-400" size={30} />
+              <div className="text-center py-16">
+                <div className="bg-slate-50 w-20 h-20 rounded-3xl flex items-center justify-center mx-auto mb-6 shadow-inner">
+                  <Briefcase className="text-slate-300" size={36} />
                 </div>
-                <h3 className="text-lg font-medium text-slate-900">No jobs posted yet</h3>
-                <p className="text-slate-500">Get started by creating your first job listing.</p>
+                <h3 className="text-xl font-black text-[#170e2c]">No jobs posted yet</h3>
+                <p className="text-[#7270b1] font-medium mt-2">Ready to find your next great hire?</p>
               </div>
             ) : (
               <div className="grid gap-4">
                 {jobs.map((job) => (
-                  <div key={job.id} className="group border border-slate-100 rounded-xl p-5  hover:border-[#3e3875]/30 hover:bg-[#e0e2ff]  hover:shadow-md transition-all bg-white">
-                    <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-                      <div className="space-y-1">
-                        <h3 className="text-lg font-bold text-slate-900 group-hover:text-[#3e3875] transition-colors">
+                  <div key={job.id} className="group bg-white border border-slate-100 rounded-[1.5rem] p-5 md:p-6 hover:border-[#5f5aa7]/30 hover:shadow-lg hover:shadow-[#170e2c]/5 transition-all">
+                    <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
+                      <div className="space-y-3">
+                        <h3 className="text-xl font-black text-[#170e2c] group-hover:text-[#3e3875] transition-colors">
                           {job.title}
                         </h3>
-                        <div className="flex flex-wrap items-center gap-4 text-sm text-slate-500">
-                          <span className="flex items-center gap-1">
-                            <MapPin size={14} /> {job.location}
+                        <div className="flex flex-wrap items-center gap-3 text-sm">
+                          <span className="flex items-center gap-1.5 font-bold text-[#7270b1] bg-slate-50 px-3 py-1.5 rounded-lg">
+                            <MapPin size={14} className="text-[#5f5aa7]" /> {job.location}
                           </span>
-                          <span className="px-2 py-0.5 bg-slate-100 text-slate-600 rounded text-xs font-semibold uppercase tracking-wider">
+                          <span className="px-3 py-1.5 bg-[#5f5aa7]/10 text-[#5f5aa7] rounded-lg text-[10px] font-black uppercase tracking-widest">
                             {job.type}
                           </span>
                           {job.paid && (
-                            <span className="text-emerald-600 font-medium">
+                            <span className="text-emerald-600 font-black bg-emerald-50 px-3 py-1.5 rounded-lg text-xs">
                               {job.salary}
                             </span>
                           )}
@@ -146,15 +151,15 @@ export default function EmployerDashboardPage() {
                       <div className="flex items-center gap-2 w-full md:w-auto">
                         <button
                           onClick={() => setEditJobId(job.id)}
-                          className="flex-1 md:flex-none flex items-center justify-center gap-2 px-4 py-2 text-sm font-medium text-white bg-[#3e3875] rounded-lg hover:bg-[#170e2c] transition-all active:scale-[0.98] shadow-sm"
+                          className="flex-1 md:flex-none flex items-center justify-center gap-2 px-6 py-3 text-sm font-black text-[#3e3875] bg-[#3e3875]/5 rounded-xl hover:bg-[#3e3875] hover:text-white transition-all active:scale-[0.98]"
                         >
                           <Edit3 size={16} /> Edit
                         </button>
                         <button
                           onClick={() => setDeleteJobId(job.id)}
-                          className="flex-1 md:flex-none flex items-center justify-center gap-2 px-4 py-2 text-sm font-medium text-rose-600 border border-rose-100 rounded-lg hover:bg-rose-50 transition-colors"
+                          className="flex-1 md:flex-none flex items-center justify-center gap-2 px-6 py-3 text-sm font-black text-rose-500 bg-rose-50 rounded-xl hover:bg-rose-500 hover:text-white transition-all"
                         >
-                          <Trash2 size={16} /> Delete
+                          <Trash2 size={16} />
                         </button>
                       </div>
                     </div>

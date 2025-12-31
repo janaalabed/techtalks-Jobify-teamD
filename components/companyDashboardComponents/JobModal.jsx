@@ -57,88 +57,85 @@ export default function JobModal({ mode, jobId, onClose, onSuccess }) {
   }
 
   if (loading) return null;
+return (
+  <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-[#170e2c]/80 backdrop-blur-md">
+    <div className="bg-white w-full max-w-2xl rounded-[2.5rem] shadow-2xl overflow-hidden animate-in fade-in zoom-in duration-300">
+      <div className="bg-[#170e2c] p-8 text-white flex justify-between items-center relative overflow-hidden">
+        <div className="absolute top-0 right-0 w-32 h-32 bg-[#3e3875] rounded-full -mr-16 -mt-16 blur-3xl opacity-50" />
+        <div className="relative z-10">
+          <h2 className="text-2xl font-black uppercase tracking-tight">{isEdit ? "Update Listing" : "Post a Job"}</h2>
+          <p className="text-[#7270b1] font-bold text-sm uppercase tracking-widest mt-1">Company Workspace</p>
+        </div>
+        <button onClick={onClose} className="relative z-10 p-2 hover:bg-white/10 rounded-full transition-colors">
+          <X size={24} />
+        </button>
+      </div>
 
-  return (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-[#170e2c]/60 backdrop-blur-sm">
-      <div className="bg-white w-full max-w-2xl rounded-2xl shadow-2xl overflow-hidden animate-in fade-in zoom-in duration-200">
-        <div className="bg-[#3e3875] p-6 text-white flex justify-between items-center">
-          <div>
-            <h2 className="text-xl font-bold">{isEdit ? "Update Job Posting" : "Post a New Job"}</h2>
-            <p className="text-indigo-200 text-sm">Fill in the details for your new opening.</p>
+      <form onSubmit={handleSubmit} className="p-8 space-y-6 max-h-[75vh] overflow-y-auto">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="space-y-2">
+            <label className="text-[11px] font-black text-[#7270b1] uppercase tracking-widest ml-1">Job Title</label>
+            <input name="title" value={form.title} onChange={handleChange} required
+              className="w-full border border-slate-200 rounded-2xl px-5 py-4 text-sm font-bold focus:border-[#5f5aa7] focus:ring-4 focus:ring-[#5f5aa7]/5 outline-none transition-all" placeholder="Software Engineer" />
           </div>
-          <button onClick={onClose} className="p-2 hover:bg-white/10 rounded-full transition-colors">
-            <X size={24} />
-          </button>
+          <div className="space-y-2">
+            <label className="text-[11px] font-black text-[#7270b1] uppercase tracking-widest ml-1">Location</label>
+            <input name="location" value={form.location} onChange={handleChange} required
+              className="w-full border border-slate-200 rounded-2xl px-5 py-4 text-sm font-bold focus:border-[#5f5aa7] focus:ring-4 focus:ring-[#5f5aa7]/5 outline-none transition-all" placeholder="Remote / Beirut" />
+          </div>
         </div>
 
-        <form onSubmit={handleSubmit} className="p-8 space-y-5 max-h-[70vh] overflow-y-auto">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="space-y-1">
-              <label className="text-sm font-semibold text-slate-700">Job Title</label>
-              <input name="title" value={form.title} onChange={handleChange} required
-                className="w-full border border-slate-200 rounded-xl px-4 py-3 focus:ring-2 focus:ring-[#3e3875]/20 outline-none" placeholder="Software Engineer" />
-            </div>
-            <div className="space-y-1">
-              <label className="text-sm font-semibold text-slate-700">Location</label>
-              <input name="location" value={form.location} onChange={handleChange} required
-                className="w-full border border-slate-200 rounded-xl px-4 py-3 focus:ring-2 focus:ring-[#3e3875]/20 outline-none" placeholder="Remote / Beirut" />
-            </div>
-          </div>
-
-          <div className="space-y-1">
-            <label className="text-sm font-semibold text-slate-700">Description</label>
-            <textarea name="description" value={form.description} onChange={handleChange} required rows={3}
-              className="w-full border border-slate-200 rounded-xl px-4 py-3 focus:ring-2 focus:ring-[#3e3875]/20 outline-none" placeholder="Tell us about the role..." />
-          </div>
-
-          <div className="space-y-1">
-            <label className="text-sm font-semibold text-slate-700">Requirements</label>
-            <textarea name="requirements" value={form.requirements} onChange={handleChange} required rows={3}
-              className="w-full border border-slate-200 rounded-xl px-4 py-3 focus:ring-2 focus:ring-[#3e3875]/20 outline-none" placeholder="Skills, years of experience..." />
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="space-y-1">
-              <label className="text-sm font-semibold text-slate-700">Job Type</label>
-              <select name="type" value={form.type} onChange={handleChange} required
-                className="w-full border border-slate-200 rounded-xl px-4 py-3 focus:ring-2 focus:ring-[#3e3875]/20 outline-none bg-white">
-                <option value="">Select Type</option>
-                <option value="full-time">Full-time</option>
-                <option value="part-time">Part-time</option>
-                <option value="internship">Internship</option>
-              </select>
-            </div>
-            <div className="space-y-1">
-              <label className="text-sm font-semibold text-slate-700">Compensation</label>
-              <div className="flex items-center gap-4 mt-3">
-                <label className="relative inline-flex items-center cursor-pointer">
-                  <input type="checkbox" name="paid" checked={form.paid} onChange={handleChange} className="sr-only peer" />
-                  <div className="w-11 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#3e3875]"></div>
-                  <span className="ml-3 text-sm font-medium text-slate-600">Paid Position</span>
-                </label>
-              </div>
-            </div>
-          </div>
-
-          {form.paid && (
-            <div className="bg-indigo-50 p-4 rounded-xl space-y-1 border border-indigo-100">
-              <label className="text-sm font-semibold text-[#3e3875]">Salary Range / Amount</label>
-              <input name="salary" value={form.salary} onChange={handleChange} required={form.paid}
-                className="w-full border border-indigo-200 rounded-lg px-4 py-2 outline-none focus:border-[#3e3875]" placeholder="e.g. $1,200 - $1,500" />
-            </div>
-          )}
-        </form>
-
-        <div className="p-6 bg-slate-50 flex justify-end gap-3">
-          <button onClick={onClose} className="px-6 py-2.5 rounded-xl border border-slate-300 font-semibold text-slate-700 hover:bg-white transition-all">
-            Cancel
-          </button>
-          <button onClick={handleSubmit} disabled={saving}
-            className="bg-[#3e3875] text-white px-8 py-2.5 rounded-xl font-bold shadow-lg hover:bg-[#170e2c] transition-all flex items-center gap-2">
-            {saving ? "Saving..." : <><Save size={18} /> Save Job</>}
-          </button>
+        <div className="space-y-2">
+          <label className="text-[11px] font-black text-[#7270b1] uppercase tracking-widest ml-1">Role Description</label>
+          <textarea name="description" value={form.description} onChange={handleChange} required rows={3}
+            className="w-full border border-slate-200 rounded-2xl px-5 py-4 text-sm font-bold focus:border-[#5f5aa7] focus:ring-4 focus:ring-[#5f5aa7]/5 outline-none transition-all resize-none" placeholder="Tell us about the role..." />
         </div>
+
+        <div className="space-y-2">
+          <label className="text-[11px] font-black text-[#7270b1] uppercase tracking-widest ml-1">Requirements</label>
+          <textarea name="requirements" value={form.requirements} onChange={handleChange} required rows={3}
+            className="w-full border border-slate-200 rounded-2xl px-5 py-4 text-sm font-bold focus:border-[#5f5aa7] focus:ring-4 focus:ring-[#5f5aa7]/5 outline-none transition-all resize-none" placeholder="Skills, years of experience..." />
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-end">
+          <div className="space-y-2">
+            <label className="text-[11px] font-black text-[#7270b1] uppercase tracking-widest ml-1">Job Type</label>
+            <select name="type" value={form.type} onChange={handleChange} required
+              className="w-full border border-slate-200 rounded-2xl px-5 py-4 text-sm font-bold focus:border-[#5f5aa7] focus:ring-4 focus:ring-[#5f5aa7]/5 outline-none bg-white appearance-none cursor-pointer">
+              <option value="">Select Type</option>
+              <option value="full-time">Full-time</option>
+              <option value="part-time">Part-time</option>
+              <option value="internship">Internship</option>
+            </select>
+          </div>
+          <div className="bg-slate-50 p-4 rounded-2xl flex items-center justify-between border border-slate-100">
+             <span className="text-[11px] font-black text-[#3e3875] uppercase tracking-widest">Paid Position</span>
+             <label className="relative inline-flex items-center cursor-pointer">
+                <input type="checkbox" name="paid" checked={form.paid} onChange={handleChange} className="sr-only peer" />
+                <div className="w-11 h-6 bg-slate-300 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#3e3875]"></div>
+             </label>
+          </div>
+        </div>
+
+        {form.paid && (
+          <div className="bg-[#5f5aa7]/5 p-5 rounded-2xl space-y-2 border border-[#5f5aa7]/20 animate-in slide-in-from-top-2">
+            <label className="text-[11px] font-black text-[#3e3875] uppercase tracking-widest ml-1">Salary Range / Amount</label>
+            <input name="salary" value={form.salary} onChange={handleChange} required={form.paid}
+              className="w-full border border-white rounded-xl px-4 py-3 text-sm font-bold outline-none focus:border-[#3e3875] shadow-sm" placeholder="e.g. $1,200 - $1,500" />
+          </div>
+        )}
+      </form>
+
+      <div className="p-8 bg-slate-50 flex flex-col md:flex-row justify-end gap-3">
+        <button onClick={onClose} className="px-8 py-4 rounded-2xl border border-slate-200 font-black text-slate-500 hover:bg-white transition-all uppercase text-xs tracking-widest">
+          Cancel
+        </button>
+        <button onClick={handleSubmit} disabled={saving}
+          className="bg-[#170e2c] text-white px-10 py-4 rounded-2xl font-black shadow-xl shadow-[#170e2c]/20 hover:bg-[#3e3875] transition-all flex items-center justify-center gap-2 uppercase text-xs tracking-widest disabled:opacity-50">
+          {saving ? "Processing..." : <><Save size={18} /> Save Listing</>}
+        </button>
       </div>
     </div>
-  );
+  </div>
+);
 }

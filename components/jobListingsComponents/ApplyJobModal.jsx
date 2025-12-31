@@ -90,55 +90,59 @@ export default function ApplyJobModal({ jobId, onClose }) {
     }
   }
 
-  return (
-    <div className="fixed inset-0 z-50 bg-black/40 flex items-center justify-center">
-      <div className="bg-white rounded-2xl w-full max-w-lg p-6 relative">
-        <button
-          onClick={onClose}
-          className="absolute right-4 top-4 text-slate-400 hover:text-slate-600"
-        >
-          <X size={18} />
-        </button>
+ return (
+  <div className="fixed inset-0 z-[150] bg-[#170e2c]/60 backdrop-blur-sm flex items-center justify-center p-4">
+    <div className="bg-white rounded-[2rem] w-full max-w-lg p-6 md:p-8 relative shadow-2xl max-h-[95vh] overflow-y-auto">
+      <button
+        onClick={onClose}
+        className="absolute right-6 top-6 text-slate-400 hover:text-[#170e2c] transition-colors"
+      >
+        <X size={20} />
+      </button>
 
-        <h2 className="text-lg font-bold text-[#170e2c] mb-4">
-          Apply for this job
-        </h2>
+      <h2 className="text-2xl font-black text-[#170e2c] mb-6 tracking-tight">
+        Apply for Position
+      </h2>
 
+      <div className="space-y-6">
         {/* CV Upload */}
-        <label className="block mb-4">
-          <span className="text-xs font-bold text-slate-600 uppercase">
-            Upload CV
+        <div className="block">
+          <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1">
+            Upload CV (PDF/DOC)
           </span>
-          <input
-            type="file"
-            accept=".pdf,.doc,.docx"
-            onChange={(e) => setCvFile(e.target.files[0])}
-            className="mt-2 block w-full text-sm"
-          />
-        </label>
+          <div className="mt-2 p-4 border-2 border-dashed border-slate-100 rounded-2xl hover:border-[#5f5aa7]/30 transition-colors">
+            <input
+              type="file"
+              accept=".pdf,.doc,.docx"
+              onChange={(e) => setCvFile(e.target.files[0])}
+              className="block w-full text-xs text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-[10px] file:font-black file:uppercase file:bg-[#5f5aa7]/10 file:text-[#3e3875] hover:file:bg-[#5f5aa7]/20 cursor-pointer"
+            />
+          </div>
+        </div>
 
         {/* Cover Letter */}
-        <label className="block mb-6">
-          <span className="text-xs font-bold text-slate-600 uppercase">
+        <div className="block">
+          <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1">
             Cover Letter
           </span>
           <textarea
-            rows={4}
+            rows={5}
             value={coverLetter}
             onChange={(e) => setCoverLetter(e.target.value)}
-            className="mt-2 w-full border border-slate-200 rounded-xl p-3 text-sm outline-none focus:ring-2 focus:ring-[#5f5aa7]/20"
-            placeholder="Write a short cover letter..."
+            className="mt-2 w-full border border-slate-100 bg-slate-50 rounded-2xl p-4 text-sm font-bold outline-none focus:bg-white focus:ring-4 focus:ring-[#5f5aa7]/5 focus:border-[#5f5aa7]/20 transition-all resize-none"
+            placeholder="Tell the employer why you're a great fit..."
           />
-        </label>
+        </div>
 
         <button
           onClick={submitApplication}
           disabled={loading}
-          className="w-full bg-[#3e3875] hover:bg-[#170e2c] text-white py-3 rounded-xl font-bold text-sm transition"
+          className="w-full bg-[#3e3875] hover:bg-[#170e2c] text-white py-4 rounded-2xl font-black text-xs uppercase tracking-widest transition-all shadow-xl shadow-[#3e3875]/20 disabled:opacity-50"
         >
-          {loading ? "Submitting..." : "Submit Application"}
+          {loading ? "Submitting..." : "Send Application"}
         </button>
       </div>
     </div>
-  );
+  </div>
+);
 }

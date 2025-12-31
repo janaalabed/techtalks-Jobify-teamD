@@ -84,8 +84,8 @@ function RegisterForm() {
         redirectAfterRegister(role, router);
     };
 
-    return (
-        <div className="min-h-screen bg-white relative flex items-center justify-center px-4 py-12 overflow-hidden">
+return (
+        <div className="min-h-screen bg-white relative flex items-center justify-center px-4 py-8 md:py-12 overflow-hidden">
             
             {/* Background Decorations */}
             <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] [background-size:20px_20px] opacity-30" />
@@ -93,43 +93,45 @@ function RegisterForm() {
             <div className="absolute -bottom-24 -right-24 w-96 h-96 bg-[#7270b1]/10 rounded-full blur-[100px]" />
 
             <div className="w-full max-w-xl relative z-10">
-                <div className="text-center mb-8">
+                {/* Header - Scaled for mobile */}
+                <div className="text-center mb-6 md:mb-8">
                     <h1 className="text-3xl md:text-4xl font-bold text-[#170e2c] tracking-tight">
                         Join <span className="text-[#5f5aa7]">Jobify</span>
                     </h1>
-                    <p className="text-slate-500 mt-2">
+                    <p className="text-slate-500 mt-2 text-sm md:text-base">
                         Create your account to start your journey.
                     </p>
                 </div>
 
-                <div className="bg-white/80 backdrop-blur-xl rounded-[2.5rem] shadow-[0_20px_50px_rgba(0,0,0,0.05)] border border-slate-100 p-8 md:p-12">
-                    <form onSubmit={handleRegister} className="space-y-5">
+                {/* Card - Optimized internal padding for mobile keyboards */}
+                <div className="bg-white/80 backdrop-blur-xl rounded-[2rem] md:rounded-[2.5rem] shadow-[0_20px_50px_rgba(0,0,0,0.05)] border border-slate-100 p-6 md:p-12">
+                    <form onSubmit={handleRegister} className="space-y-4 md:space-y-5">
 
-                        {/* Role Selection Buttons */}
-                        <div className="grid grid-cols-2 gap-4 mb-8">
+                        {/* Role Selection Buttons - Improved sizing for small screens */}
+                        <div className="grid grid-cols-2 gap-3 md:gap-4 mb-6 md:mb-8">
                             <button
                                 type="button"
                                 onClick={() => setRole("applicant")}
-                                className={`p-4 rounded-2xl border-2 transition-all flex flex-col items-center gap-2 ${
+                                className={`p-3 md:p-4 rounded-2xl border-2 transition-all flex flex-col items-center gap-2 ${
                                     role === "applicant"
                                         ? "border-[#5f5aa7] bg-[#5f5aa7]/5 text-[#5f5aa7]"
                                         : "border-slate-100 text-slate-400 hover:border-slate-200"
                                 }`}
                             >
-                                <span className="text-xs font-bold uppercase tracking-wider">
+                                <span className="text-[10px] md:text-xs font-bold uppercase tracking-wider">
                                     Applicant
                                 </span>
                             </button>
                             <button
                                 type="button"
                                 onClick={() => setRole("employer")}
-                                className={`p-4 rounded-2xl border-2 transition-all flex flex-col items-center gap-2 ${
+                                className={`p-3 md:p-4 rounded-2xl border-2 transition-all flex flex-col items-center gap-2 ${
                                     role === "employer"
                                         ? "border-[#5f5aa7] bg-[#5f5aa7]/5 text-[#5f5aa7]"
                                         : "border-slate-100 text-slate-400 hover:border-slate-200"
                                 }`}
                             >
-                                <span className="text-xs font-bold uppercase tracking-wider">
+                                <span className="text-[10px] md:text-xs font-bold uppercase tracking-wider">
                                     Employer
                                 </span>
                             </button>
@@ -161,8 +163,8 @@ function RegisterForm() {
                             />
                         </div>
 
-                        {/* Password Requirements Grid */}
-                        <div className="grid grid-cols-2 gap-2 px-2 py-2">
+                        {/* Password Requirements Grid - Improved readability/spacing */}
+                        <div className="grid grid-cols-2 gap-y-2 gap-x-1 px-1 py-1">
                             {[
                                 { label: "8+ characters", met: requirements.length },
                                 { label: "One letter", met: requirements.letter },
@@ -171,7 +173,7 @@ function RegisterForm() {
                             ].map((req) => (
                                 <div
                                     key={req.label}
-                                    className={`flex items-center gap-2 text-[11px] font-medium ${
+                                    className={`flex items-center gap-2 text-[11px] md:text-xs font-medium ${
                                         req.met ? "text-emerald-600" : "text-slate-400"
                                     }`}
                                 >
@@ -208,7 +210,7 @@ function RegisterForm() {
                             <ArrowRight size={18} />
                         </button>
 
-                        <p className="text-center text-sm text-slate-500 mt-8">
+                        <p className="text-center text-sm text-slate-500 mt-6">
                             Already have an account?{" "}
                             <button
                                 type="button"

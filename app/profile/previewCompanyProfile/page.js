@@ -44,8 +44,8 @@ export default function CompanyProfilePage() {
     }, [router, supabase]);
 
     if (loading) {
-         return (
-            <div className="flex justify-center items-center h-screen bg-[#f8fafc]">
+        return (
+            <div className="flex justify-center items-center h-screen bg-[#edf0f7]">
                 <div className="w-10 h-10 border-4 border-slate-200 border-t-[#3e3875] rounded-full animate-spin"></div>
             </div>
         );
@@ -62,7 +62,7 @@ export default function CompanyProfilePage() {
                         </div>
                         <h2 className="text-xl font-bold text-[#170e2c] mb-2">No Company Profile Found</h2>
                         <p className="text-slate-500 mb-6">Create your company profile to start posting jobs and attracting talent.</p>
-                        <button 
+                        <button
                             onClick={() => router.push("/employers/create")}
                             className="w-full py-3 rounded-2xl bg-[#3e3875] text-white font-bold hover:bg-[#170e2c] transition-colors"
                         >
@@ -77,46 +77,51 @@ export default function CompanyProfilePage() {
     return (
         <div className="min-h-screen bg-[#f8fafc]">
             <Navbar />
-            
-            {/* Header / Banner */}
-            <div className="relative bg-[#170e2c] pt-20 pb-32">
+
+           
+            <div className="relative bg-[#170e2c] pt-12 md:pt-20 pb-24 md:pb-32">
                 <div className="absolute inset-0 bg-gradient-to-r from-[#3e3875]/40 to-transparent" />
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
-                    {/* Logo */}
-                    <div className="w-32 h-32 mx-auto bg-white rounded-full shadow-2xl shadow-[#3e3875]/20 mb-6 flex items-center justify-center">
+
+                    
+                    <div className="w-24 h-24 md:w-32 md:h-32 mx-auto bg-white rounded-full shadow-2xl shadow-[#3e3875]/20 mb-6 flex items-center justify-center overflow-hidden border-4 border-white/10">
                         {company.logo_url ? (
-                            <img src={company.logo_url} alt={company.company_name} className="w-full h-full object-cover rounded-full" />
+                            <img src={company.logo_url} alt={company.company_name} className="w-full h-full object-cover" />
                         ) : (
-                            <Building2 size={48} className="text-[#3e3875]/40" />
+                            <Building2 size={40} className="md:size-12 text-[#3e3875]/40" />
                         )}
                     </div>
+
                     
-                    <h1 className="text-4xl font-extrabold text-white tracking-tight mb-2">{company.company_name}</h1>
+                    <h1 className="text-2xl md:text-4xl font-extrabold text-white tracking-tight mb-2 px-2">
+                        {company.company_name}
+                    </h1>
+
                     
-                    <div className="flex flex-wrap justify-center gap-4 mt-6 text-indigo-100/80 text-sm font-medium">
+                    <div className="flex flex-wrap justify-center gap-2 md:gap-4 mt-6 text-indigo-100/80 text-xs md:text-sm font-medium">
                         {company.industry && (
-                            <div className="flex items-center gap-1.5 bg-white/10 px-4 py-1.5 rounded-full backdrop-blur-sm border border-white/10">
+                            <div className="flex items-center gap-1.5 bg-white/10 px-3 md:px-4 py-1.5 rounded-full backdrop-blur-sm border border-white/10">
                                 <Briefcase size={14} />
                                 {company.industry}
                             </div>
                         )}
                         {company.location && (
-                            <div className="flex items-center gap-1.5 bg-white/10 px-4 py-1.5 rounded-full backdrop-blur-sm border border-white/10">
+                            <div className="flex items-center gap-1.5 bg-white/10 px-3 md:px-4 py-1.5 rounded-full backdrop-blur-sm border border-white/10">
                                 <MapPin size={14} />
                                 {company.location}
                             </div>
                         )}
-                       {company.website && (
-                            <a href={company.website} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5 bg-white/10 px-4 py-1.5 rounded-full backdrop-blur-sm border border-white/10 hover:bg-white/20 transition-colors">
+                        {company.website && (
+                            <a href={company.website} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5 bg-white/10 px-3 md:px-4 py-1.5 rounded-full backdrop-blur-sm border border-white/10 hover:bg-white/20 transition-colors">
                                 <Globe size={14} />
-                                Website
+                                <span className="hidden xs:inline">Website</span>
                             </a>
                         )}
                     </div>
-                    
-                    <button 
+
+                    <button
                         onClick={() => router.push("/employers/create")}
-                        className="mt-8 inline-flex items-center gap-2 px-6 py-2.5 bg-white/10 hover:bg-white/20 text-white rounded-xl backdrop-blur-md border border-white/20 transition-all font-semibold text-sm group"
+                        className="mt-8 inline-flex items-center gap-2 px-6 py-2.5 bg-white/10 hover:bg-white/20 text-white rounded-xl backdrop-blur-md border border-white/20 transition-all font-semibold text-sm active:scale-95"
                     >
                         <Edit size={16} />
                         Edit Profile
@@ -124,20 +129,21 @@ export default function CompanyProfilePage() {
                 </div>
             </div>
 
-            {/* Content */}
-            <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 -mt-20 relative z-20 pb-20">
-                <div className="bg-white rounded-[2.5rem] shadow-xl shadow-[#170e2c]/5 border border-slate-200 p-8 md:p-12">
-                    <div className="prose prose-slate max-w-none">
-                        <h2 className="text-2xl font-bold text-[#170e2c] mb-6 flex items-center gap-3">
+           
+            <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 -mt-12 md:-mt-20 relative z-20 pb-20">
+                <div className="bg-white rounded-[2rem] md:rounded-[2.5rem] shadow-xl shadow-[#170e2c]/5 border border-slate-200 p-6 md:p-12">
+                    <div className="max-w-none">
+                        <h2 className="text-xl md:text-2xl font-bold text-[#170e2c] mb-6 flex items-center gap-3">
+                            <div className="h-6 w-1 bg-[#5f5aa7] rounded-full" />
                             About Us
                         </h2>
                         {company.description ? (
-                            <p className="text-slate-600 leading-relaxed whitespace-pre-line text-lg">
+                            <p className="text-slate-600 leading-relaxed whitespace-pre-line text-base md:text-lg">
                                 {company.description}
                             </p>
                         ) : (
-                            <div className="text-center py-12 border-2 border-dashed border-slate-100 rounded-3xl">
-                                <p className="text-slate-400 italic">No description added yet.</p>
+                            <div className="text-center py-12 border-2 border-dashed border-slate-100 rounded-[2rem]">
+                                <p className="text-slate-400 italic text-sm md:text-base">No description added yet.</p>
                             </div>
                         )}
                     </div>

@@ -32,8 +32,8 @@ export default function ApplicantsBoard() {
 
             if (error) throw error;
 
-           
-            
+
+
             const formattedData = data.map(app => {
                 if (app.cv_url && !app.cv_url.startsWith('http')) {
                     const { data: publicUrlData } = supabase
@@ -54,7 +54,7 @@ export default function ApplicantsBoard() {
         }
     };
 
-  
+
     const updateStatus = async (applicationId, newStatus, applicantUserId) => {
         try {
             const { error } = await supabase
@@ -64,12 +64,12 @@ export default function ApplicantsBoard() {
 
             if (error) throw error;
 
-           
+
             setApplications(prev =>
                 prev.map(app => app.id === applicationId ? { ...app, status: newStatus } : app)
             );
 
-         
+
             if (selectedApp?.id === applicationId) {
                 setSelectedApp(prev => ({ ...prev, status: newStatus }));
             }
@@ -86,33 +86,32 @@ export default function ApplicantsBoard() {
     );
 
     return (
-        <div className="flex flex-col h-screen bg-[#e0e2ff]/50 font-sans antialiased text-[#170e2c]">
+        <div className="flex flex-col min-h-screen bg-[#edf0f7] font-sans antialiased text-[#170e2c]">
             <Navbar />
 
-            <header className="px-10 pt-10 pb-6 flex justify-between items-center">
+            <header className="px-4 md:px-10 pt-6 md:pt-10 pb-6 flex justify-between items-center">
                 <div className="flex items-center gap-3 bg-white px-4 py-2 rounded-xl shadow-sm border border-[#7270b1]/5">
-                    <div className="w-2 h-2 rounded-full bg-[#5f5aa7]"></div>
-                    <span className="text-xs font-bold text-[#3e3875] uppercase tracking-wider">
+                    <div className="w-2 h-2 rounded-full bg-[#5f5aa7] animate-pulse"></div>
+                    <span className="text-[10px] md:text-xs font-bold text-[#3e3875] uppercase tracking-wider">
                         {applications.length} Total Applicants
                     </span>
                 </div>
             </header>
 
-            <main className="px-10 pb-10 flex-1 flex overflow-x-auto gap-8 items-start scrollbar-hide">
+            {/* Changed overflow-x-auto to flex-col on mobile, flex-row on desktop */}
+            <main className="px-4 md:px-10 pb-10 flex-1 flex flex-col md:flex-row gap-6 md:gap-8 items-start overflow-x-auto scrollbar-hide">
                 {columns.map((col) => (
-                    <section key={col} className="min-w-[340px] max-w-[340px] h-full flex flex-col bg-[#e0e2ff]/50 p-5 rounded-[0.5rem] border border-[#f1f2ff]">
-                        <div className="flex items-center justify-between mb-6 group px-1">
-                            <div className="flex items-center gap-2.5">
-                                <h2 className="text-[11px] font-black uppercase tracking-[0.1em] text-[#3e3875] opacity-80 group-hover:opacity-100 transition-opacity">
-                                    {col === 'pending' ? 'New Entry' : col}
-                                </h2>
-                            </div>
+                    <section key={col} className="w-full md:min-w-[340px] md:max-w-[340px] flex flex-col bg-[#e0e2ff]/40 p-4 md:p-5 rounded-2xl border border-white/50">
+                        <div className="flex items-center justify-between mb-5 px-1">
+                            <h2 className="text-[11px] font-black uppercase tracking-[0.1em] text-[#3e3875] opacity-80">
+                                {col === 'pending' ? 'New Entry' : col}
+                            </h2>
                             <span className="text-[10px] font-mono font-bold bg-white text-[#5f5aa7] px-2 py-0.5 rounded-lg shadow-sm">
-                                {applications.filter(a => (a.status || 'pending') === col).length.toString()}
+                                {applications.filter(a => (a.status || 'pending') === col).length}
                             </span>
                         </div>
 
-                        <div className="flex-1 overflow-y-auto space-y-4 pr-1 custom-scrollbar hover:scrollbar-thumb-[#7270b1]/20 transition-colors">
+                        <div className="space-y-4 custom-scrollbar">
                             {applications.filter(app => (app.status || 'pending') === col).length > 0 ? (
                                 applications.filter(app => (app.status || 'pending') === col).map(app => (
                                     <ApplicantCard
@@ -127,8 +126,7 @@ export default function ApplicantsBoard() {
                                     />
                                 ))
                             ) : (
-                                <div className="border-2 border-dashed border-[#7270b1]/10 rounded-2xl py-12 flex flex-col items-center justify-center opacity-40">
-                                    <div className="w-8 h-8 rounded-full bg-white mb-2"></div>
+                                <div className="border-2 border-dashed border-[#7270b1]/10 rounded-2xl py-8 flex flex-col items-center justify-center opacity-40">
                                     <p className="text-[10px] font-bold uppercase tracking-widest text-[#7270b1]">Empty Stage</p>
                                 </div>
                             )}
@@ -144,18 +142,6 @@ export default function ApplicantsBoard() {
                     onUpdateStatus={updateStatus}
                 />
             )}
-
-            <style jsx global>{`
-                .custom-scrollbar::-webkit-scrollbar { width: 4px; }
-                .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
-                .custom-scrollbar::-webkit-scrollbar-thumb { 
-                    background: transparent; 
-                    border-radius: 10px;
-                }
-                .custom-scrollbar:hover::-webkit-scrollbar-thumb {
-                    background: #e2e4ff;
-                }
-            `}</style>
         </div>
     );
 }
