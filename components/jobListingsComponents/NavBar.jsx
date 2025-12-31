@@ -41,7 +41,7 @@ return (
         ? "bg-[#170e2c]/95 backdrop-blur-md shadow-lg"
         : "bg-[#170e2c]"
     }`}>
-      {/* Changed px-8 to px-4 for mobile, md:px-8 for desktop */}
+      
       <div className="w-full max-w-7xl mx-auto flex items-center justify-between px-4 md:px-8">
         
         {/* Logo Section - Responsive width */}       
