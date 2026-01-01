@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
-import { Globe, Briefcase, MapPin, Building2, Image as ImageIcon, CheckCircle2, AlertCircle, ArrowLeft } from "lucide-react";
+import { Globe, Briefcase, MapPin, Building2, Image as ImageIcon, CheckCircle2, AlertCircle, ArrowRight,ArrowLeft } from "lucide-react";
 import getSupabase from "../../../lib/supabaseClient";
 
 export default function CreateCompanyProfilePage() {
