@@ -50,7 +50,7 @@ export default function JobsListPage() {
       <div className="flex-1 overflow-y-auto custom-scrollbar">
 
         <header className="bg-white border-b border-slate-200/60">
-          {/* Adjusted padding: px-4 on mobile, px-8 on desktop */}
+        
           <div className="max-w-6xl mx-auto px-4 sm:px-6 md:px-8 py-6 md:py-8">
             <div className="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4">
               <div className="space-y-1">
@@ -63,7 +63,7 @@ export default function JobsListPage() {
                   Find your next <span className="text-[#3e3875]">Big Move.</span>
                 </h1>
               </div>
-              {/* Opportunity count now hidden on very small phones, shown from 'sm' up */}
+           
               <div className="hidden sm:flex items-center self-start md:self-auto gap-2 px-4 py-2 rounded-2xl bg-[#5f5aa7]/5 border border-[#5f5aa7]/10 text-[#3e3875] text-xs font-black uppercase tracking-tighter shadow-sm">
                 <Sparkles size={14} className="text-[#5f5aa7]" /> {jobs.length} Opportunities Available
               </div>

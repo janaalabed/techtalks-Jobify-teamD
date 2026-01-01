@@ -64,7 +64,7 @@ function RegisterForm() {
         const user = data.user;
         if (!user) return;
 
-        // Insert into the profiles table
+       
         const { error: profileError } = await supabase
             .from("profiles")
             .insert({ id: user.id, role });
@@ -74,7 +74,7 @@ function RegisterForm() {
             return;
         }
 
-        // Insert into role-specific tables
+       
         if (role === "applicant") {
             await supabase.from("applicants").insert({ user_id: user.id });
         } else if (role === "employer") {
@@ -103,11 +103,11 @@ return (
                     </p>
                 </div>
 
-                {/* Card - Optimized internal padding for mobile keyboards */}
+               
                 <div className="bg-white/80 backdrop-blur-xl rounded-[2rem] md:rounded-[2.5rem] shadow-[0_20px_50px_rgba(0,0,0,0.05)] border border-slate-100 p-6 md:p-12">
                     <form onSubmit={handleRegister} className="space-y-4 md:space-y-5">
 
-                        {/* Role Selection Buttons - Improved sizing for small screens */}
+                       
                         <div className="grid grid-cols-2 gap-3 md:gap-4 mb-6 md:mb-8">
                             <button
                                 type="button"
@@ -163,7 +163,7 @@ return (
                             />
                         </div>
 
-                        {/* Password Requirements Grid - Improved readability/spacing */}
+                       
                         <div className="grid grid-cols-2 gap-y-2 gap-x-1 px-1 py-1">
                             {[
                                 { label: "8+ characters", met: requirements.length },
@@ -227,7 +227,7 @@ return (
     );
 }
 
-// Final Export wrapped in Suspense to handle the useSearchParams hook correctly
+
 export default function Register() {
     return (
         <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading...</div>}>

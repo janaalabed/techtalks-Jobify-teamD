@@ -98,7 +98,7 @@ export default function ApplicantsBoard() {
                 </div>
             </header>
 
-            {/* Changed overflow-x-auto to flex-col on mobile, flex-row on desktop */}
+            
             <main className="px-4 md:px-10 pb-10 flex-1 flex flex-col md:flex-row gap-6 md:gap-8 items-start overflow-x-auto scrollbar-hide">
                 {columns.map((col) => (
                     <section key={col} className="w-full md:min-w-[340px] md:max-w-[340px] flex flex-col bg-[#e0e2ff]/40 p-4 md:p-5 rounded-2xl border border-white/50">

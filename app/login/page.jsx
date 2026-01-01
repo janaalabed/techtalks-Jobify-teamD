@@ -69,13 +69,13 @@ export default function Login() {
 
   return (
     <div className="min-h-screen bg-white relative flex items-center justify-center px-4 py-8 md:py-12 overflow-hidden">
-      {/* Background Decor */}
+    
       <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] [background-size:20px_20px] opacity-30" />
       <div className="absolute -top-24 -right-24 w-96 h-96 bg-[#5f5aa7]/10 rounded-full blur-[100px]" />
       <div className="absolute -bottom-24 -left-24 w-96 h-96 bg-[#7270b1]/10 rounded-full blur-[100px]" />
 
       <div className="w-full max-w-lg relative z-10">
-        {/* Header - Improved margin and text size for mobile */}
+        
         <div className="text-center mb-6 md:mb-10">
           <h1 className="text-3xl md:text-4xl font-bold text-[#170e2c] tracking-tight">
             Welcome <span className="text-[#5f5aa7]">Back</span>
@@ -83,7 +83,7 @@ export default function Login() {
           <p className="text-slate-500 mt-2 text-sm md:text-base px-4">Log in to continue to your Jobify dashboard.</p>
         </div>
 
-        {/* Card - Improved: Responsive padding p-6 for mobile, md:p-12 for desktop */}
+       
         <div className="bg-white/80 backdrop-blur-xl rounded-[2rem] md:rounded-[2.5rem] shadow-[0_20px_50px_rgba(0,0,0,0.05)] border border-slate-100 p-6 md:p-12">
           <form onSubmit={handleLogin} className="space-y-5 md:space-y-6">
             

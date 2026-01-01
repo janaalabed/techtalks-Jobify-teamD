@@ -45,7 +45,7 @@ const [isSidebarOpen, setIsSidebarOpen] = useState(false);
       { data: applicationsData, error: applicationsError },
     ] = await Promise.all([
       supabase.from("profiles").select("*"),
-      // Explicitly naming the foreign key relationship to ensure the join works
+      
       supabase.from("jobs").select("*, employers!jobs_employer_id_fkey(company_name)"),
       supabase.from("applications").select("*"),
     ]);
@@ -89,7 +89,7 @@ const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   return (
   <div className="min-h-screen bg-[#170e2c] text-white font-sans">
-    {/* MOBILE TOP NAV - Added for responsiveness */}
+
     <div className="lg:hidden flex items-center justify-between p-4 bg-[#3e3875] border-b border-[#7270b1]/30">
       <div className="flex items-center gap-2">
         <LayoutDashboard size={20} className="text-[#7270b1]" />
@@ -120,7 +120,7 @@ const [isSidebarOpen, setIsSidebarOpen] = useState(false);
               key={tab}
               onClick={() => {
                 setActiveTab(tab);
-                setIsSidebarOpen(false); // Close on mobile after selection
+                setIsSidebarOpen(false); 
               }}
               className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 capitalize font-semibold ${
                 activeTab === tab
@@ -293,7 +293,7 @@ const [isSidebarOpen, setIsSidebarOpen] = useState(false);
       </main>
     </div>
 
-    {/* JOB MODAL - Refined for mobile height/scrolling */}
+   
     {selectedJob && (
       <div className="fixed inset-0 bg-[#170e2c]/90 backdrop-blur-md flex items-center justify-center z-[100] p-4">
         <div className="bg-[#3e3875] border border-[#7270b1]/30 text-white p-6 md:p-10 rounded-[2rem] w-full max-w-2xl relative shadow-2xl overflow-y-auto max-h-[85vh] custom-scrollbar">

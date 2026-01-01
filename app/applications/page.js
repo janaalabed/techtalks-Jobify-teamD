@@ -47,7 +47,7 @@ export default function ApplicationsPage() {
       <Navbar />
 
       <main className="max-w-5xl mx-auto px-4 sm:px-6 py-8 md:py-12">
-        {/* Header Section: flex-col on mobile */}
+       
         <header className="mb-8 md:mb-10 flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4">
           <div>
             <h1 className="text-2xl md:text-3xl font-black text-[#170e2c] tracking-tight mb-1 md:mb-2">
@@ -83,7 +83,7 @@ export default function ApplicationsPage() {
                     <div className="w-12 h-12 md:w-14 md:h-14 bg-[#edf0f7] rounded-xl flex items-center justify-center text-[#5f5aa7] font-black text-lg md:text-xl shrink-0 group-hover:bg-[#3e3875] group-hover:text-white transition-all duration-300">
                       {app.jobs?.title?.charAt(0)}
                     </div>
-                    <div className="min-w-0"> {/* min-w-0 allows text truncation to work inside flex */}
+                    <div className="min-w-0"> 
                       <h3 className="text-base md:text-lg font-bold text-[#170e2c] leading-snug truncate">
                         {app.jobs?.title}
                       </h3>
@@ -102,7 +102,7 @@ export default function ApplicationsPage() {
                     </div>
                   </div>
 
-                  {/* Status & Action */}
+                  
                   <div className="flex items-center justify-between md:justify-end gap-6 border-t border-slate-50 md:border-t-0 pt-4 md:pt-0">
                     <div className="flex flex-row md:flex-col items-center md:items-end justify-between w-full md:w-auto gap-4">
                       <span className={`text-[9px] md:text-[10px] font-black uppercase tracking-[0.15em] px-2.5 py-1 rounded-md border shadow-sm ${app.status === "pending" ? "text-amber-600 bg-amber-50 border-amber-100" :

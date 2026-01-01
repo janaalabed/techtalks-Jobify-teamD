@@ -11,7 +11,7 @@ export default function ApplicantModal({ app, onClose, onUpdateStatus }) {
     const experience = safeParse(app.applicants?.experience);
     const education = safeParse(app.applicants?.education);
 
-    // Reusable Header Component for internal consistency
+   
     const SectionHeader = ({ icon: Icon, title }) => (
         <div className="flex items-center gap-3 mb-6">
             <div className="w-8 h-8 rounded-lg bg-[#f1f0fb] flex items-center justify-center text-[#5f5aa7]">
@@ -73,7 +73,7 @@ return (
                     
                     {/* LEFT COLUMN: Narrative & Experience */}
                     <div className="lg:col-span-7 p-6 md:p-12 space-y-12">
-                        {/* Summary Section */}
+                     
                         <section>
                             <div className="flex items-center gap-3 mb-6">
                                 <div className="w-8 h-8 rounded-lg bg-amber-50 flex items-center justify-center text-amber-600">
