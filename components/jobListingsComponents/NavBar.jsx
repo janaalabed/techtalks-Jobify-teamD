@@ -1,18 +1,17 @@
-
-
 "use client";
 
 import { useState, useEffect } from "react";
 import { useRouter, usePathname } from "next/navigation";
 import getSupabase from "../../lib/supabaseClient";
 import Image from "next/image"; 
-import { LayoutDashboard, UserCircle, Users, Bookmark, LogOut } from "lucide-react";
+import { LayoutDashboard, UserCircle, Users, Bookmark, LogOut, Menu, X } from "lucide-react";
 
 export default function Navbar() {
   const supabase = getSupabase();
   const router = useRouter();
   const pathname = usePathname();
   const [scrolled, setScrolled] = useState(false);
+  const [isOpen, setIsOpen] = useState(false); // State for mobile menu toggle
 
   useEffect(() => {
     const handleScroll = () => {
@@ -22,6 +21,11 @@ export default function Navbar() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  // Close mobile menu when route changes
+  useEffect(() => {
+    setIsOpen(false);
+  }, [pathname]);
+
   const handleLogout = async () => {
     await supabase.auth.signOut();
     router.push("/login");
@@ -29,14 +33,13 @@ export default function Navbar() {
 
   const navLinks = [
     { id: "dashboard", name: "Dashboard", path: "/jobs-list", icon: <LayoutDashboard size={18} /> },
-
     { id: "applications", name: "My Applications", path: "/applications", icon: <Users size={18} /> },
     { id: "saved", name: "Saved Jobs", path: "/bookmarks", icon: <Bookmark size={18} /> },
-        { id: "profile", name: "Profile", path: "/profile/previewApplicantProfile", icon: <UserCircle size={18} /> },
+    { id: "profile", name: "Profile", path: "/profile/previewApplicantProfile", icon: <UserCircle size={18} /> },
   ];
 
-return (
-    <nav className={`w-full z-[100] transition-all duration-300 border-b border-white/10 shrink-0 h-[72px] flex items-center ${
+  return (
+    <nav className={`w-full z-[100] transition-all duration-300 border-b border-white/10 shrink-0 h-[72px] flex items-center sticky top-0 ${
       scrolled
         ? "bg-[#170e2c]/95 backdrop-blur-md shadow-lg"
         : "bg-[#170e2c]"
@@ -44,7 +47,7 @@ return (
       
       <div className="w-full max-w-7xl mx-auto flex items-center justify-between px-4 md:px-8">
         
-        {/* Logo Section - Responsive width */}       
+        {/* Logo Section */}       
         <div
           className="flex items-center gap-2 cursor-pointer transition-transform hover:scale-105 shrink-0"
           onClick={() => router.push("/")}
@@ -93,18 +96,42 @@ return (
           </button>
         </div>
 
-        {/* Mobile View - visible below md (768px) */}
+        {/* Mobile View Toggle */}
         <div className="md:hidden flex items-center">
           <button
-            onClick={handleLogout}
-            className="flex items-center gap-2 px-3 py-2 rounded-xl text-sm font-bold text-rose-400 active:bg-rose-500/10 transition-all"
+            onClick={() => setIsOpen(!isOpen)}
+            className="p-2 text-gray-400 hover:text-white transition-all"
           >
-            <LogOut size={20} />
-            {/* Keeping text for clarity, but ensured it fits via px-4 on parent */}
-            <span className="text-xs uppercase tracking-tight">Logout</span>
+            {isOpen ? <X size={24} /> : <Menu size={24} />}
           </button>
         </div>
       </div>
+
+      {/* Mobile Menu Dropdown */}
+      {isOpen && (
+        <div className="absolute top-[72px] left-0 w-full bg-[#170e2c] border-b border-white/10 flex flex-col p-4 space-y-2 md:hidden">
+          {navLinks.map((link) => (
+            <button
+              key={link.id}
+              onClick={() => router.push(link.path)}
+              className={`flex items-center gap-4 px-4 py-3 rounded-xl text-sm font-bold transition-all ${
+                pathname === link.path ? "bg-[#5f5aa7]/20 text-white" : "text-gray-400"
+              }`}
+            >
+              {link.icon}
+              {link.name}
+            </button>
+          ))}
+          <div className="h-[1px] bg-white/10 my-2" />
+          <button
+            onClick={handleLogout}
+            className="flex items-center gap-4 px-4 py-3 rounded-xl text-sm font-bold text-rose-400 active:bg-rose-500/10 transition-all"
+          >
+            <LogOut size={18} />
+            Logout
+          </button>
+        </div>
+      )}
     </nav>
   );
 }

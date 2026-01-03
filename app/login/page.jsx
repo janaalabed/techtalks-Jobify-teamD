@@ -14,44 +14,52 @@ export default function Login() {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const handleLogin = async (e) => {
-    e.preventDefault();
-    setLoading(true);
+const handleLogin = async (e) => {
+  e.preventDefault();
+  setLoading(true);
+  console.log("Step 1: Login started");
 
-    try {
-     
-      const adminEmail = "admin@jobify.com";
-      const adminPassword = "Admin1234";
+  try {
+    const adminEmail = "admin@jobify.com";
+    const adminPassword = "Admin1234";
 
-      if (email === adminEmail && password === adminPassword) {
-        router.push("/admin");
-        return;
-      }
-
-      // Normal user login
-      const { data, error } = await supabase.auth.signInWithPassword({
-        email,
-        password,
-      });
-
-      if (error) throw error;
-      if (!data.user) throw new Error("Login failed");
-
-      const { data: profile, error: profileError } = await supabase
-        .from("profiles")
-        .select("role")
-        .eq("id", data.user.id)
-        .single();
-
-      if (profileError || !profile) throw new Error("User profile not found");
-
-      redirectToDashboard(profile.role, router);
-    } catch (err) {
-      alert(err.message || "Something went wrong. Please try again.");
-    } finally {
-      setLoading(false);
+    if (email === adminEmail && password === adminPassword) {
+      console.log("Step 2a: Admin detected, redirecting...");
+      router.push("/admin");
+      return; 
     }
-  };
+
+    console.log("Step 2b: Attempting Supabase Auth...");
+    const { data, error } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    });
+
+    if (error) {
+      console.error("Auth Error:", error.message);
+      throw error;
+    }
+
+    console.log("Step 3: Auth successful, fetching profile...");
+    const { data: profile, error: profileError } = await supabase
+      .from("profiles")
+      .select("role")
+      .eq("id", data.user.id)
+      .single();
+
+    if (profileError || !profile) {
+      console.error("Profile Error:", profileError);
+      throw new Error("User profile not found");
+    }
+
+   console.log("Step 4: Redirecting...");
+    setLoading(false); // <--- Turn off spinner THE MOMENT you know where they are going
+    redirectToDashboard(profile.role, router);
+  } catch (err) {
+    setLoading(false); // <--- Only turn it off here if there's an error
+    alert(err.message);
+  }
+};
 
   const handleForgotPassword = async () => {
     if (!email) {

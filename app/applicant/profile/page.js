@@ -365,3 +365,29 @@ export default function ApplicantProfilePage() {
 function EmptyState({ text }) {
     return <div className="text-center py-12 bg-slate-50 border-2 border-dashed border-slate-200 rounded-[2rem] text-slate-400 text-sm font-bold tracking-tight">{text}</div>;
 }
+function FileUploadBox({ label, icon, fileName, onChange, accept }) {
+    return (
+        <div className="space-y-2">
+            <label className="label-style">{label}</label>
+            <label className="flex flex-col items-center justify-center w-full p-6 bg-slate-50 border-2 border-dashed border-slate-200 rounded-[2rem] cursor-pointer hover:bg-slate-100 transition-all group">
+                <div className="flex flex-col items-center justify-center pt-2 pb-3">
+                    <div className="w-10 h-10 rounded-xl bg-white shadow-sm flex items-center justify-center text-[#5f5aa7] mb-3 group-hover:scale-110 transition-transform">
+                        {icon}
+                    </div>
+                    <p className="text-[11px] font-black text-[#170e2c] text-center px-2 line-clamp-1">
+                        {fileName}
+                    </p>
+                    <p className="text-[10px] font-bold text-slate-400 mt-1 uppercase tracking-widest">
+                        Click to upload
+                    </p>
+                </div>
+                <input
+                    type="file"
+                    className="hidden"
+                    onChange={onChange}
+                    accept={accept}
+                />
+            </label>
+        </div>
+    );
+}
