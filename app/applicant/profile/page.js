@@ -252,6 +252,63 @@ export default function ApplicantProfilePage() {
 
                         <hr className="border-slate-100" />
 
+                        {/* Education Section */}
+                        <div>
+                            <div className="flex items-center justify-between mb-6 md:mb-8">
+                                <div className="flex items-center gap-3 md:gap-4">
+                                    <div className="w-10 h-10 rounded-xl bg-[#f1f0fb] flex items-center justify-center text-[#5f5aa7]">
+                                        <GraduationCap size={18} />
+                                    </div>
+                                    <h2 className="text-xl font-black text-[#170e2c]">Education</h2>
+                                </div>
+                                <button
+                                    type="button"
+                                    onClick={addEducation}
+                                    className="text-xs md:text-sm font-black text-[#5f5aa7] flex items-center gap-1 hover:underline"
+                                >
+                                    <Plus size={16} /> ADD
+                                </button>
+                            </div>
+
+                            <div className="space-y-4 md:space-y-6">
+                                {education.map((edu) => (
+                                    <div key={edu.id} className="relative p-5 md:p-6 bg-slate-50 rounded-[1.5rem] md:rounded-[2rem] border border-slate-100">
+                                        <button
+                                            type="button"
+                                            onClick={() => removeEducation(edu.id)}
+                                            className="absolute top-4 right-4 text-slate-300 hover:text-red-500 transition-colors"
+                                        >
+                                            <Trash2 size={18} />
+                                        </button>
+                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-5">
+                                            <input
+                                                className="input-field-balanced"
+                                                placeholder="School/University"
+                                                value={edu.school}
+                                                onChange={(e) => updateEducation(edu.id, "school", e.target.value)}
+                                            />
+                                            <input
+                                                className="input-field-balanced"
+                                                placeholder="Degree/Field of Study"
+                                                value={edu.degree}
+                                                onChange={(e) => updateEducation(edu.id, "degree", e.target.value)}
+                                            />
+                                            <div className="md:col-span-2">
+                                                <input
+                                                    className="input-field-balanced"
+                                                    placeholder="Graduation Year (e.g. 2020)"
+                                                    value={edu.year}
+                                                    onChange={(e) => updateEducation(edu.id, "year", e.target.value)}
+                                                />
+                                            </div>
+                                        </div>
+                                    </div>
+                                ))}
+                                {education.length === 0 && <EmptyState text="Add your academic background." />}
+                            </div>
+                        </div>
+                        <hr className="border-slate-100" />
+
                         {/* Experience */}
                         <div>
                             <div className="flex items-center justify-between mb-6 md:mb-8">
