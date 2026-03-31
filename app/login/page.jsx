@@ -35,7 +35,8 @@ console.log("ENV KEY:", process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY);
       email,
       password,
     });
-
+console.log("Auth response data:", data);
+console.log("Auth response error:", error);
     if (error) {
       console.error("Auth Error:", error.message);
       throw error;
