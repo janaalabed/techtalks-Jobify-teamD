@@ -28,7 +28,8 @@ const handleLogin = async (e) => {
       router.push("/admin");
       return; 
     }
-
+console.log("ENV URL:", process.env.NEXT_PUBLIC_SUPABASE_URL);
+console.log("ENV KEY:", process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY);
     console.log("Step 2b: Attempting Supabase Auth...");
     const { data, error } = await supabase.auth.signInWithPassword({
       email,
