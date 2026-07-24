@@ -75,7 +75,7 @@ The project was developed collaboratively by a team of five members following th
 
 ---
 
-# 🛠 Tech Stack
+# Tech Stack
 
 | Category                | Technologies                       |
 | ----------------------- | ---------------------------------- |
@@ -196,24 +196,6 @@ The database was designed to support multiple user roles and recruitment workflo
 
 ---
 
-## Recruiter Dashboard
-
-![Recruiter Dashboard](docs/screenshots/recruiter-dashboard.png)
-
----
-
-## Applicant Tracking
-
-![Applicant Tracking](docs/screenshots/applicant-tracking.png)
-
----
-
-## Admin Dashboard
-
-![Admin Dashboard](docs/screenshots/admin-dashboard.png)
-
----
-
 # Getting Started
 
 ## Prerequisites
@@ -268,7 +250,6 @@ Example:
 NEXT_PUBLIC_SUPABASE_URL=YOUR_SUPABASE_URL
 NEXT_PUBLIC_SUPABASE_ANON_KEY=YOUR_SUPABASE_ANON_KEY
 
-# Add any additional environment variables required by your project.
 ```
 
 > Do not commit sensitive credentials to the repository.
