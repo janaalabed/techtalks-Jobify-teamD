@@ -1,7 +1,7 @@
 # Jobify – Full-Stack Recruitment Platform
 
 <p align="center">
-  <img src="public/uploads/logo2.png" alt="Jobify Banner" width="100%">
+  <img src="public/uploads/logo2.png" alt="Jobify Banner" width="50%">
 </p>
 
 <p align="center">
